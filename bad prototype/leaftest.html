@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+	<style>
+		#test {
+			height:500px;
+			width: 800px;
+		}
+	</style>
+	<script>
+		function eSmoothing(x){
+			if(x[0]==0 || x[x.length-1]==0){
+				let t=0;
+				let n=0;
+				for(a=0;a<x.length;a++){
+					if(x[a]!=0){
+						t+=x[a];
+						++n;
+					}
+				}
+				let avg=t/n;
+				if(x[0]==0)x[0]=avg;
+				if(x[x.length-1]==0)x[x.length-1]=avg;
+			}
+			for(i=1;i<x.length;i++){
+				if(x[i]==0){
+					let g=0;
+					while(x[i+g]==0)++g;
+					let dif=x[i+g]-x[i-1];
+					let d=dif/(g+1);
+					while(x[i]==0){
+						x[i]=x[i-1]+d;
+						++i;
+					}
+				}
+			}
+			return x;
+		}			
+		
+		async function call(x){
+			let now = new Date();
+			let date="";
+			date+=String(now.getDate()).padStart(2, '0')+"-";
+			date+=String(now.getMonth() + 1).padStart(2, '0')+"-";
+			date+=String(now.getFullYear()).slice(2);
+			console.log("api.php?sensor="+x+"&date="+date)
+			let r = await fetch("api.php?sensor="+x+"&date="+date);
+			let j = await r.json();
+			return j;
+		}
+
+		async function load(x){
+			let res = await call(x);
+			chart.data.labels=res.time;
+			/*
+			chart.data.datasets[0].data=eSmoothing(res.temp);
+			chart.data.datasets[1].data=eSmoothing(res.diox);
+			*/
+			chart.data.datasets[0].data=res.temp;
+			chart.data.datasets[1].data=res.diox;
+			chart.update();
+		}
+		
+
+		
+	</script>
+</head>
+<body>
+<div id="test">
+</div>
+<script>
+	var map = L.map('test',{doubleClickZoom:false}).setView([53.388,-1.6],11);
+	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+	L.marker([53.3841556,-1.7766328]).addTo(map).on('click',function(){load("941205");});
+
+	L.polygon([
+		[53.38, -1.84],
+		[53.388, -1.88],
+		[53.39, -1.84]
+	]).addTo(map).on('click',function(){load("sensor022");});
+
+	var x = L.polyline([
+		[53.38,-1.74],
+		[53.38,-1.75],
+		[53.39,-1.76],
+		[53.39,-1.77]
+	],{weight:5}).addTo(map).on('click',function(){load("sensor044");});
+</script>
+
+<div width="800px" height="400px">
+	<canvas id="char"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+	const canv=document.getElementById("char");
+	
+	const chart = new Chart(canv,{type:'line',
+		data: { labels:[],
+			datasets:[{
+				label:'temp',
+				data:[]
+			},{
+				label:'diox',
+				data:[]
+			}]
+		},
+		options: {
+			maintainAspectRatio: false,
+		}
+	});
+</script>
+</body>
+</html>

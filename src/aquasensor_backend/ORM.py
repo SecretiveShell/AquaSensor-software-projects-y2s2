@@ -9,7 +9,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timezone
 
-engine = create_engine('sqlite:///:memory:')
+import os
+
+DATABASE_URL = os.getenv('DATABASE_URL', "sqlite:///:memory:")
+
+engine = create_engine(DATABASE_URL)
 
 Base = declarative_base()
 

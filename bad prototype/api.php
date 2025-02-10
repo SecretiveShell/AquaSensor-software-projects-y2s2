@@ -20,18 +20,30 @@ curl_close( $curl_handle );
 $html=substr($html,35);
 $row=0;
 $token=",\n";
+header('Content-Type: application/json; charset=utf-8');
 $t=strtok($html,$token);
+if($t===false){
+	$dt=-1;
+	$temp=-1;
+	$diox=-1;
+	$perc=-1;
+}else{
 while($t!==false){
-	$date[$row]=$t;
-	$time[$row]=strtok($token);
+	$dt[$row]=$t.' '.strtok($token);
 	$temp[$row]=strtok($token);
 	$diox[$row]=strtok($token);
 	$perc[$row]=strtok($token);
 	$t=strtok($token);;
 	$row=1+$row;
+}}
+if($row>125){
+	$dt=-1;
+	$time=-1;
+	$temp=-1;
+	$diox=-1;
+	$perc=-1;
 }
-$out=array('date'=>$date,'time'=>$time,'temp'=>$temp,'diox'=>$diox,'perc'=>$perc);
+$out=array('dt'=>$dt,'temp'=>$temp,'diox'=>$diox,'perc'=>$perc);
 $out=json_encode($out);
-header('Content-Type: application/json; charset=utf-8');
 echo $out;
 ?>

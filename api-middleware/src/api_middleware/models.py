@@ -14,9 +14,9 @@ class SensorStatus(BaseModel):
     id: Annotated[str, Field(description="Unique sensor identifier.")]
     name: Annotated[str, Field(description="Name or location of the sensor.")]
     datetime: Annotated[datetime, Field(description="Timestamp of the latest reading (ISO 8601).")]
-    temperature: Annotated[str, Field(description="Temperature recorded by the sensor (e.g., '5.12C').")]
-    dissolved_oxygen: Annotated[float, Field(description="Dissolved oxygen level in mg/L.")]
-    dissolved_oxygen_percent: Annotated[float, Field(description="Dissolved oxygen percentage relative to standard saturation.")]
+    temperature: Annotated[str | None, Field(description="Temperature recorded by the sensor (e.g., '5.12C').")]
+    dissolved_oxygen: Annotated[float | None, Field(description="Dissolved oxygen level in mg/L.")]
+    dissolved_oxygen_percent: Annotated[float | None, Field(description="Dissolved oxygen percentage relative to standard saturation.")]
 
 
 class SensorReadings(BaseModel):

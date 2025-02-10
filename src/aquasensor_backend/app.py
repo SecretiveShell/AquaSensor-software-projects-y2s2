@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from aquasensor_backend.templates import static_files
+from fastapi import FastAPI, Request
+from aquasensor_backend.templates import templates, static_files
 
 app = FastAPI(
     title="AquaSensor Backend",
@@ -7,3 +7,7 @@ app = FastAPI(
 )
 
 app.mount("/static", static_files, name="static")
+
+@app.get("/")
+async def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})

@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AquaSensor</title>
-  <link
-      rel="stylesheet"
-      href="css/index.css"
-    />
-    <link rel="stylesheet" href="css/chart.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <?php include("includes/header.php")
-    ?>
+{% extends "base.html" %}
+
+{% block title %}AquaSensor{% endblock %}
+
+{% block content %}
+
   <!-- Graph 1: Today's River Data -->
   <div class="chart-container">
     <h2>Today's River Data</h2>
@@ -139,5 +129,4 @@
       }
     });
   </script>
-</body>
-</html>
+{% endblock %}

@@ -45,6 +45,8 @@ function eSmoothing(x){
 				return;
 			}
 			chart.data.labels=res.dt;
+
+			chart.options.scales.x.suggestedMax=moment.min(moment({H:23,m:59}),moment().add(2,'hours'));
 			
 			chart.data.datasets[0].data=eSmoothing(res.temp);
 			chart.data.datasets[1].data=eSmoothing(res.diox);

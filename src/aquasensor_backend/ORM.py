@@ -3,7 +3,7 @@ import asyncio
 from functools import partial
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Integer, String, MetaData
+from sqlalchemy import DateTime, Float, Integer, String, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, Mapped, mapped_column
@@ -27,15 +27,28 @@ class Users(Base):
     email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String, nullable=False)
 
-class RiverData(Base):
-    __tablename__ = 'RiverData'
+class Rivers(Base):
+    __tablename__ = 'Rivers'
 
-    RiverId: Mapped[int] = mapped_column(Integer, primary_key=True)
-    Rivertemp: Mapped[int] = mapped_column(Integer)
-    DOlevels: Mapped[int] = mapped_column(Integer)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=current_utc_datetime, onupdate=current_utc_datetime
-    )
+    RiverId: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+
+class Sensors(Base):
+    __tablename__ = 'Sensors'
+
+    id: Mapped[int] = mapped_column(String, primary_key=True)
+    RiverId: Mapped[int] = mapped_column(Integer, foreign_key="Rivers.RiverId")
+    latitude: Mapped[float] = mapped_column(Float, nullable=False)
+    longitude: Mapped[float] = mapped_column(Float, nullable=False)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+
+class SensorReadings(Base):
+    __tablename__ = 'SensorReadings'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    temp: Mapped[int] = mapped_column(Integer, nullable=True)
+    dissolved_oxygen: Mapped[int] = mapped_column(Integer, nullable=True)
+    time: Mapped[datetime] = mapped_column(DateTime, default=current_utc_datetime)
 
 # session factory
 AsyncSessionLocal = async_sessionmaker(bind=async_engine, class_=AsyncSession, expire_on_commit=False)

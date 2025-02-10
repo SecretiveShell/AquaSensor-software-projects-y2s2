@@ -3,8 +3,8 @@ import asyncio
 from functools import partial
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Float, Integer, String, MetaData
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, MetaData
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, Mapped, mapped_column
 from sqlalchemy.ext.asyncio import async_sessionmaker
@@ -37,7 +37,7 @@ class Sensors(Base):
     __tablename__ = 'Sensors'
 
     id: Mapped[int] = mapped_column(String, primary_key=True)
-    RiverId: Mapped[int] = mapped_column(Integer, foreign_key="Rivers.RiverId")
+    RiverId: Mapped[int] = mapped_column(Integer, ForeignKey("Rivers.RiverId"))
     latitude: Mapped[float] = mapped_column(Float, nullable=False)
     longitude: Mapped[float] = mapped_column(Float, nullable=False)
     name: Mapped[str] = mapped_column(String, nullable=False)
@@ -46,6 +46,7 @@ class SensorReadings(Base):
     __tablename__ = 'SensorReadings'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    sensor_id: Mapped[int] = mapped_column(Integer, ForeignKey("Sensors.id"))
     temp: Mapped[int] = mapped_column(Integer, nullable=True)
     dissolved_oxygen: Mapped[int] = mapped_column(Integer, nullable=True)
     time: Mapped[datetime] = mapped_column(DateTime, default=current_utc_datetime)

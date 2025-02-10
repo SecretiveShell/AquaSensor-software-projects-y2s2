@@ -4,76 +4,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AquaSensor</title>
-  <link
-      rel="stylesheet"
-      href="css/index.css"
-    />
-    <link rel="stylesheet" href="css/map.css"/>
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/map.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  
 </head>
 <body>
-    <?php include("includes/header.php")
-    ?>
+  <?php include("includes/header.php") ?>
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Initialize the map
-    const map = L.map('map').setView([54.5, -4], 6); // Centered on the UK
+    const map = L.map('map').setView([54.5, -4], 6); 
 
-    // Add a base map (OpenStreetMap)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Example GeoJSON data for rivers (replace with actual river data)
     const rivers = {
       "type": "FeatureCollection",
       "features": [
         {
           "type": "Feature",
           "properties": {
-            "name": "River Thames"
+            "name": "River Derwent (Yorkshire)",
+            "numberofsensors": "3 Sensors",
+            "AverageTemperature": "6.16C"
           },
           "geometry": {
             "type": "LineString",
             "coordinates": [
-              [-0.609, 51.499], // Example coordinates (replace with actual river path)
-              [-0.609, 51.498],
-              [-0.608, 51.497]
+              [-0.964, 53.719], 
+              [-0.964, 53.718],
+              [-0.963, 53.717]
             ]
           }
         },
         {
           "type": "Feature",
           "properties": {
-            "name": "River Severn"
+            "name": "River Derwent (Derbyshire)",
+            "numberofsensors": "3 Sensors",
+            "AverageTemperature": "6.16C"
           },
           "geometry": {
             "type": "LineString",
             "coordinates": [
-              [-2.48, 52.50], // Example coordinates (replace with actual river path)
-              [-2.48, 52.49],
-              [-2.47, 52.48]
+              [-0.609, 51.499], 
+              [-0.609, 51.498],
+              [-0.608, 51.497]
             ]
           }
-        }
-        // Add more rivers here
+        },
       ]
     };
 
-    // Add rivers to the map
     L.geoJSON(rivers, {
       style: {
-        color: 'blue', // River color
-        weight: 15 // River line thickness
+        color: 'Red', 
+        weight: 15
       },
       onEachFeature: function (feature, layer) {
-        layer.bindPopup(feature.properties.name); // Show river name on click
+        layer.bindPopup(feature.properties.name);
       }
     }).addTo(map);
+
+    const apidata = 'https://api.aquasensor.co.uk/aq.php?op=status&username=shu&token=aebbf6305f9fce1d5591ee05a3448eff';
+
+    fetch(apidata)
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(sensor => {
+          const { sensor_id, status, Date_Time, Water_Temperature, weather, oxygen, river_level } = sensor;
+
+          marker.bindPopup(`
+            <b>Sensor ID:</b> ${sensor_id}<br>
+            <b>Status:</b> ${status}<br>
+            <b>Date Time:</b> ${Date_Time}<br>
+            <b>Water Temperature:</b> ${Water_Temperature}<br>
+            <b>Weather:</b>${weather}<br>
+            <b>Dissolved Oxygen:</b>${oxygen}<br>
+            <b>River level:</b>${river_level}<br>
+          `);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching sensor data:', error);
+      });
   </script>
-  <?php include("includes/footer.php")?>
+  <?php include("includes/footer.php") ?>
 </body>
 </html>

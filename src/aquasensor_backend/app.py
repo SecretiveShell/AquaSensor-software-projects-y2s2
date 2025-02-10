@@ -16,3 +16,7 @@ async def read_root(request: Request) -> HTMLResponse:
 @app.get("/chart")
 async def read_chart(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("chart.html", {"request": request})
+
+@app.get("/map")
+async def read_map(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse("map.html", {"request": request})

@@ -16,6 +16,26 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/37/d7/15d67e05b235d1ed8c3ce61688fe4d84130e72af1657acadfaac3479f4cf/aiocache-0.12.3-py2.py3-none-any.whl", hash = "sha256:889086fc24710f431937b87ad3720a289f7fc31c4fd8b68e9f918b9bacd8270d", size = 28199 },
 ]
 
+[package.optional-dependencies]
+memcached = [
+    { name = "aiomcache" },
+]
+redis = [
+    { name = "redis" },
+]
+
+[[package]]
+name = "aiomcache"
+version = "0.8.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8b/0a/914d8df1002d88ca70679d192f6e16d113e6b5cbcc13c51008db9230025f/aiomcache-0.8.2.tar.gz", hash = "sha256:43b220d7f499a32a71871c4f457116eb23460fa216e69c1d32b81e3209e51359", size = 10640 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a1/f8/78455f6377cbe85f335f4dbd40a807dafb72bd5fa05eb946f2ad0cec3d40/aiomcache-0.8.2-py3-none-any.whl", hash = "sha256:9d78d6b6e74e775df18b350b1cddfa96bd2f0a44d49ad27fa87759a3469cef5e", size = 10145 },
+]
+
 [[package]]
 name = "aiomysql"
 version = "0.2.0"
@@ -90,7 +110,7 @@ name = "aquasensor-backend"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "aiocache" },
+    { name = "aiocache", extra = ["memcached", "redis"] },
     { name = "aiomysql" },
     { name = "aiosqlite" },
     { name = "asyncpg" },
@@ -105,7 +125,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aiocache", specifier = ">=0.12.3" },
+    { name = "aiocache", extras = ["memcached", "redis"], specifier = ">=0.12.3" },
     { name = "aiomysql", specifier = ">=0.2.0" },
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "asyncpg", specifier = ">=0.30.0" },
@@ -539,6 +559,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/b3/8f/ce59b5e5ed4ce8512f879ff1fa5ab699d211ae2495f1adaa5fbba2a1eada/pymysql-1.1.1.tar.gz", hash = "sha256:e127611aaf2b417403c60bf4dc570124aeb4a57f5f37b8e95ae399a42f904cd0", size = 47678 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0c/94/e4181a1f6286f545507528c78016e00065ea913276888db2262507693ce5/PyMySQL-1.1.1-py3-none-any.whl", hash = "sha256:4de15da4c61dc132f4fb9ab763063e693d521a80fd0e87943b9a453dd4c19d6c", size = 44972 },
+]
+
+[[package]]
+name = "redis"
+version = "5.2.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "async-timeout", marker = "python_full_version < '3.11.3'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/47/da/d283a37303a995cd36f8b92db85135153dc4f7a8e4441aa827721b442cfb/redis-5.2.1.tar.gz", hash = "sha256:16f2e22dff21d5125e8481515e386711a34cbec50f0e44413dd7d9c060a54e0f", size = 4608355 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3c/5f/fa26b9b2672cbe30e07d9a5bdf39cf16e3b80b42916757c5f92bca88e4ba/redis-5.2.1-py3-none-any.whl", hash = "sha256:ee7e1056b9aea0f04c6c2ed59452947f34c4940ee025f5dd83e6a6418b6989e4", size = 261502 },
 ]
 
 [[package]]

@@ -25,8 +25,8 @@ def msg(c,d,m):
     t=Point("Sensor").tag("location",sensor).field("Temperature",float(temp)).time(ts,WritePrecision.S)
     d=Point("Sensor").tag("location",sensor).field("Dissolved Oxygen",float(diox)).time(ts,WritePrecision.S)
     with influx.write_api(write_options=SYNCHRONOUS) as wa:
-        wa.write(bucket=os.environ.get("DB_BUCKET",record=t)
-        wa.write(bucket=os.environ.get("DB_BUCKET",record=d)
+        wa.write(bucket=os.environ.get("DB_BUCKET",record=t))
+        wa.write(bucket=os.environ.get("DB_BUCKET",record=d))
 
 conn=mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 conn.on_connect=on_connect

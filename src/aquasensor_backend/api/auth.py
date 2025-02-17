@@ -11,7 +11,7 @@ from aquasensor_backend.models.auth import (
     RegisterResponse,
     UserModel,
 )
-from aquasensor_backend.security import hash_password
+from aquasensor_backend.security import hash_password, get_logged_in_user_depends
 from aquasensor_backend.ORM import Users, AsyncSessionLocal
 from secrets import compare_digest, token_hex
 
@@ -65,6 +65,7 @@ async def logout():
 
 
 @router.get("/me")
-async def me() -> UserModel:
+async def me(logged_in_user: get_logged_in_user_depends) -> UserModel:
     """get information about the currently logged in user"""
-    pass
+    
+    return logged_in_user

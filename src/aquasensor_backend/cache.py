@@ -1,3 +1,4 @@
+import json
 from aiocache import Cache
 from aiocache.serializers import BaseSerializer
 import os
@@ -21,8 +22,8 @@ class PydanticSerializer(BaseSerializer):
     def dumps(self, obj: "BaseModel") -> bytes:
         return obj.model_dump_json().encode("utf-8")
     
-    def loads(self, data: bytes, model: "BaseModel") -> "BaseModel":
-        return model.model_validate_json(data.decode("utf-8"))
+    def loads(self, data: bytes) -> dict:
+        return json.loads(data)
 
 cache = Cache.from_url(CACHE_URL)
 cache.serializer = PydanticSerializer()

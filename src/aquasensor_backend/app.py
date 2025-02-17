@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from aquasensor_backend.templates import templates, static_files
+from aquasensor_backend.api import router as api_router
 
 app = FastAPI(
     title="AquaSensor Backend",
@@ -8,6 +9,8 @@ app = FastAPI(
 )
 
 app.mount("/static", static_files, name="static")
+
+app.include_router(api_router, prefix="/api/v1", tags=["auth"])
 
 @app.get("/")
 async def read_root(request: Request) -> HTMLResponse:

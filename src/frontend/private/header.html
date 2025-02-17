@@ -1,6 +1,6 @@
 <style>
   header {
-    background: #79B7AC;
+    background: darkslateblue;
     height: 100px;
     width: 100%;
     display: flex;
@@ -18,11 +18,11 @@
   .sidenav {
   height: 100%;
   width: 0;
-  position: absolute;
+  position: fixed;
   z-index: 1;
   top: 0;
   right: 0;
-  background-color: #111;
+  background-color: darkslateblue;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
@@ -145,13 +145,16 @@
   .cn:hover {
     background-color: crimson;
   }
+  .span{
+    color: white;
+  }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <header>
   <div class="logo">
     <h1 class="logo-text">
       <a href="/">
-        <span>AquaSensor</span>
+        <img src="/src/frontend/static/cropped-logo-32x32.png">
       </a>
     </h1>
   </div>
@@ -190,19 +193,22 @@
     <a href=""></a>
     <a href=""></a>
     <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
     <a href="signin">Signin</a>
     <a href="register">Register</a>
-
   </div>
   <span onclick="openNav()">&#9776;</span>
   </nav>
   <script>
     function openNav(){
     document.getElementById("mySidenav").style.width = "250px";
+    document.getElementById("main").style.marginRight = "250px";
     document.body.style.backgroundColor = "rgba(0,0,0,0)";
     }
     function closeNav(){
       document.getElementById("mySidenav").style.width = "0";
+      document.getElementById("main").style.marginRight = "0";
       document.body.style.backgroundColor = "white";
     }
   </script>

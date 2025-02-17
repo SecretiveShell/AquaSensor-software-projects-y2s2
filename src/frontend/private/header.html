@@ -1,3 +1,152 @@
+<style>
+  header {
+    background: #79B7AC;
+    height: 100px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid black;
+    color: white;
+  }
+  
+  header .logo {
+    max-height: 80px;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+  }
+  .sidenav {
+  height: 100%;
+  width: 0;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+  /* Content */
+  .body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .content {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    border: 2px solid #5f98ae;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 10px;
+  }
+  
+  h2 {
+    font-size: 30px;
+    margin-bottom: 0px;
+  }
+  
+  p {
+    font-size: 16px;
+    line-height: 3;
+    margin-bottom: 100px;
+  }
+  
+  .uc {
+    text-transform: uppercase;
+  }
+  
+  .search-container {
+    text-align: center;
+    margin-top: 3%;
+  }
+  
+  .btn {
+    width: 100px;
+    height: 40px;
+    background: red;
+    margin-top: 13px;
+    color: black;
+    font-size: 15px;
+    border-radius: 5px;
+  }
+  
+  .btn:hover {
+    color: crimson;
+  }
+  
+  .srch {
+    outline: none;
+  }
+  
+  .content h1 {
+    font-family: 'Times New Roman';
+    font-size: 50px;
+    padding-left: 20px;
+    margin-top: 9%;
+    letter-spacing: 2px;
+  }
+  
+  .content .cn {
+    width: 160px;
+    height: 40px;
+    background: #ff7200;
+    border: none;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .content span {
+    color: crimson;
+    font-size: 60px;
+  }
+  
+  .content .cn a {
+    text-decoration: none;
+    color: black;
+    transition: .3s ease;
+  }
+  
+  .cn:hover {
+    background-color: crimson;
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <header>
   <div class="logo">
     <h1 class="logo-text">
@@ -7,11 +156,54 @@
     </h1>
   </div>
 
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="/">Home</a>
-      <a href="/chart">River Data</a>
-      <a href="/map">Map</a>
-    </div>
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;
+    </a>
+    <a href="/"><i class="fa fa-fw fa-home"></i>Home</a>
+    <a href="chart"><i class="fa fa-fw fa-wrench"></i>River Data</a>
+    <a href="map"><i class="fa fa-fw fa-map"></i>Map</a>
+    <a href="aboutus"><i class="fa fa-fw fa-user"></i>Client</a>
+    <a href="contactus"><i class="fa fa-fw fa-envelope"></i>Contact Us</a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href=""></a>
+    <a href="signin">Signin</a>
+    <a href="register">Register</a>
+
+  </div>
+  <span onclick="openNav()">&#9776;</span>
   </nav>
+  <script>
+    function openNav(){
+    document.getElementById("mySidenav").style.width = "250px";
+    document.body.style.backgroundColor = "rgba(0,0,0,0)";
+    }
+    function closeNav(){
+      document.getElementById("mySidenav").style.width = "0";
+      document.body.style.backgroundColor = "white";
+    }
+  </script>
 </header>

@@ -5,7 +5,7 @@ from os import getenv
 
 from loguru import logger
 
-# salt used for hashing passwords. must me a constant
+# salt used for hashing passwords. must be a constant
 PASSWORD_SALT = getenv("PASSWORD_SALT") or "AQUASENSOR"
 
 if PASSWORD_SALT == "AQUASENSOR":

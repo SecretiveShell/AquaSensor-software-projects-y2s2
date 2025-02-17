@@ -8,6 +8,8 @@ from aquasensor_backend.models.auth import (
     RegisterResponse,
     UserModel,
 )
+from aquasensor_backend.security import hash_password
+from aquasensor_backend.ORM import Users, AsyncSessionLocal
 
 router = APIRouter()
 
@@ -21,7 +23,18 @@ async def login(login: Login) -> LoginResponse:
 @router.post("/register")
 async def register(register: Register) -> RegisterResponse:
     """register a new user account"""
-    pass
+    
+    new_user = Users(
+        username = register.username,
+        email = register.email,
+        password = hash_password(register.password)
+    )
+
+    async with AsyncSessionLocal() as session:
+        session.add(new_user)
+        await session.commit()
+
+    return RegisterResponse(success=True)
 
 
 @router.get("/logout")

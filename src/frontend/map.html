@@ -23,6 +23,7 @@ content %}
   
   <div id="map"></div>
 
+<<<<<<< HEAD
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const map = L.map('map').setView([54.5, -4], 6); 
@@ -105,4 +106,94 @@ content %}
   
 </body>
 </html>
+=======
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const map = L.map("map").setView([54.5, -4], 6);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors",
+  }).addTo(map);
+
+  const rivers = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: {
+          name: "River Derwent (Yorkshire)",
+          numberofsensors: "3 Sensors",
+          AverageTemperature: "6.16C",
+        },
+        geometry: {
+          type: "LineString",
+          coordinates: [
+            [-0.964, 53.719],
+            [-0.964, 53.718],
+            [-0.963, 53.717],
+          ],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          name: "River Derwent (Derbyshire)",
+          numberofsensors: "3 Sensors",
+          AverageTemperature: "6.16C",
+        },
+        geometry: {
+          type: "LineString",
+          coordinates: [
+            [-0.609, 51.499],
+            [-0.609, 51.498],
+            [-0.608, 51.497],
+          ],
+        },
+      },
+    ],
+  };
+
+  L.geoJSON(rivers, {
+    style: {
+      color: "Red",
+      weight: 15,
+    },
+    onEachFeature: function (feature, layer) {
+      layer.bindPopup(feature.properties.name);
+    },
+  }).addTo(map);
+
+  const apidata =
+    "https://api.aquasensor.co.uk/aq.php?op=status&username=shu&token=REDACTED";
+
+  fetch(apidata)
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((sensor) => {
+        const {
+          sensor_id,
+          status,
+          Date_Time,
+          Water_Temperature,
+          weather,
+          oxygen,
+          river_level,
+        } = sensor;
+
+        marker.bindPopup(`
+          <b>Sensor ID:</b> ${sensor_id}<br>
+          <b>Status:</b> ${status}<br>
+          <b>Date Time:</b> ${Date_Time}<br>
+          <b>Water Temperature:</b> ${Water_Temperature}<br>
+          <b>Weather:</b>${weather}<br>
+          <b>Dissolved Oxygen:</b>${oxygen}<br>
+          <b>River level:</b>${river_level}<br>
+        `);
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching sensor data:", error);
+    });
+</script>
+>>>>>>> 6a7894273369ce1f680d3760187220594e031e80
 {% endblock %}

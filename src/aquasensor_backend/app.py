@@ -12,13 +12,16 @@ app.mount("/static", static_files, name="static")
 
 app.include_router(api_router, prefix="/api/v1", tags=["auth"])
 
+
 @app.get("/")
 async def read_root(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("index.html", {"request": request})
 
+
 @app.get("/chart")
 async def read_chart(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("chart.html", {"request": request})
+
 
 @app.get("/map")
 async def read_map(request: Request) -> HTMLResponse:

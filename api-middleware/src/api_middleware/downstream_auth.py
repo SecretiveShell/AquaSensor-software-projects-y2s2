@@ -14,4 +14,5 @@ def get_api_key(api_key: str = Header(...)):
         raise HTTPException(status_code=401, detail="Invalid API Key")
     return api_key
 
+
 auth_required = Depends(get_api_key)

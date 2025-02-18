@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from sqlalchemy import select
+from sqlalchemy import select,update
 from aquasensor_backend.ORM import AsyncSessionLocal, Users
 from aquasensor_backend.cache import cache
 from fastapi import APIRouter
@@ -14,6 +14,8 @@ from aquasensor_backend.models.auth import (
 from aquasensor_backend.security import hash_password, get_logged_in_user_depends
 from aquasensor_backend.ORM import Users, AsyncSessionLocal
 from secrets import compare_digest, token_hex
+
+from argon2 import PasswordHasher
 
 router = APIRouter()
 
@@ -31,9 +33,16 @@ async def login(login: Login) -> LoginResponse:
             return LoginResponse(success=False, failure_reason="Invalid username or password.")
         
         # use compare_digest to prevent timing attacks
-        if not compare_digest(user.password, hash_password(login.password)):
+        p=PasswordHasher()
+        try:
+            p.verify(user.password,login.password)
+        except:
             return LoginResponse(success=False, failure_reason="Invalid username or password.")
-        
+        if p.check_needs_rehash(user.password):
+            h=p.hash(login.password)
+            up=update(Users).where(Users.username==login.username).values(password=h)
+            await session.execute(up)
+
         user = UserModel(username=user.username, email=user.email)
         token = token_hex(128)
 

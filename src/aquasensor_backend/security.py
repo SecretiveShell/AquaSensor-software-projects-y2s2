@@ -1,6 +1,6 @@
 """all security related functions."""
 
-from hashlib import sha3_256
+from argon2 import PasswordHasher
 from os import getenv
 
 from fastapi.security import APIKeyHeader
@@ -11,18 +11,14 @@ from fastapi import Depends, HTTPException
 from aquasensor_backend.cache import cache
 from aquasensor_backend.models.auth import UserModel
 
-# salt used for hashing passwords. must be a constant
-PASSWORD_SALT = getenv("PASSWORD_SALT") or "AQUASENSOR"
-
-if PASSWORD_SALT == "AQUASENSOR":
-    logger.warning("PASSWORD_SALT is not set. Using default value. Please set PASSWORD_SALT environment variable.")
-
 
 def hash_password(password: str) -> str:
     """hash a password"""
 
     # Using sha3_256 for hashing instead of blake2b
-    return sha3_256((password + PASSWORD_SALT).encode("utf-8")).hexdigest()
+    p=PasswordHasher()
+    h=p.hash(password)
+    return h
 
 
 api_key_header = APIKeyHeader(name="AquaSensor-Login-Token")

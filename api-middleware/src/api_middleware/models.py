@@ -40,13 +40,13 @@ class SensorReadings(BaseModel):
         datetime, Field(description="Date and time of the reading (ISO 8601).")
     ]
     temperature: Annotated[
-        float, Field(description="Temperature value recorded in Celsius.")
+        float | None, Field(description="Temperature value recorded in Celsius.")
     ]
     dissolved_oxygen: Annotated[
-        float, Field(description="Dissolved oxygen level in mg/L.")
+        float | None, Field(description="Dissolved oxygen level in mg/L.")
     ]
     dissolved_oxygen_percent: Annotated[
-        float, Field(description="Dissolved oxygen saturation percentage.")
+        float | None, Field(description="Dissolved oxygen saturation percentage.")
     ]
 
 

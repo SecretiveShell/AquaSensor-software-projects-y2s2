@@ -11,7 +11,7 @@ from fastapi import Depends, HTTPException
 from aquasensor_backend.cache import cache
 from aquasensor_backend.models.auth import UserModel
 
-# salt used for hashing passwords. must me a constant
+# salt used for hashing passwords. must be a constant
 PASSWORD_SALT = getenv("PASSWORD_SALT") or "AQUASENSOR"
 
 if PASSWORD_SALT == "AQUASENSOR":

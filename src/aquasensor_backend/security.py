@@ -1,6 +1,6 @@
-"""all security related functions"""
+"""all security related functions."""
 
-from hashlib import blake2b
+from hashlib import sha3_256
 from os import getenv
 
 from fastapi.security import APIKeyHeader
@@ -21,7 +21,8 @@ if PASSWORD_SALT == "AQUASENSOR":
 def hash_password(password: str) -> str:
     """hash a password"""
 
-    return blake2b(password.encode("utf-8"), digest_size=64, salt=PASSWORD_SALT.encode("utf-8")).hexdigest()
+    # Using sha3_256 for hashing instead of blake2b
+    return sha3_256((password + PASSWORD_SALT).encode("utf-8")).hexdigest()
 
 
 api_key_header = APIKeyHeader(name="AquaSensor-Login-Token")

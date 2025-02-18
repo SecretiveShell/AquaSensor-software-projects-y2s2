@@ -15,10 +15,10 @@ from aquasensor_backend.models.auth import UserModel
 def hash_password(password: str) -> str:
     """hash a password"""
 
-    # Using sha3_256 for hashing instead of blake2b
-    p=PasswordHasher()
-    h=p.hash(password)
-    return h
+    # argon 2 password hash
+    password_hasher=PasswordHasher()
+    hashed_password=password_hasher.hash(password)
+    return hashed_password
 
 
 api_key_header = APIKeyHeader(name="AquaSensor-Login-Token")

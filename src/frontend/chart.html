@@ -1,6 +1,19 @@
 {% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
 content %}
-
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  .chart-container {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 40px;
+  }
+  h2 {
+    text-align: center;
+  }
+</style>
 <!-- Graph 1: Today's River Data -->
 <div class="chart-container">
   <h2>Today's River Data</h2>

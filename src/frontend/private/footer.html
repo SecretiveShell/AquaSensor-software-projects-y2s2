@@ -1,12 +1,54 @@
-{% set year = now().year %}
-<div class="panel">
-  <ul>
-    <li><a href="faq.html">FAQs</a></li>
-    <li><a href="privacy_policy.html">Privacy Policy</a></li>
-    <li><a href="ContactUs.html">Contact Us</a></li>
-    <li><a href="About.html">About Us</a></li>
-  </ul>
-  <ul>
-    <li><div>&copy; By Team Aqua2 {{ year }}</div></li>
-  </ul>
+<style>
+  /* Footer */
+.footer {
+  position: relative;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    background-color: darkslateblue;
+    color: white;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+ul {
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ul li {
+    list-style: none;
+    margin-left: 62px;
+    margin-top: 27px;
+    font-size: 15px;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #818181;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    transition: 0.45 ease-in-out;
+}
+
+ul li a:hover {
+    color: white;
+}
+</style>
+<div class="footer">
+  <footer>
+    {% set year = now().year %}
+    <div class="panel">
+      <ul>
+        <li><a href="faq.html">FAQs</a></li>
+        <li><a href="privacy_policy.html">Privacy Policy</a></li>
+      </ul>
+      <ul>
+        <li><div>&copy; By Team Aqua2 {{ year }}</div></li>
+      </ul>
+    </div>
+  </footer>
 </div>

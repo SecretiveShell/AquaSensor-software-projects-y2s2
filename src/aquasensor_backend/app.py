@@ -28,3 +28,11 @@ async def read_chart(request: Request) -> HTMLResponse:
 @app.get("/map")
 async def read_map(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("map.html", {"request": request})
+
+@app.get("/dataFunction.js")
+async def read_datfunc(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("dataFunction.js",{"request": request})
+
+@app.get("/test")
+async def read_test(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("test.html",{"request":request})

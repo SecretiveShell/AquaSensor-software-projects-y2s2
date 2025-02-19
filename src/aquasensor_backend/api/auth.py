@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
-from sqlalchemy import select,update
+from sqlalchemy import select, update
 from aquasensor_backend.ORM import AsyncSessionLocal, Users
 from aquasensor_backend.cache import cache
 from fastapi import APIRouter, Depends
@@ -13,9 +13,12 @@ from aquasensor_backend.models.auth import (
     RegisterResponse,
     UserModel,
 )
-from aquasensor_backend.security import hash_password, get_logged_in_user_depends, api_key_header
-from aquasensor_backend.ORM import Users, AsyncSessionLocal
-from secrets import compare_digest, token_hex
+from aquasensor_backend.security import (
+    hash_password,
+    get_logged_in_user_depends,
+    api_key_header,
+)
+from secrets import token_hex
 
 from argon2 import PasswordHasher
 
@@ -26,23 +29,28 @@ router = APIRouter()
 async def login(login: Login) -> LoginResponse:
     """log in to your account and return a token"""
     async with AsyncSessionLocal() as session:
-
         stmt = select(Users).where(Users.username == login.username)
         result = await session.execute(stmt)
         user = result.scalars().first()
 
         if user is None:
-            return LoginResponse(success=False, failure_reason="Invalid username or password.")
-        
+            return LoginResponse(
+                success=False, failure_reason="Invalid username or password."
+            )
+
         # use compare_digest to prevent timing attacks
-        p=PasswordHasher()
+        p = PasswordHasher()
         try:
-            p.verify(user.password,login.password)
-        except:
-            return LoginResponse(success=False, failure_reason="Invalid username or password.")
+            p.verify(user.password, login.password)
+        except Exception:
+            return LoginResponse(
+                success=False, failure_reason="Invalid username or password."
+            )
         if p.check_needs_rehash(user.password):
-            h=p.hash(login.password)
-            up=update(Users).where(Users.username==login.username).values(password=h)
+            h = p.hash(login.password)
+            up = (
+                update(Users).where(Users.username == login.username).values(password=h)
+            )
             await session.execute(up)
 
         user = UserModel(username=user.username, email=user.email)
@@ -52,14 +60,15 @@ async def login(login: Login) -> LoginResponse:
 
         return LoginResponse(success=True, token=token)
 
+
 @router.post("/register")
 async def register(register: Register) -> RegisterResponse:
     """register a new user account"""
-    
+
     new_user = Users(
-        username = register.username,
-        email = register.email,
-        password = hash_password(register.password)
+        username=register.username,
+        email=register.email,
+        password=hash_password(register.password),
     )
 
     async with AsyncSessionLocal() as session:
@@ -72,14 +81,14 @@ async def register(register: Register) -> RegisterResponse:
 @router.get("/logout")
 async def logout(token: Annotated[str, Depends(api_key_header)]) -> LogoutResponse:
     """log out and invalidate the token"""
-    
+
     await cache.delete(token)
 
-    return { "success": True}
+    return {"success": True}
 
 
 @router.get("/me")
 async def me(logged_in_user: get_logged_in_user_depends) -> UserModel:
     """get information about the currently logged in user"""
-    
+
     return logged_in_user

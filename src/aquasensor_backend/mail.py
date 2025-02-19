@@ -16,8 +16,8 @@ assert SMTP_PORT > 0 and SMTP_PORT < 65536, "SMTP_PORT environment variable is i
 assert EMAIL_SENDER is not None, "EMAIL_SENDER environment variable is not set"
 assert EMAIL_PASSWORD is not None, "EMAIL_PASSWORD environment variable is not set"
 
-def send_email(to: str, subject: str, template: str, template_data: dict):
 
+def send_email(to: str, subject: str, template: str, template_data: dict):
     template = jinja_env.get_template("email/email.html")
     body = template.render(**template_data)
 
@@ -38,4 +38,3 @@ def send_email(to: str, subject: str, template: str, template_data: dict):
 
     except Exception as e:
         print(f"Error: {e}")
-

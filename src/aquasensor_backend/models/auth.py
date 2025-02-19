@@ -36,5 +36,6 @@ class UserModel(BaseModel):
     username: str = Field(..., description="Username")
     email: EmailStr = Field(..., description="Email")
 
+
 class LogoutResponse(BaseModel):
     success: bool = Field(True, description="Success")

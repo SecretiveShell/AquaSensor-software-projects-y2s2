@@ -7,7 +7,7 @@ from aquasensor_backend.lifespan import lifespan
 app = FastAPI(
     title="AquaSensor Backend",
     description="A backend for the AquaSensor project.",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.mount("/static", static_files, name="static")

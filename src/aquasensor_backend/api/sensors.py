@@ -17,8 +17,11 @@ assert API_API_KEY, "API_API_KEY environment variable is not set."
 
 router = APIRouter()
 
+
 @router.get("/status")
-async def get_sensor_status(logged_in_user: get_logged_in_user_depends) -> SensorStatusResponse:
+async def get_sensor_status(
+    logged_in_user: get_logged_in_user_depends,
+) -> SensorStatusResponse:
     """Get sensor status."""
 
     async with Client(headers={"api-key": API_API_KEY}) as client:
@@ -28,7 +31,9 @@ async def get_sensor_status(logged_in_user: get_logged_in_user_depends) -> Senso
 
 
 @router.get("/sensors/{sensorid}/status")
-async def get_sensor_status_by_id(logged_in_user: get_logged_in_user_depends, sensorid: str) -> SensorStatus:
+async def get_sensor_status_by_id(
+    logged_in_user: get_logged_in_user_depends, sensorid: str
+) -> SensorStatus:
     """Get sensor status by ID."""
 
     async with Client(headers={"api-key": API_API_KEY}) as client:
@@ -39,7 +44,10 @@ async def get_sensor_status_by_id(logged_in_user: get_logged_in_user_depends, se
 
 @router.get("/sensors/{sensorid}/readings")
 async def get_sensor_readings_by_id(
-    logged_in_user: get_logged_in_user_depends, sensorid: str, start_date: datetime, end_date: datetime
+    logged_in_user: get_logged_in_user_depends,
+    sensorid: str,
+    start_date: datetime,
+    end_date: datetime,
 ) -> SensorReadingsResponse:
     """Get sensor readings by ID."""
 
@@ -50,10 +58,14 @@ async def get_sensor_readings_by_id(
 
 
 @router.get("/sensors/{sensorid}/readings/latest")
-async def get_sensor_readings_latest_by_id(logged_in_user: get_logged_in_user_depends, sensorid: str) -> SensorStatus:
+async def get_sensor_readings_latest_by_id(
+    logged_in_user: get_logged_in_user_depends, sensorid: str
+) -> SensorStatus:
     """Get latest sensor readings by ID."""
 
     async with Client(headers={"api-key": API_API_KEY}) as client:
-        response = await client.get(API_BASE_URL + f"/sensors/{sensorid}/readings/latest")
+        response = await client.get(
+            API_BASE_URL + f"/sensors/{sensorid}/readings/latest"
+        )
 
     return response.json()

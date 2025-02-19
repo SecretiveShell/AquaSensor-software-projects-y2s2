@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from httpx import AsyncClient as Client
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urlencode, urlunparse
+from urllib.parse import urlparse, urlencode
 from datetime import datetime
 from os import getenv
 

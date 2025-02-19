@@ -31,13 +31,6 @@ async def get_historical_data(
     data = raw_data.split("\n")
     data = data[1:]
 
-    headers = [
-        "datetime",
-        "temperature",
-        "dissolved_oxygen",
-        "dissolved_oxygen_percent",
-    ]
-
     readings = []
     for row in data:
         if row == "":
@@ -50,9 +43,11 @@ async def get_historical_data(
 
         dt = datetime.strptime(f"{row[0]} {row[1]}", r"%d-%m-%y %H:%M:%S")
 
-        temperature = row[2] if row[2] and not isnan(float(row[2]))else None
+        temperature = row[2] if row[2] and not isnan(float(row[2])) else None
         dissolved_oxygen = row[3] if row[3] and not isnan(float(row[3])) else None
-        dissolved_oxygen_percent = row[4] if row[4] and not isnan(float(row[4])) else None
+        dissolved_oxygen_percent = (
+            row[4] if row[4] and not isnan(float(row[4])) else None
+        )
 
         readings.append(
             {

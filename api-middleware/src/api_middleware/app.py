@@ -6,7 +6,6 @@ from api_middleware.models import (
     SensorStatus,
     SensorStatusResponse,
     SensorReadingsResponse,
-    SensorReadingsRequest,
 )
 from api_middleware.functions import get_status, get_status_by_id
 from api_middleware.historical import get_historical_data

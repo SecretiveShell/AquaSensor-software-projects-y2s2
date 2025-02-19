@@ -12,7 +12,7 @@ app = FastAPI(
 
 app.mount("/static", static_files, name="static")
 
-app.include_router(api_router, prefix="/api/v1", tags=["auth"])
+app.include_router(api_router, prefix="/api/v1")
 
 
 @app.get("/")

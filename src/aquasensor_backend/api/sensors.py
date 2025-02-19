@@ -31,7 +31,10 @@ async def get_sensor_status(logged_in_user: get_logged_in_user_depends) -> Senso
 async def get_sensor_status_by_id(logged_in_user: get_logged_in_user_depends, sensorid: str) -> SensorStatus:
     """Get sensor status by ID."""
 
-    return {}
+    async with Client(headers={"api-key": API_API_KEY}) as client:
+        response = await client.get(API_BASE_URL + f"/sensors/{sensorid}/status")
+
+    return response.json()
 
 
 @router.get("/sensors/{sensorid}/readings")
@@ -40,11 +43,17 @@ async def get_sensor_readings_by_id(
 ) -> SensorReadingsResponse:
     """Get sensor readings by ID."""
 
-    return {}
+    async with Client(headers={"api-key": API_API_KEY}) as client:
+        response = await client.get(API_BASE_URL + f"/sensors/{sensorid}/readings")
+
+    return response.json()
 
 
 @router.get("/sensors/{sensorid}/readings/latest")
 async def get_sensor_readings_latest_by_id(logged_in_user: get_logged_in_user_depends, sensorid: str) -> SensorStatus:
     """Get latest sensor readings by ID."""
 
-    return {}
+    async with Client(headers={"api-key": API_API_KEY}) as client:
+        response = await client.get(API_BASE_URL + f"/sensors/{sensorid}/readings/latest")
+
+    return response.json()

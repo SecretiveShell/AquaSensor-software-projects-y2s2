@@ -1,23 +1,18 @@
+<link rel="icon" type="image/png" href="/static/aquasensor logo.png" />
 <link
-      rel="icon"
-      type="image/png"
-      href="/static/aquasensor logo.png"
-    />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="/static/css/header.css">
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+<link rel="stylesheet" href="/static/css/header.css" />
 <header>
   <div class="logo">
-    
-
- 
-  
-      <span onclick="openNav()">&#9776;</span>
-      <a href="/"><img src="/static/aquasensor logo.png"></a>
-   
+    <span onclick="openNav()">&#9776;</span>
+    <a href="/"><img src="/static/aquasensor logo.png" /></a>
   </div>
 
   <div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+      >&times;
     </a>
     <a href="/"><i class="fa fa-fw fa-home"></i>Home</a>
     <a href="chart"><i class="fa fa-fw fa-wrench"></i>River Data</a>
@@ -26,19 +21,25 @@
     <a href="contactus"><i class="fa fa-fw fa-envelope"></i>Contact Us</a>
 
     <div class="btn-container">
-      <button type="button" class="ctn"><a href="signin"><i class="fa fa-fw fa-user"></i>Signin</a></button>
-      <button type="button" class="ctn" onclick="alert('When registering we will use your data to match you with relative data close to your location')"><a href="register"><i class="fa fa-fw fa-user"></i>Register</a></button>
+      <button type="button" class="ctn">
+        <a href="signin"><i class="fa fa-fw fa-user"></i>Signin</a>
+      </button>
+      <button
+        type="button"
+        class="ctn"
+        onclick="alert('When registering we will use your data to match you with relative data close to your location')"
+      >
+        <a href="register"><i class="fa fa-fw fa-user"></i>Register</a>
+      </button>
     </div>
-    
   </div>
-  </nav>
   <script>
-    function openNav(){
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-    document.body.style.backgroundColor = "rgba(0,0,0,0)";
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+      document.getElementById("main").style.marginLeft = "250px";
+      document.body.style.backgroundColor = "rgba(0,0,0,0)";
     }
-    function closeNav(){
+    function closeNav() {
       document.getElementById("mySidenav").style.width = "0";
       document.getElementById("main").style.marginLeft = "0";
       document.body.style.backgroundColor = "white";

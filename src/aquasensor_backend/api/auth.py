@@ -1,17 +1,19 @@
 from datetime import timedelta
+from typing import Annotated
 
 from sqlalchemy import select,update
 from aquasensor_backend.ORM import AsyncSessionLocal, Users
 from aquasensor_backend.cache import cache
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from aquasensor_backend.models.auth import (
     Login,
     LoginResponse,
+    LogoutResponse,
     Register,
     RegisterResponse,
     UserModel,
 )
-from aquasensor_backend.security import hash_password, get_logged_in_user_depends
+from aquasensor_backend.security import hash_password, get_logged_in_user_depends, api_key_header
 from aquasensor_backend.ORM import Users, AsyncSessionLocal
 from secrets import compare_digest, token_hex
 
@@ -68,9 +70,12 @@ async def register(register: Register) -> RegisterResponse:
 
 
 @router.get("/logout")
-async def logout():
+async def logout(token: Annotated[str, Depends(api_key_header)]) -> LogoutResponse:
     """log out and invalidate the token"""
-    pass
+    
+    await cache.delete(token)
+
+    return { "success": True}
 
 
 @router.get("/me")

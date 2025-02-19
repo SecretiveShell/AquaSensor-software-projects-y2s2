@@ -13,3 +13,13 @@ services:
     env_file: ".env"
     ports:
       - 8001:8000
+
+  redis:
+    image: redis:8.0-M03-alpine
+    volumes:
+      - red:/vol
+    ports:
+      - 6379:6379
+      - 6380:6380
+volumes:
+  red:

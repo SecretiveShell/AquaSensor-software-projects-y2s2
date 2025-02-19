@@ -21,7 +21,7 @@
   position: fixed;
   z-index: 1;
   top: 0;
-  right: 0;
+  left: 0;
   background-color: darkslateblue;
   overflow-x: hidden;
   transition: 0.5s;
@@ -44,7 +44,7 @@
 .sidenav .closebtn {
   position: absolute;
   top: 0;
-  right: 25px;
+  right: 10px;
   font-size: 36px;
   margin-left: 50px;
 }
@@ -94,17 +94,16 @@
   }
   
   .btn {
-    width: 100px;
-    height: 40px;
-    background: red;
+    display: inline;
+    background: darkslateblue;
     margin-top: 13px;
-    color: black;
+    color: gray;
     font-size: 15px;
     border-radius: 5px;
   }
   
   .btn:hover {
-    color: crimson;
+    color: white;
   }
   
   .srch {
@@ -148,14 +147,54 @@
   .span{
     color: white;
   }
+  .logo .logo-text a{
+    color: gray;
+  }
+  .logo-text a:hover{
+    color: white;
+  }
+  .logo-text img{
+    width: 50px;
+  }
+  .sidenav .btn-container {
+  margin-top: auto;
+  padding: 16px;
+}
+.sidenav .ctn {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: darkslateblue;
+  color: grey;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-size: 16px;
+}
+.sidenav .ctn:hover {
+  background-color: white;
+}
+
+.sidenav .ctn a {
+  color: grey;
+  text-decoration: none;
+  display: block;
+}
+  
 </style>
+<link
+      rel="icon"
+      type="image/png"
+      href="/static/aquasensor logo.png"
+    />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <header>
   <div class="logo">
     <h1 class="logo-text">
-      <a href="/">
-        <img src="/src/frontend/static/cropped-logo-32x32.png">
-      </a>
+      <span onclick="openNav()">&#9776;</span>
+      <a href="/"><img src="/src/frontend/static/aquasensor logo.png">AquaSensor</a>
     </h1>
   </div>
 
@@ -167,48 +206,23 @@
     <a href="map"><i class="fa fa-fw fa-map"></i>Map</a>
     <a href="aboutus"><i class="fa fa-fw fa-user"></i>Client</a>
     <a href="contactus"><i class="fa fa-fw fa-envelope"></i>Contact Us</a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href=""></a>
-    <a href="signin">Signin</a>
-    <a href="register">Register</a>
+
+    <div class="btn-container">
+      <button type="button" class="ctn"><a href="signin"><i class="fa fa-fw fa-user"></i>Signin</a></button>
+      <button type="button" class="ctn" onclick="alert('When registering we will use your data to match you with relative data close to your location')"><a href="register"><i class="fa fa-fw fa-user"></i>Register</a></button>
+    </div>
+    
   </div>
-  <span onclick="openNav()">&#9776;</span>
   </nav>
   <script>
     function openNav(){
     document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginRight = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
     document.body.style.backgroundColor = "rgba(0,0,0,0)";
     }
     function closeNav(){
       document.getElementById("mySidenav").style.width = "0";
-      document.getElementById("main").style.marginRight = "0";
+      document.getElementById("main").style.marginLeft = "0";
       document.body.style.backgroundColor = "white";
     }
   </script>

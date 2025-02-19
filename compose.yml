@@ -3,9 +3,22 @@ services:
     build:
       context: .
       dockerfile: backend.Dockerfile
+    environment:
+      - API_BASE_URL=http://middleware
+      - API_API_KEY=abv
     ports:
       - 8000:8000
-  
+    develop:
+      watch:
+        - path: ./src
+          target: /src
+          action: sync
+        - path: ./src/frontend
+          target: /src/frontend
+          action: sync
+        - path: ./src/aquasensor_backend
+          target: /src/aquasensor_backend
+          action: sync
   middleware:
     build: 
       context: .

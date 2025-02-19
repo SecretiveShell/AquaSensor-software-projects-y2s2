@@ -21,7 +21,10 @@ router = APIRouter()
 async def get_sensor_status(logged_in_user: get_logged_in_user_depends) -> SensorStatusResponse:
     """Get sensor status."""
 
-    return {}
+    async with Client(headers={"api-key": API_API_KEY}) as client:
+        response = await client.get(API_BASE_URL + "/status")
+
+    return response.json()
 
 
 @router.get("/sensors/{sensorid}/status")

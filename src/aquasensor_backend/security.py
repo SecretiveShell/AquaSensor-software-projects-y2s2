@@ -1,30 +1,26 @@
-"""all security related functions"""
+"""all security related functions."""
 
-from hashlib import blake2b
-from os import getenv
+from argon2 import PasswordHasher
 
 from fastapi.security import APIKeyHeader
-from loguru import logger
 from typing import Annotated
 from fastapi import Depends, HTTPException
 
 from aquasensor_backend.cache import cache
 from aquasensor_backend.models.auth import UserModel
 
-# salt used for hashing passwords. must me a constant
-PASSWORD_SALT = getenv("PASSWORD_SALT") or "AQUASENSOR"
-
-if PASSWORD_SALT == "AQUASENSOR":
-    logger.warning("PASSWORD_SALT is not set. Using default value. Please set PASSWORD_SALT environment variable.")
-
 
 def hash_password(password: str) -> str:
     """hash a password"""
 
-    return blake2b(password.encode("utf-8"), digest_size=64, salt=PASSWORD_SALT.encode("utf-8")).hexdigest()
+    # argon 2 password hash
+    password_hasher = PasswordHasher()
+    hashed_password = password_hasher.hash(password)
+    return hashed_password
 
 
 api_key_header = APIKeyHeader(name="AquaSensor-Login-Token")
+
 
 async def get_logged_in_user(token: Annotated[str, Depends(api_key_header)]):
     """check if the user is logged in"""
@@ -39,5 +35,6 @@ async def get_logged_in_user(token: Annotated[str, Depends(api_key_header)]):
         raise HTTPException(status_code=401, detail="Invalid API key")
 
     return user
+
 
 get_logged_in_user_depends = Annotated[UserModel, Depends(get_logged_in_user)]

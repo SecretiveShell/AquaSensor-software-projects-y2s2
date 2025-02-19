@@ -7,4 +7,5 @@ COPY . .
 
 RUN uv sync
 
-CMD [ "uv", "run", "aquasensor-backend"]
+WORKDIR api-middleware
+CMD ["uv","run","api-middleware"]

@@ -1,26 +1,38 @@
 services:
-  frontend:
-    build: frontend.Dockerfile
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
-
   backend:
-    build: backend.Dockerfile
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
-
-  traefik:
-    image: traefik:latest
-    command:
-      - --api.insecure=true
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    environment:
+      - API_BASE_URL=http://middleware
+      - API_API_KEY=abc
     ports:
-      - 80:80
-      - 443:443
+      - 8000:8000
+    develop:
+      watch:
+        - path: ./src
+          target: /src
+          action: sync
+        - path: ./src/frontend
+          target: /src/frontend
+          action: sync
+        - path: ./src/aquasensor_backend
+          target: /src/aquasensor_backend
+          action: sync
+  middleware:
+    build: 
+      context: .
+      dockerfile: middleware.Dockerfile
+    env_file: ".env"
+    ports:
+      - 8001:8000
+
+  redis:
+    image: redis:8.0-M03-alpine
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - red:/vol
+    ports:
+      - 6379:6379
+      - 6380:6380
+volumes:
+  red:

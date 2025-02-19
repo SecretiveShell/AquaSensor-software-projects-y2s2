@@ -1,4 +1,5 @@
-from fastapi import Depends, HTTPException, Header
+from fastapi import Depends, HTTPException
+from fastapi.security import APIKeyHeader
 import os
 
 # pull the api key from env vars
@@ -7,7 +8,7 @@ valid_api_key = os.environ.get("MIDDLEWARE_API_KEY")
 assert valid_api_key, "MIDDLEWARE_API_KEY environment variable is not set."
 
 
-def get_api_key(api_key: str = Header(...)):
+def get_api_key(api_key: str = Depends(APIKeyHeader(name="api-key"))):
     """Validate API key."""
 
     if api_key != valid_api_key:

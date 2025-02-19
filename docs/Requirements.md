@@ -29,6 +29,7 @@ Water quality is a critical issue in many communities, and it is essential to mo
 | FR006 | Application   | The system must include a user-friendly web application                                   | Must              |
 | FR007 | Application   | The application should support real-time and historical data interaction                  | Should            |
 | FR008 | Accessibility | The application must cater to a wide range of users, from ecologists to community members | Must              |
+| FR009 | Integration   | The application could provide warnings about sudden drastic changes in water quality      | Could             |
 
 ## Non Functional Requirements
 

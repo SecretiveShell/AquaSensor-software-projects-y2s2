@@ -40,3 +40,7 @@ async def read_test(request:Request) -> HTMLResponse:
 @app.get("/contact-us")
 async def read_contact(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("contactus.html",{"request":request})
+
+@app.get("/login")
+async def read_login(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("signin.html",{"request":request})

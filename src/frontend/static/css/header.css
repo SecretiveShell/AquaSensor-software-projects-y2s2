@@ -1,21 +1,21 @@
 header {
-  background: darkslateblue;
+  background: rgb(255, 255, 255);
   height: 100px;
   width: 100%;
   display: flex;
   align-items: center;
   border-bottom: 2px solid black;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 header .logo {
-  max-height: 80px;
-  margin-left: 20px;
+  max-height: 100px;
+  margin-left: 50px;
   display: flex;
   align-items: center;
 }
 .logo img {
-  width: 80px;
+  width: 150px;
 }
 .sidenav {
   height: 100%;
@@ -24,7 +24,7 @@ header .logo {
   z-index: 1001;
   top: 0;
   right: 0;
-  background-color: darkslateblue;
+  background-color: rgb(42, 90, 107);
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;

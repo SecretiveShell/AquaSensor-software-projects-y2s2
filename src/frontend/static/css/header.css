@@ -7,7 +7,39 @@ header {
   border-bottom: 2px solid black;
   color: white;
 }
+.title{
+  width: 95%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
 
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+}
+
+.sidebar {
+  display: flex;
+  align-self: right;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #f8f8f8; 
+}
+
+.sidebar span {
+  font-size: 30px;
+  cursor: pointer;
+  color: black; 
+  transition: color 0.3s ease; 
+}
+
+.sidebar span:hover {
+  color: grey;
+}
 header .logo {
   max-height: 80px;
   margin-left: 20px;
@@ -23,7 +55,7 @@ header .logo {
   position: fixed;
   z-index: 1001;
   top: 0;
-  right: 0;
+  left: 0;
   background-color: darkslateblue;
   overflow-x: hidden;
   transition: 0.5s;

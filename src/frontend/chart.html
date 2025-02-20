@@ -74,10 +74,28 @@
           };
           chart.setOption(option);
         }
-
-        renderChart("todayChart", "Today's Water Level", ["00:00", "06:00", "12:00", "18:00", "24:00"], [10, 15, 20, 18, 12], "blue");
-        renderChart("yesterdayChart", "Yesterday's Water Level", ["00:00", "06:00", "12:00", "18:00", "24:00"], [8, 14, 19, 17, 11], "green");
-        renderChart("fiveYearChart", "Last 5 Years Water Level", ["2018", "2019", "2020", "2021", "2022", "2023"], [50, 55, 60, 58, 62, 65], "red");
+    
+        async function fetchDataAndRenderChart(apiUrl, containerId, title, color) {
+          try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+    
+            const xData = data.xData;
+            const yData = data.yData;
+    
+            renderChart(containerId, title, xData, yData, color);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        }
+    
+        const todayApiUrl = '';
+        const yesterdayApiUrl = '';
+        const fiveYearApiUrl = '';
+    
+        fetchDataAndRenderChart(todayApiUrl, "todayChart", "Today's Water Level", "blue");
+        fetchDataAndRenderChart(yesterdayApiUrl, "yesterdayChart", "Yesterday's Water Level", "green");
+        fetchDataAndRenderChart(fiveYearApiUrl, "fiveYearChart", "Last 5 Years Water Level", "red");
       };
     </script>
   </body>

@@ -21,6 +21,11 @@ img {
   padding: 5px;
   width: 150px;
 }
+.leaflet-tile {
+	border: 0px;
+	border-radius: 0px;
+	padding: 0px;
+}
 
 .sidebar {
   display: flex;

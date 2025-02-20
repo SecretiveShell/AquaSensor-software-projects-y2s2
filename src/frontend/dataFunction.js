@@ -68,6 +68,9 @@ async function load(x, chartvar) {
 		{
 			type: 'value'
 		}],
+	  	dataZoom:[{
+			type:'inside'
+		}],
 		series : [
 			{
 				name:'DO',

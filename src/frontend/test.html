@@ -1,41 +1,40 @@
 {% extends "base.html" %} {% block title %}AquaSensor{% endblock%} {% block content %}
-<div id="map-section" style="height:400px">
-	<div id="map" style="height:100%">
-	</div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/moment"></script>
+<style>
+#map-section, #chart-section{
+	width:50%;
+	height:75vh;
+	float: left;
+}
+main {
+	display:block;
+	height: 81vh;
+}
+</style>
+<div id="map-section"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="{{ base_url }}/dataFunction.js"></script>
 <script>
-	var map = L.map('map-section',{doubleClickZoom:false}).setView([53.388,-1.6],11);
+	var map = L.map('map-section',{doubleClickZoom:false}).setView([53.175537,-1.464475],11);
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 	}).addTo(map);
 
-	L.marker([53.3841556,-1.7766328]).addTo(map).on('click',function(){load("941205",chart);});
+	L.marker([53.116169,-1.559394]).addTo(map).on('click',function(){load("941205",chart);});
 
-	L.polygon([
-		[53.38, -1.84],
-		[53.388, -1.88],
-		[53.39, -1.84]
-	]).addTo(map).on('click',function(){load("sensor022",chart);});
+	L.marker([53.109518, -1.545122]).addTo(map).on('click',function(){load("sensor022",chart);});
 
 	var x = L.polyline([
-		[53.38,-1.74],
-		[53.38,-1.75],
-		[53.39,-1.76],
-		[53.39,-1.77]
+		[53.111059,-1.562336],
+		[53.110007,-1.559895],
+		[53.110307,-1.555075]
 	],{weight:5}).addTo(map).on('click',function(){load("sensor044",chart);});	
 </script>
 
 <script src=" https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js "></script>
-<div id="chart-section" style="height:40%;width:100%">
-	<canvas id="chart-section"></canvas>
+<div id="chart-section">
 </div>
 <script>
-	var chart = echarts.init(document.getElementById('chart-section'),null,{
-	width:600, height:400
-	});
+	var chart = echarts.init(document.getElementById('chart-section'));
 	var option = {
 		xAxis : [{
 			type: 'time',

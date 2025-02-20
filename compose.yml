@@ -6,6 +6,7 @@ services:
     environment:
       - API_BASE_URL=http://middleware:8000
       - API_API_KEY=abc
+      - CACHE_URL=redis://redis 
     ports:
       - 8000:8000
     develop:

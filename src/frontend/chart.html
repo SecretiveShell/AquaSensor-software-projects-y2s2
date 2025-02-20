@@ -49,6 +49,12 @@
 
     <script>
       window.onload = function() {
+        function getToken() {
+          // Temporary test token
+          // TODO: replace with login token
+          return "dc22a10098077450aaf6b009405f12275fe510327117dde51afc4b2982c6458e9621d4d14eeafa6e4d929f3cf186d05f65f2d5b355749322d1a80dbf9ff2040c02df22bd248f1eb756a230ef394b009ba827ca2a5036315b66edd33347d34f8fca41865aac5e643ee9545d49efbe9586b40640250d39ba94c98339f8eea87b08";
+        }
+
         function renderChart(containerId, title, xData, yData, color) {
           var chart = echarts.init(document.getElementById(containerId));
           var option = {
@@ -63,7 +69,7 @@
             },
             yAxis: {
               type: 'value',
-              name: 'Water Level'
+              name: 'Water Temperature (°C)'
             },
             series: [{
               data: yData,
@@ -74,28 +80,49 @@
           };
           chart.setOption(option);
         }
-    
-        async function fetchDataAndRenderChart(apiUrl, containerId, title, color) {
+
+        async function fetchDataAndRenderChart(sensorId, startDate, endDate, containerId, title, color) {
           try {
-            const response = await fetch(apiUrl);
+            const apiUrl = `/api/v1/sensors/sensors/${sensorId}/readings?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+            const response = await fetch(apiUrl, {
+              headers: {
+                'Content-Type': 'application/json',
+                'AquaSensor-Login-Token': getToken()
+              }
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
             const data = await response.json();
-    
-            const xData = data.xData;
-            const yData = data.yData;
-    
+
+            if (!data.readings || !Array.isArray(data.readings)) {
+              throw new Error("Invalid data format received.");
+            }
+
+            const xData = data.readings.map(entry => new Date(entry.datetime).toLocaleString());
+            const yData = data.readings.map(entry => entry.temperature);
+
             renderChart(containerId, title, xData, yData, color);
           } catch (error) {
             console.error('Error fetching data:', error);
           }
         }
-    
-        const todayApiUrl = '';
-        const yesterdayApiUrl = '';
-        const fiveYearApiUrl = '';
-    
-        fetchDataAndRenderChart(todayApiUrl, "todayChart", "Today's Water Level", "blue");
-        fetchDataAndRenderChart(yesterdayApiUrl, "yesterdayChart", "Yesterday's Water Level", "green");
-        fetchDataAndRenderChart(fiveYearApiUrl, "fiveYearChart", "Last 5 Years Water Level", "red");
+
+        // TODO: make this selectable
+        const sensorId = "sensor022";
+
+        // Get today's and yesterday's dates
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayDate = yesterday.toISOString().split('T')[0];
+
+        // Fetch data for different charts
+        fetchDataAndRenderChart(sensorId, today, today, "todayChart", "Today's Water Temperature", "blue");
+        fetchDataAndRenderChart(sensorId, yesterdayDate, yesterdayDate, "yesterdayChart", "Yesterday's Water Temperature", "green");
+        fetchDataAndRenderChart(sensorId, "2019-01-01", today, "fiveYearChart", "Last 5 Years Water Temperature", "red");
       };
     </script>
   </body>

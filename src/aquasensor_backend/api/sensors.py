@@ -52,7 +52,7 @@ async def get_sensor_readings_by_id(
     """Get sensor readings by ID."""
 
     async with Client(headers={"api-key": API_API_KEY}) as client:
-        response = await client.get(API_BASE_URL + f"/sensors/{sensorid}/readings")
+        response = await client.get(API_BASE_URL + f"/sensors/{sensorid}/readings", params={"start_date": start_date, "end_date": end_date})
 
     return response.json()
 

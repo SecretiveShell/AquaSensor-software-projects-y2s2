@@ -1,29 +1,41 @@
 {% extends "base.html" %} {% block title %}AquaSensor{% endblock%} {% block content %}
 <style>
-body {
-	overflow: hidden;
-}
 #map-section, #chart-section{
 	width:50%;
 	height:75vh;
 	float: left;
-}
-main {
-	display:block;
-	height: 81vh;
 }
 </style>
 <div id="map-section"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="{{ base_url }}/dataFunction.js"></script>
 <script>
-	var map = L.map('map-section',{doubleClickZoom:false}).setView([53.175537,-1.464475],11);
+	var map = L.map('map-section').setView([53.175537,-1.464475],11);
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 	}).addTo(map);
 	if (L.Browser.mobile) {
 	   map.removeControl(map.zoomControl);
+	   map.doubleClickZoom.disable();
 	}
+
+	L.Control.Days=L.Control.extend({
+		onAdd : function(map){
+			var range = L.DomUtil.create('input');
+			range.id="DateRange";
+			range.type="number";
+			range.min=1;
+			range.value=1;
+			return range;
+		},
+		onRemove: function(map){
+			//
+		}
+	});
+	L.control.days= function(opts){
+		return new L.Control.Days(opts);
+	}
+	L.control.days({position:'topright'}).addTo(map);
 
 	L.marker([53.116169,-1.559394]).addTo(map).on('click',function(){load("941205",chart);});
 

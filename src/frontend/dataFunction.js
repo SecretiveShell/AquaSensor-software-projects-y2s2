@@ -34,8 +34,10 @@ function eSmoothing(x) {
 
 async function call(x) {
   let now = new Date();
-  let date = now.toISOString().substring(0, 10);
-  let r = await fetch("{{ base_url }}" + "/api/v1/sensors/sensors/" + x + "/readings?start_date=" + date + "&end_date=" + date,{
+  let to = now.toISOString().substring(0, 10);
+  now.setDate(now.getDate() - (document.getElementById("DateRange").value) + 1);
+  let from = now.toISOString().substring(0,10);
+  let r = await fetch("{{ base_url }}" + "/api/v1/sensors/sensors/" + x + "/readings?start_date=" + from + "&end_date=" + to,{
 	headers: {
 		'Accept': 'application/json',
 		'AquaSensor-Login-Token':window.sessionStorage["AquaSensorToken"]

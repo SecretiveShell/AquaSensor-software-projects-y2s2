@@ -3,8 +3,9 @@ from math import isnan
 from fastapi import HTTPException
 from httpx import AsyncClient as Client
 from api_middleware.functions import BASE_URL, USERNAME, TOKEN
+from aiocache import cached
 
-
+@cached(ttl=60) # TODO: make this redis?
 async def get_historical_data(
     sensorid: str, start_date: datetime, end_date: datetime
 ) -> dict:

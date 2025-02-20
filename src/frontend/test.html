@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}AquaSensor{% endblock%} {% block content %}
-<div id="map" height="60%">
-	<div id="map-section">
+<div id="map-section" style="height:400px">
+	<div id="map" style="height:100%">
 	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/moment"></script>
@@ -28,39 +28,39 @@
 	],{weight:5}).addTo(map).on('click',function(){load("sensor044",chart);});	
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
-<div id="chart" height="40%" width="100%">
+<script src=" https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js "></script>
+<div id="chart-section" style="height:40%;width:100%">
 	<canvas id="chart-section"></canvas>
 </div>
 <script>
-	const canv=document.getElementById("chart-section");
-	
-	const chart = new Chart(canv,{type:'line',
-		data: { labels:[],
-			datasets:[{
-				label:'temp',
+	var chart = echarts.init(document.getElementById('chart-section'),null,{
+	width:600, height:400
+	});
+	var option = {
+		xAxis : [{
+			type: 'time',
+			boundaryGap:false,
+			data: []
+		}],
+		yAxis : [{
+			type: 'value'
+		}],
+		series : [
+			{
+				name:'DO',
+				type:'line',
+				smooth:false,
 				data:[]
-			},{
-				label:'diox',
+			},
+			{
+				name:'temp',
+				type:'line',
+				smooth:false,
 				data:[]
-			}]
-		},
-		options: {
-			maintainAspectRatio: false,
-			scales: {
-				x: {
-					type: 'time',
-					time: {
-						unit: 'second',
-						parser: 'DD/MM/YYYY HH:mm',
-						displayFormats: {
-							second: 'HH:mm'
-						}
-					}
-				}
 			}
-		}
-	});	
+		]
+	};
+	chart.setOption(option);
 </script>
 
 {% endblock %}

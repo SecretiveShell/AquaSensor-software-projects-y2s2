@@ -35,32 +35,54 @@ function eSmoothing(x) {
 async function call(x) {
   let now = new Date();
   let date = now.toISOString().substring(0, 10);
-  let r = await fetch(
-    "{{ base_url }}" +
-      "/api/v1/sensors/sensors/" +
-      x +
-      "/readings?start_date=" +
-      date +
-      "&end_date=" +
-      date,
-  );
+  let r = await fetch("{{ base_url }}" + "/api/v1/sensors/sensors/" + x + "/readings?start_date=" + date + "&end_date=" + date,{
+	headers: {
+		'Accept': 'application/json',
+		'AquaSensor-Login-Token':window.sessionStorage["AquaSensorToken"]
+	}});
   let j = await r.json();
   return j;
 }
 
 async function load(x, chartvar) {
+  if(!window.sessionStorage["AquaSensorToken"]){
+	  console.log("no auth");
+	  //no auth
+	  return
+  }
   let res = await call(x);
-  chartvar.data.labels = res.dt;
+  
+  dates=eSmoothing(res.readings.map(index=>index.datetime));
+  DO=eSmoothing(res.readings.map(index=>index.dissolved_oxygen));
+  temp=eSmoothing(res.readings.map(index=>index.temperature));
+  
+  var option = {
+		xAxis : [{
+			type: 'category',
+			boundaryGap:false,
+			data: dates
+		}],
+		yAxis : [{
+			type: 'value'
+		},
+		{
+			type: 'value'
+		}],
+		series : [
+			{
+				name:'DO',
+				type:'line',
+				smooth:false,
+				data: DO
+			},
+			{
+				name:'temp',
+				type:'line',
+				smooth:false,
+				data: temp
+			}
+		]
+	};
 
-  chartvar.options.scales.x.suggestedMax = moment.min(
-    moment({ H: 23, m: 59 }),
-    moment().add(2, "hours"),
-  );
-  console.log(res.temp);
-  chartvar.data.datasets[0].data = eSmoothing(res.temp);
-  chartvar.data.datasets[1].data = eSmoothing(res.diox);
-
-  //chart.data.datasets[0].data=res.temp;
-  //chart.data.datasets[1].data=res.diox;
-  chartvar.update();
+  chartvar.setOption(option);
 }

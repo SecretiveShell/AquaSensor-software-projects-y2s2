@@ -44,3 +44,7 @@ async def read_contact(request:Request) -> HTMLResponse:
 @app.get("/login")
 async def read_login(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("signin.html",{"request":request})
+
+@app.get("/loginsuccess")
+async def read_logsucc(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("loginsuccess.html",{"request":request})

@@ -1,6 +1,4 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
-<html>
+{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block content %}
   <style>
     .form-container {
       min-height: 100vh;
@@ -75,30 +73,53 @@ content %}
       padding: 10px;
     }
   </style>
-  <body>
     <div class="page-container">
       <div class="form-container">
-        <form action="" method="post">
+        <form id="loginform" method="none" action="javascript:void(0);">
           <h3>Sign In</h3>
-
           <input
             type="text"
             placeholder="Enter Username"
             name="username"
             required
-          />
+          >
           <input
             type="password"
             placeholder="Enter Password"
             name="password"
             required
-          />
-          <input type="submit" name="submit" value="Login" class="form-btn" />
-          <p>don't have an account? <a href="register">Register</a></p>
-          <p>Go back<a href="/"></a></p>
+          >
+	  <input type="submit" value="Submit" onclick="process()">
         </form>
       </div>
     </div>
-  </body>
-</html>
+    <script>
+	    async function process(){
+		    var f = new FormData(document.getElementById("loginform"));
+		    var req = await fetch('{{ base_url }}/api/v1/auth/login',{
+			    method: 'POST',
+			    headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+			    },
+			    body: JSON.stringify({"username":f.get("username"),"password":f.get("password")})
+		    });
+		    var res=await req.json();
+		    console.log(res);
+		    if(res["success"]==false){
+			    //display error codes
+			    return
+		    }
+		    if(res["success"]==true){
+			    /*let d = new Date();
+			    d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+			    Document.cookie="AquaSensorToken="+res["token"]+"; expires="+d.toGMTString()+"; path=/";*/
+			    window.sessionStorage.setItem("AquaSensorToken",res["token"]);
+			    window.location.href = "{{ base_url }}/loginsuccess.html";
+			    return
+		    }
+		    //panic here
+		    return
+	    }
+    </script>
 {% endblock %}

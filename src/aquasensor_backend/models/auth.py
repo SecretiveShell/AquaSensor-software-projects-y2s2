@@ -27,6 +27,7 @@ class RegisterResponse(BaseModel):
     """Register Response"""
 
     success: bool = Field(..., description="Success")
+    token: str | None = Field(None, description="Session Token")
     failure_reason: str | None = Field(None, description="Failure Reason")
 
 

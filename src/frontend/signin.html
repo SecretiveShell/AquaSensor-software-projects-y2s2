@@ -99,9 +99,9 @@ content %}
    var f = new FormData(document.getElementById("loginform"));
 
    // validation code
-  if not (f.get("username") and f.get("password")){
+  if (!(f.get("username") && f.get("password"))){
     alert("Please enter username and password");
-    return
+    return;
   }
 
    // call the api

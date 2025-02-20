@@ -52,7 +52,11 @@
         function getToken() {
           // Temporary test token
           // TODO: replace with login token
-          return "dc22a10098077450aaf6b009405f12275fe510327117dde51afc4b2982c6458e9621d4d14eeafa6e4d929f3cf186d05f65f2d5b355749322d1a80dbf9ff2040c02df22bd248f1eb756a230ef394b009ba827ca2a5036315b66edd33347d34f8fca41865aac5e643ee9545d49efbe9586b40640250d39ba94c98339f8eea87b08";
+          const token = sessionStorage.getItem("AquaSensorToken");
+          if (!token) {
+            window.location.href = "{{ request.url_for("read_login") }}";
+          }
+          return token;
         }
 
         function renderChart(containerId, title, xData, yData, color) {

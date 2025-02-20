@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AquaSensor</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
+    <script src="/dataFunction.js"></script>
     <style>
       html, body {
         margin: 0;
@@ -108,7 +109,9 @@
             const xData = data.readings.map(entry => new Date(entry.datetime).toLocaleString());
             const yData = data.readings.map(entry => entry.temperature);
 
-            renderChart(containerId, title, xData, yData, color);
+            const smoothedYData = eSmoothing(yData);
+
+            renderChart(containerId, title, xData, smoothedYData, color);
           } catch (error) {
             console.error('Error fetching data:', error);
           }
@@ -124,9 +127,11 @@
         const yesterdayDate = yesterday.toISOString().split('T')[0];
 
         // Fetch data for different charts
-        fetchDataAndRenderChart(sensorId, today, today, "todayChart", "Today's Water Temperature", "blue");
-        fetchDataAndRenderChart(sensorId, yesterdayDate, yesterdayDate, "yesterdayChart", "Yesterday's Water Temperature", "green");
-        fetchDataAndRenderChart(sensorId, "2019-01-01", today, "fiveYearChart", "Last 5 Years Water Temperature", "red");
+        Promise.all([
+          fetchDataAndRenderChart(sensorId, today, today, "todayChart", "Today's Water Temperature", "blue"),
+          fetchDataAndRenderChart(sensorId, yesterdayDate, yesterdayDate, "yesterdayChart", "Yesterday's Water Temperature", "green"),
+          fetchDataAndRenderChart(sensorId, "2019-01-01", today, "fiveYearChart", "Last 5 Years Water Temperature", "red")
+        ])
       };
     </script>
   </body>

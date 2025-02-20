@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse
 from aquasensor_backend.templates import templates, static_files
 from aquasensor_backend.api import router as api_router
@@ -30,8 +30,8 @@ async def read_map(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("map.html", {"request": request})
 
 @app.get("/dataFunction.js")
-async def read_datfunc(request:Request) -> HTMLResponse:
-    return templates.TemplateResponse("dataFunction.js",{"request": request})
+async def read_datfunc(request:Request) -> Response:
+    return Response(templates.TemplateResponse("dataFunction.js",{"request": request}).body, media_type="application/javascript")
 
 @app.get("/test")
 async def read_test(request:Request) -> HTMLResponse:

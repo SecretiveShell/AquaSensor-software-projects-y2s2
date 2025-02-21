@@ -18,9 +18,13 @@ async def read_chart(request: Request) -> HTMLResponse:
 async def read_map(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("map.html", {"request": request})
 
-@router.get("/dataFunction.js")
+@router.get("/eSmoothing.js")
 async def read_datfunc(request:Request) -> Response:
-    return Response(templates.TemplateResponse("dataFunction.js",{"request": request}).body, media_type="application/javascript")
+    return Response(templates.TemplateResponse("eSmoothing.js",{"request": request}).body, media_type="application/javascript")
+
+@router.get("/dataLoading.js")
+async def read_datfunc(request:Request) -> Response:
+    return Response(templates.TemplateResponse("dataLoading.js",{"request": request}).body, media_type="application/javascript")
 
 @router.get("/test")
 async def read_test(request:Request) -> HTMLResponse:

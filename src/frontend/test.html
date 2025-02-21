@@ -8,7 +8,8 @@
 </style>
 <div id="map-section"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="{{ base_url }}/dataFunction.js"></script>
+<script src="{{ base_url }}/dataLoading.js"></script>
+<script src="{{ base_url }}/eSmoothing.js"></script>
 <script>
 	var map = L.map('map-section').setView([53.175537,-1.464475],11);
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -26,6 +27,8 @@
 			range.type="number";
 			range.min=1;
 			range.value=1;
+			range.onmouseover=function(){map.doubleClickZoom.disable();map.dragging.disable();}
+			range.onmouseleave=function(){map.doubleClickZoom.enable();map.dragging.enable();}
 			return range;
 		},
 		onRemove: function(map){
@@ -64,13 +67,13 @@
 		}],
 		series : [
 			{
-				name:'DO',
+				name:'Dissolved Oxygen',
 				type:'line',
 				smooth:false,
 				data:[]
 			},
 			{
-				name:'temp',
+				name:'Temperature',
 				type:'line',
 				smooth:false,
 				data:[]

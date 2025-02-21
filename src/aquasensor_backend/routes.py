@@ -45,3 +45,15 @@ async def read_reg(request:Request) -> HTMLResponse:
 @router.get("/login-homepage")
 async def read_authed_homepage(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("loginsuccess.html",{"request":request})
+
+@router.get("/aboutus")
+async def read_aboutus(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("aboutus.html",{"request":request})
+
+@router.get("/faq")
+async def read_faq(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("faq.html",{"request":request})
+
+@router.get("/privacy-policy")
+async def read_privacypolicy(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("privacy-policy.html",{"request":request})

@@ -19,7 +19,7 @@ services:
           action: sync
         - path: ./src/aquasensor_backend
           target: /src/aquasensor_backend
-          action: sync
+          action: sync+restart
   middleware:
     build: 
       context: .

@@ -41,7 +41,7 @@ button:active {
     margin: auto;
     padding: 0 30px;
     background-color: #fff;
-    border: 1px solid transparent; /* Removes margin collapse */
+    border: 1px solid transparent;
 }
 .m-0 {
     margin: 0;
@@ -54,8 +54,6 @@ button:active {
     height: 1px;
     overflow: hidden;
 }
- 
-/* Comment */
  
 .comment {
     position: relative;
@@ -96,9 +94,6 @@ button:active {
 .replies {
     margin-left: 20px;
 }
- 
-/* Adjustments for the comment border links */
- 
 .comment-border-link {
     display: block;
     position: absolute;
@@ -121,9 +116,6 @@ button:active {
 .replies {
     margin-left: 28px;
 }
- 
-/* Adjustments for toggleable comments */
- 
 details.comment summary {
     position: relative;
     list-style: none;
@@ -149,11 +141,7 @@ details.comment[open] .comment-heading::after {
 details.comment:not([open]) .comment-heading::after {
     content: "Click to show";
 }
- 
-/* Adjustment for Internet Explorer */
- 
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    /* Resets cursor, and removes prompt text on Internet Explorer */
     .comment-heading {
         cursor: default;
     }
@@ -162,9 +150,6 @@ details.comment:not([open]) .comment-heading::after {
         content: " ";
     }
 }
- 
-/* Styling the reply to comment form */
- 
 .reply-form textarea {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 16px;
@@ -181,6 +166,14 @@ details.comment:not([open]) .comment-heading::after {
   <body>
     <div class="main">
       <div class="content">
+        <div class="contactdata">
+            <h2>
+                You can contact AquaSensor at: 
+            </h2>
+            <p>
+
+            </p>
+        </div>
         <div class="comment-thread">
             <details open class="comment" id="comment-1">
                 <a href="#comment-1" class="comment-border-link">

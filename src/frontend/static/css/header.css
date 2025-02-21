@@ -48,11 +48,13 @@ img {
 }
 
 .side-top{
+	position:absolute;
+	top:35px;
 }
 
 .side-bottom{
 	position:absolute;
-	bottom:5px;
+	bottom:20px;
 }
 header .logo {
   max-height: 100px;
@@ -64,7 +66,7 @@ header .logo {
   width: 150px;
 }
 .sidenav {
-  height: 93vh;
+  height: 100vh;
   width: 0;
   position: fixed;
   z-index: 1001;
@@ -73,7 +75,6 @@ header .logo {
   background-color: rgb(42, 90, 107);
   overflow-x: hidden;
   transition: 0.5s;
-  padding-top: 60px;
 }
 
 .sidenav a {
@@ -97,6 +98,7 @@ header .logo {
   margin-left: 50px;
 }
 
+/*
 @media screen and (max-height: 450px) {
   .sidenav {
     padding-top: 15px;
@@ -104,6 +106,16 @@ header .logo {
   .sidenav a {
     font-size: 18px;
   }
+}*/
+@media screen and (max-width: 768px){
+	.sidenav a{
+		font-size: 10px;
+	}
+}
+@media screen and (max-width: 320px){
+	.sidenav a{
+		font-size: 18px;
+	}
 }
 /* Content */
 .body {

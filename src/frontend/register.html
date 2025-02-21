@@ -135,7 +135,7 @@ content %}
 		}
 		if(res["success"]==true){
 			window.sessionStorage.setItem("AquaSensorToken",res["token"]);
-			window.location.href = "{{ base_url }}/chart";
+			window.location.href = "{{ base_url }}/sensormap";
 			return;
 		}
 		alert("Registration failed");

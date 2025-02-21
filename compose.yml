@@ -8,7 +8,7 @@ services:
       - API_API_KEY=abc
       - CACHE_URL=redis://redis 
     ports:
-      - 8000:8000
+      - 80:8000
     develop:
       watch:
         - path: ./src

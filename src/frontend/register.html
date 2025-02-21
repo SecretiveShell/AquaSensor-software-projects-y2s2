@@ -1,6 +1,5 @@
 {% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
 content %}
-<html>
   <style>
     .form-container {
       min-height: 100vh;
@@ -75,12 +74,11 @@ content %}
       padding: 10px;
     }
   </style>
-  <body>
+
     <div class="page-container">
       <div class="form-container">
-        <form action="" method="post">
+        <form id="regform" method="none" action="javascript:void(0)">
           <h3>Register</h3>
-
           <input
             type="text"
             placeholder="Enter Username"
@@ -93,12 +91,61 @@ content %}
             name="password"
             required
           />
-          <input type="text" placeholder="Enter Email" name="email" required />
-          <input type="submit" name="submit" value="Login" class="form-btn" />
-          <p>Go back<a href="/"></a></p>
+          <input 
+	    type="text"
+	    placeholder="Enter Email"
+	    name="email"
+	    required
+	  />
+          <input
+	    type="submit"
+	    value="Submit"
+	    onclick="process()"
+	  />
         </form>
+	<script>
+	async function process(){
+		var f=new FormData(document.getElementById("regform"));
+
+		//validation
+		if(!(f.get("username") && f.get("password") && f.get("email"))){
+			alert("Please fill out all fields");
+		}
+
+		//
+		var req=await fetch('{{ base_url }}/api/v1/auth/register',{
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({"username":f.get("username"),"email":f.get("email"),"password":f.get("password")})
+		});
+		var res=await req.json();
+		if(res["success"]==false){
+			if(res["type"]=="string_too_short"){
+				alert("Password must be 16 characters");
+			}
+			/*
+			if(res["type"]=="duplicate_email"){
+				alert("Email in use");
+			}
+			*/
+			alert("Reistration failed");
+		}
+		if(res["success"]==true){
+			window.sessionStorage.setItem("AquaSensorToken",res["token"]);
+			window.location.href = "{{ base_url }}/chart";
+			return;
+		}
+		alert("Registration failed");
+		return;
+	}
+	</script>
+
+
       </div>
     </div>
-  </body>
-</html>
+
+
 {% endblock %}

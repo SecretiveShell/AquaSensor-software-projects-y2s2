@@ -114,7 +114,6 @@ content %}
     body: JSON.stringify({"username":f.get("username"),"password":f.get("password")})
    });
    var res=await req.json();
-   console.log(res);
    if(res["success"]==false){
     alert("login failed");
     return

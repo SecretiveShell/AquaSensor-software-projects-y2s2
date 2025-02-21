@@ -56,3 +56,7 @@ async def read_reg(request:Request) -> HTMLResponse:
 @app.get("/login-homepage")
 async def read_authed_homepage(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("loginsuccess.html",{"request":request})
+
+@app.exception_handler(404)
+async def read_404page(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("e404.html",{"request":request})

@@ -20,7 +20,7 @@ async function load(x, chartvar) {
   }
   let res = await call(x);
   
-  dates=eSmoothing(res.readings.map(index=>index.datetime));
+  dates=res.readings.map(index=>index.datetime);
   DO=eSmoothing(res.readings.map(index=>index.dissolved_oxygen));
   temp=eSmoothing(res.readings.map(index=>index.temperature));
   

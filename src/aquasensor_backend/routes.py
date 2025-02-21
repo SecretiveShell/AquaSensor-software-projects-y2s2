@@ -26,7 +26,7 @@ async def read_smooth(request:Request) -> Response:
 async def read_datfunc(request:Request) -> Response:
     return Response(templates.TemplateResponse("dataLoading.js",{"request": request}).body, media_type="application/javascript")
 
-@router.get("/test")
+@router.get("/sensormap")
 async def read_test(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("test.html",{"request":request})
 

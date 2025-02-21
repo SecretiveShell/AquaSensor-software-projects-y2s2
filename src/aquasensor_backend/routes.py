@@ -1,0 +1,39 @@
+from fastapi import APIRouter, Request, Response
+from fastapi.responses import HTMLResponse
+from aquasensor_backend.templates import templates
+
+router = APIRouter(include_in_schema=False)
+
+@router.get("/")
+async def read_root(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+@router.get("/chart")
+async def read_chart(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse("chart.html", {"request": request})
+
+
+@router.get("/map")
+async def read_map(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse("map.html", {"request": request})
+
+@router.get("/dataFunction.js")
+async def read_datfunc(request:Request) -> Response:
+    return Response(templates.TemplateResponse("dataFunction.js",{"request": request}).body, media_type="application/javascript")
+
+@router.get("/test")
+async def read_test(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("test.html",{"request":request})
+
+@router.get("/contact-us")
+async def read_contact(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("contactus.html",{"request":request})
+
+@router.get("/login")
+async def read_login(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("signin.html",{"request":request})
+
+@router.get("/login-homepage")
+async def read_authed_homepage(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("loginsuccess.html",{"request":request})

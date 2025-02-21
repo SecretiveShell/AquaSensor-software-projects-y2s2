@@ -36,7 +36,7 @@ async def read_login(request:Request) -> HTMLResponse:
 
 @router.get("/register")
 async def read_reg(request:Request) -> HTMLResponse:
-    return templates.TemplateRespone("register.html",{"request":request})
+    return templates.TemplateResponse("register.html",{"request":request})
 
 @router.get("/login-homepage")
 async def read_authed_homepage(request:Request) -> HTMLResponse:

@@ -32,7 +32,13 @@ async function load(x, chartvar) {
 		xAxis : [{
 			type: 'category',
 			boundaryGap:false,
-			data: dates
+			data: dates,
+			name: x,
+			nameGap: 0,
+			nameTextStyle: {
+				align:'center',
+				verticalAlign:'bottom'
+			}
 		}],
 		yAxis : [{
 			type: 'value'

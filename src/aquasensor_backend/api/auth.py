@@ -71,11 +71,20 @@ async def register(register: Register) -> RegisterResponse:
         password=hash_password(register.password),
     )
 
-    async with AsyncSessionLocal() as session:
-        session.add(new_user)
-        await session.commit()
+    try: 
+        async with AsyncSessionLocal() as session:
+            session.add(new_user)
+            await session.commit()
+    except Exception as e:
+        return RegisterResponse(success=False, failure_reason=str(e))
 
-    return RegisterResponse(success=True)
+
+    user = UserModel(username=register.username, email=register.email)
+    token = token_hex(128)
+
+    await cache.set(token, user, ttl=timedelta(days=1).total_seconds())
+
+    return RegisterResponse(success=True, token=token)
 
 
 @router.get("/logout")

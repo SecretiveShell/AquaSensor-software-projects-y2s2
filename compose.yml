@@ -4,8 +4,9 @@ services:
       context: .
       dockerfile: backend.Dockerfile
     environment:
-      - API_BASE_URL=http://middleware
+      - API_BASE_URL=http://middleware:8000
       - API_API_KEY=abc
+      - CACHE_URL=redis://redis 
     ports:
       - 8000:8000
     develop:
@@ -24,13 +25,11 @@ services:
       context: .
       dockerfile: middleware.Dockerfile
     env_file: ".env"
-    ports:
-      - 8001:8000
 
   redis:
     image: redis:8.0-M03-alpine
     volumes:
-      - red:/vol
+      - red:/data
     ports:
       - 6379:6379
       - 6380:6380

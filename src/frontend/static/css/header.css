@@ -1,6 +1,6 @@
 header {
   background: rgb(255, 255, 255);
-  height: 100px;
+  height: 9vh;
   width: 100%;
   display: flex;
   align-items: center;
@@ -16,9 +16,9 @@ header {
 }
 
 img {
-  border: 1px solid #ddd;
+  /*border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 5px;
+  padding: 5px;*/
   width: 150px;
 }
 .leaflet-tile {

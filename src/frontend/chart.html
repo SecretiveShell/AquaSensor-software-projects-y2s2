@@ -70,15 +70,16 @@
             xAxis: {
               type: 'category',
               data: xData,
-              name: 'Time'
+              name: 'Time',
+	      boundaryGap:false
             },
             yAxis: {
               type: 'value',
               name: 'Water Temperature (°C)'
             },
-	    dataZoom: {[
-		    type:'inside'
-	    ]},
+            dataZoom: [{
+		    type: 'inside'
+	    }],
             series: [{
               data: yData,
               type: 'line',

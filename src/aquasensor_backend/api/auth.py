@@ -24,6 +24,8 @@ from argon2 import PasswordHasher
 
 router = APIRouter()
 
+AUTH_TOKEN_TTL = timedelta(days=1).total_seconds()
+
 
 @router.post("/login")
 async def login(login: Login) -> LoginResponse:
@@ -56,7 +58,7 @@ async def login(login: Login) -> LoginResponse:
         user = UserModel(username=user.username, email=user.email)
         token = token_hex(128)
 
-        await cache.set(token, user, ttl=timedelta(days=1).total_seconds())
+        await cache.set(token, user, ttl=AUTH_TOKEN_TTL)
 
         return LoginResponse(success=True, token=token)
 
@@ -71,18 +73,20 @@ async def register(register: Register) -> RegisterResponse:
         password=hash_password(register.password),
     )
 
-    try: 
+    try:
         async with AsyncSessionLocal() as session:
             session.add(new_user)
             await session.commit()
-    except Exception as e:
-        return RegisterResponse(success=False, failure_reason=str(e))
 
+    except Exception:
+        return RegisterResponse(
+            success=False, failure_reason="This account already exists."
+        )
 
     user = UserModel(username=register.username, email=register.email)
     token = token_hex(128)
 
-    await cache.set(token, user, ttl=timedelta(days=1).total_seconds())
+    await cache.set(token, user, ttl=AUTH_TOKEN_TTL)
 
     return RegisterResponse(success=True, token=token)
 

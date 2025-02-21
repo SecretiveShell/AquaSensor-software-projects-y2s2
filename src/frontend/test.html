@@ -7,7 +7,6 @@
 }
 </style>
 <div id="map-section"></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="{{ base_url }}/dataLoading.js"></script>
 <script src="{{ base_url }}/eSmoothing.js"></script>
 <script>
@@ -44,11 +43,7 @@
 
 	L.marker([53.109518, -1.545122]).addTo(map).on('click',function(){load("sensor022",chart);});
 
-	var x = L.polyline([
-		[53.111059,-1.562336],
-		[53.110007,-1.559895],
-		[53.110307,-1.555075]
-	],{weight:5}).addTo(map).on('click',function(){load("sensor044",chart);});	
+	L.marker([53.110007,-1.559895]).addTo(map).on('click',function(){load("sensor044",chart);});	
 </script>
 
 <script src=" https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js "></script>

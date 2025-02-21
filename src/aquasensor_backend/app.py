@@ -41,9 +41,17 @@ async def read_test(request:Request) -> HTMLResponse:
 async def read_contact(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("contactus.html",{"request":request})
 
+@app.get("/aboutus")
+async def read_about(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("aboutus.html",{"request":request})
+
 @app.get("/login")
 async def read_login(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("signin.html",{"request":request})
+
+@app.get("/register")
+async def read_reg(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("register.html",{"request":request})
 
 @app.get("/login-homepage")
 async def read_authed_homepage(request:Request) -> HTMLResponse:

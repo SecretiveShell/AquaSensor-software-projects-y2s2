@@ -26,13 +26,17 @@ async def read_datfunc(request:Request) -> Response:
 async def read_test(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("test.html",{"request":request})
 
-@router.get("/contact-us")
+@router.get("/contactus")
 async def read_contact(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("contactus.html",{"request":request})
 
 @router.get("/login")
 async def read_login(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("signin.html",{"request":request})
+
+@router.get("/register")
+async def read_reg(request:Request) -> HTMLResponse:
+    return templates.TemplateRespone("register.html",{"request":request})
 
 @router.get("/login-homepage")
 async def read_authed_homepage(request:Request) -> HTMLResponse:

@@ -37,7 +37,7 @@ async def read_datfunc(request:Request) -> Response:
 async def read_test(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("test.html",{"request":request})
 
-@app.get("/contact-us")
+@app.get("/contactus")
 async def read_contact(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("contactus.html",{"request":request})
 

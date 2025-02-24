@@ -7,7 +7,7 @@ from api_middleware.models import (
     SensorStatusResponse,
     SensorReadingsResponse,
 )
-from api_middleware.functions import get_status, get_status_by_id
+from api_middleware.functions import get_status, get_status_by_id, get_sensor_ids as get_sensor_ids_function
 from api_middleware.historical import get_historical_data
 
 app = FastAPI(
@@ -50,3 +50,9 @@ async def get_sensor_readings_latest_by_id(sensorid: str) -> SensorStatus:
     """Get latest sensor readings by ID."""
 
     return await get_status_by_id(sensorid)
+
+@app.get("/sensors/ids", dependencies=[auth_required])
+async def get_sensor_ids() -> list:
+    """Get all sensor ids."""
+
+    return await get_sensor_ids_function()

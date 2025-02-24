@@ -1,3 +1,4 @@
+from aiocache import cached
 from fastapi import HTTPException
 from httpx import AsyncClient as Client
 from bs4 import BeautifulSoup
@@ -63,3 +64,11 @@ async def get_status_by_id(sensorid: str) -> dict:
             return sensor
 
     raise HTTPException(status_code=404, detail="Sensor not found")
+
+@cached()
+async def get_sensor_ids() -> list:
+    status = await get_status()
+    sensors = status["sensors"]
+    return [
+        {"id": sensor["id"], "name": sensor["name"]} for sensor in sensors
+    ]

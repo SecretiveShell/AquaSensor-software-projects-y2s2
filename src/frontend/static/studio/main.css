@@ -70,3 +70,31 @@ div#center-top > div#map {
     height: 100%;
     width: 100%;
 }
+
+@media only screen and (max-width: 768px) {
+    div#container {
+        flex-direction: column;
+    }
+
+    div#left, div#right {
+        width: 100%;
+        height: auto;
+    }
+
+    div#left-top, div#left-bottom, div#right-top, div#right-bottom {
+        height: auto;
+    }
+
+    div#center {
+        width: 100%;
+        height: auto;
+    }
+
+    div#center-top, div#center-bottom {
+        height: auto;
+    }
+
+    div#center-top > div#map {
+        height: 300px;
+    }
+}

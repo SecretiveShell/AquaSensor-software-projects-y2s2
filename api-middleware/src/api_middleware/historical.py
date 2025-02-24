@@ -25,42 +25,42 @@ async def get_historical_data(
                     status_code=response.status_code,
                     detail="Failed to retrieve data"
                 )
-        istream = response.aiter_bytes(1)
+        istream = response.aiter_text(1)
         for i in range(35):
-            await _ = next(istream)
+             _ = await anext(istream)
         dt=[]
         temperature=[]
         dissolved_oxygen=[]
         percentage=[]
         #begin stream process
-        while(None!=(buffer:=[next(istream,None)])[0]):
+        while(None!=(buffer:=[await anext(istream,None)])[0]):
             #datetime (left in aquasensor format in hopes they change it)
             for i in range(7):
-                await buffer+=[next(istream)]
-            await _=next(istream)
+                buffer+=[await anext(istream)]
+            _=await anext(istream)
             buffer+=["T"]
             for i in range(8):
-                await buffer+=[next(istream)]
+                buffer+=[await anext(istream)]
             dt+=[''.join(buffer)]
-            await _=next(istream)
+            _=await anext(istream)
 
             #temperature
             buffer=[]
-            await while(','!=(cbuffer:=next(istream))):
+            while(','!=(cbuffer:=await anext(istream))):
                 buffer+=[cbuffer]
-            temperature+=[''.join(buffer)]
+            temperature+=[float(''.join(buffer))]
 
             #dissolved oxygen
             buffer=[]
-            await while(','!=(cbuffer:=next(istream))):
+            while(','!=(cbuffer:=await anext(istream))):
                 buffer+=[cbuffer]
-            dissolved_oxygen+=[''.join(buffer)]
+            dissolved_oxygen+=[float(''.join(buffer))]
             
             #dissolved oxygen
             buffer=[]
-            await while('\n'!=(cbuffer:=next(istream))):
+            while('\n'!=(cbuffer:=await anext(istream))):
                 buffer+=[cbuffer]
-            percentage+=[''.join(buffer)]
+            percentage+=[float(''.join(buffer))]
         #end stream process 
   
    

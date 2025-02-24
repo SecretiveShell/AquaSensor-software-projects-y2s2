@@ -1,0 +1,31 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+div#container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+div#left {
+    width: 15cm;
+    height: 100%;
+    background-color: red;
+}
+
+div#center {
+    width: 100%;
+    height: 100%;
+    background-color: blue;
+}
+
+div#right {
+    width: 15cm;
+    height: 100%;
+    background-color: green;
+}

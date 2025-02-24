@@ -57,3 +57,7 @@ async def read_faq(request:Request) -> HTMLResponse:
 @router.get("/privacy-policy")
 async def read_privacypolicy(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("privacy-policy.html",{"request":request})
+
+@router.get("/studio")
+async def read_studio(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("studio.html",{"request":request})

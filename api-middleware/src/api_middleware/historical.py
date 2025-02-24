@@ -19,6 +19,8 @@ async def get_historical_data(
 
     print(url)
 
+
+    yearprefix=str(datetime.now().year)[:2]
     async with Client().stream(method="GET",url=url) as response:
         if response.status_code != 200:
             raise HTTPException(
@@ -37,11 +39,13 @@ async def get_historical_data(
             #datetime (left in aquasensor format in hopes they change it)
             for i in range(7):
                 buffer+=[await anext(istream)]
+            buffer[0],buffer[6]=buffer[6],buffer[0]
+            buffer[1],buffer[7]=buffer[7],buffer[1]
             _=await anext(istream)
             buffer+=["T"]
             for i in range(8):
                 buffer+=[await anext(istream)]
-            dt+=[''.join(buffer)]
+            dt+=[yearprefix+''.join(buffer)]
             _=await anext(istream)
 
             #temperature
@@ -51,9 +55,9 @@ async def get_historical_data(
                 buffer+=[cbuffer]
                 while(','!=(cbuffer:=await anext(istream))):
                     buffer+=[cbuffer]
-                temperature+=[float(''.join(buffer))]
+                temperature+=[''.join(buffer)]
             else:
-                temperature+=[0]
+                temperature+=[None]
                 _=await anext(istream)
                 _=await anext(istream)
                 _=await anext(istream)
@@ -65,9 +69,9 @@ async def get_historical_data(
                 buffer+=[cbuffer]
                 while(','!=(cbuffer:=await anext(istream))):
                     buffer+=[cbuffer]
-                dissolved_oxygen+=[float(''.join(buffer))]
+                dissolved_oxygen+=[''.join(buffer)]
             else:
-                dissolved_oxygen+=[0]
+                dissolved_oxygen+=[None]
                 _=await anext(istream)
                 _=await anext(istream)
                 _=await anext(istream)
@@ -79,16 +83,15 @@ async def get_historical_data(
                 buffer+=[cbuffer]
                 while('\n'!=(cbuffer:=await anext(istream))):
                     buffer+=[cbuffer]
-                percentage+=[float(''.join(buffer))]
+                percentage+=[''.join(buffer)]
             else:
-                percentage+=[0]
+                percentage+=[None]
                 _=await anext(istream)
                 _=await anext(istream)
                 _=await anext(istream)
 
         #end stream process 
-  
-   
+
 
     readings = []
     readings.append(

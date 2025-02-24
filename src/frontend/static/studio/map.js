@@ -9,18 +9,6 @@ L.tileLayer(
   }
 ).addTo(map);
 
-var legend = L.control({ position: "bottomright" });
-legend.onAdd = function (map) {
-  var div = L.DomUtil.create("div", "legend");
-  div.innerHTML += "<h4>Temperature</h4>";
-  div.innerHTML += '<i style="background: #313695"></i>15°C<br>';
-  div.innerHTML += '<i style="background: #74add1"></i>20°C<br>';
-  div.innerHTML += '<i style="background: #fee090"></i>25°C<br>';
-  div.innerHTML += '<i style="background: #d73027"></i>30°C<br>';
-  return div;
-};
-legend.addTo(map);
-
 function fetchRivers() {
   var bounds = map.getBounds();
   var minLat = bounds.getSouth();

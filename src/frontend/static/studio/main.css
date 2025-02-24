@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 html, body {
     width: 100%;
     height: 100%;
@@ -83,6 +87,87 @@ div#center-top > div#map {
     width: 100%;
     height: 250px; /* Ensuring ECharts has a valid height */
   }
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+div#container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+div#left {
+    width: 15cm;
+    height: 100%;
+    background-color: red;
+}
+
+div#left-top {
+    height: 50%;
+    width: 100%;
+    background-color: yellow;
+}
+
+div#left-bottom {
+    height: 50%;
+    width: 100%;
+    background-color: orange;
+}
+
+div#center {
+    width: 100%;
+    height: 100%;
+    background-color: blue;
+}
+
+div#center-top {
+    height: 80%;
+    width: 100%;
+    background-color: pink;
+}
+
+div#center-bottom {
+    height: 20%;
+    width: 100%;
+    background-color: purple;
+}
+
+div#right {
+    width: 15cm;
+    height: 100%;
+    background-color: green;
+}
+
+div#right-top {
+    height: 50%;
+    width: 100%;
+    background-color: cyan;
+}
+
+div#right-bottom {
+    height: 50%;
+    width: 100%;
+    background-color: brown;
+}
+
+div#center-top > div#map {
+    height: 100%;
+    width: 100%;
+}
+
+div#left > div, div#center > div, div#right > div {
+    border: 2px solid black;
+}
 
 @media only screen and (max-width: 768px) {
     div#container {

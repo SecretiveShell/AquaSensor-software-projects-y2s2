@@ -46,21 +46,46 @@ async def get_historical_data(
 
             #temperature
             buffer=[]
-            while(','!=(cbuffer:=await anext(istream))):
+            cbuffer=await anext(istream)
+            if cbuffer!='N':
                 buffer+=[cbuffer]
-            temperature+=[float(''.join(buffer))]
+                while(','!=(cbuffer:=await anext(istream))):
+                    buffer+=[cbuffer]
+                temperature+=[float(''.join(buffer))]
+            else:
+                temperature+=[0]
+                _=await anext(istream)
+                _=await anext(istream)
+                _=await anext(istream)
 
             #dissolved oxygen
             buffer=[]
-            while(','!=(cbuffer:=await anext(istream))):
+            cbuffer=await anext(istream)
+            if cbuffer!='N':
                 buffer+=[cbuffer]
-            dissolved_oxygen+=[float(''.join(buffer))]
+                while(','!=(cbuffer:=await anext(istream))):
+                    buffer+=[cbuffer]
+                dissolved_oxygen+=[float(''.join(buffer))]
+            else:
+                dissolved_oxygen+=[0]
+                _=await anext(istream)
+                _=await anext(istream)
+                _=await anext(istream)
             
             #dissolved oxygen
             buffer=[]
-            while('\n'!=(cbuffer:=await anext(istream))):
-                buffer+=[cbuffer]
-            percentage+=[float(''.join(buffer))]
+            cbuffer=await anext(istream)
+            if cbuffer!='N':
+                buffer=+[cbuffer]
+                while('\n'!=(cbuffer:=await anext(istream))):
+                    buffer+=[cbuffer]
+                percentage+=[float(''.join(buffer))]
+            else:
+                percentage+=[0]
+                _=await anext(istream)
+                _=await anext(istream)
+                _=await anext(istream)
+
         #end stream process 
   
    

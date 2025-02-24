@@ -76,7 +76,7 @@ async def get_historical_data(
             buffer=[]
             cbuffer=await anext(istream)
             if cbuffer!='N':
-                buffer=+[cbuffer]
+                buffer+=[cbuffer]
                 while('\n'!=(cbuffer:=await anext(istream))):
                     buffer+=[cbuffer]
                 percentage+=[float(''.join(buffer))]

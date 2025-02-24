@@ -6,9 +6,12 @@ services:
     environment:
       - API_BASE_URL=http://middleware:8000
       - API_API_KEY=abc
-      - CACHE_URL=redis://redis 
+      - CACHE_URL=redis://redis
+    networks:
+      - public
+      - private
     ports:
-      - 80:8000
+      - 8000:8000
     develop:
       watch:
         - path: ./src
@@ -20,18 +23,31 @@ services:
         - path: ./src/aquasensor_backend
           target: /src/aquasensor_backend
           action: sync+restart
+
   middleware:
-    build: 
+    build:
       context: .
       dockerfile: middleware.Dockerfile
+    networks:
+      - private
+    environment:
+      - MIDDLEWARE_API_KEY=abc
     env_file: ".env"
 
   redis:
     image: redis:8.0-M03-alpine
     volumes:
       - red:/data
+    networks:
+      - private
     ports:
       - 6379:6379
-      - 6380:6380
+
 volumes:
   red:
+
+networks:
+  public:
+    external: false
+  private:
+    external: false

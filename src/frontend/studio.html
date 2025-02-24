@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="static/studio/main.css" />
+
+    <!-- for the map in the center -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+    <script src="/static/studio/map.js" defer></script>
+    <!-- end of map -->
   </head>
   <body>
     <div id="container">
@@ -13,7 +23,9 @@
         <div id="left-bottom"></div>
       </div>
       <div id="center">
-        <div id="center-top"></div>
+        <div id="center-top">
+            <div id="map"></div>
+        </div>
         <div id="center-bottom"></div>
       </div>
       <div id="right">

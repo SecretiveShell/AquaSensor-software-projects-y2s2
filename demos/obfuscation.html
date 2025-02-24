@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map - Sheffield, UK</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; width: 100%; }
+        .legend {
+            padding: 6px 8px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            line-height: 24px;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+        .legend .circle {
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            margin-top: 7px;
+        }
+        .legend .line {
+            height: 3px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Define a better color scheme with high contrast colors
+        const colors = {
+            grid: "#000",         // Light gray for grid lines
+            river: "#0078FF",        // Bright blue for river
+            riverNode: "#FF3300",    // Bright red for river nodes
+            gridCenter: "#FF9500",   // Bright orange for grid centers
+            centerToNode: "#9500FF", // Bright purple for center-to-node connection
+            centerToRiver: "#00CC00" // Bright green for center-to-river connection
+        };
+        
+        // Start with a better zoom level
+        var map = L.map('map').setView([53.3811, -1.4701], 15);
+
+        // Use a clearer base map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add legend
+        function addLegend() {
+            const legend = L.control({position: 'bottomright'});
+            
+            legend.onAdd = function(map) {
+                const div = L.DomUtil.create('div', 'legend');
+                div.innerHTML = `
+                    <div><i class="line" style="background: ${colors.grid}"></i>Grid Cell</div>
+                    <div><i class="line" style="background: ${colors.river}"></i>River Sheaf</div>
+                    <div><i class="circle" style="background: ${colors.riverNode}"></i>River Node</div>
+                    <div><i class="circle" style="background: ${colors.gridCenter}"></i>Grid Center</div>
+                    <div><i class="line" style="background: ${colors.centerToNode}"></i>Center-to-Node</div>
+                    <div><i class="line" style="background: ${colors.centerToRiver}"></i>Center-to-River</div>
+                `;
+                return div;
+            };
+            
+            legend.addTo(map);
+        }
+        
+        // Improved grid function with thinner lines
+        function drawGrid() {
+            // Remove old grid before drawing new one
+            map.eachLayer(function(layer) {
+                if (layer._gridRect) {
+                    map.removeLayer(layer);
+                }
+            });
+            
+            var bounds = map.getBounds();
+            var southWest = bounds.getSouthWest();
+            var northEast = bounds.getNorthEast();
+            var gridSize = 0.001;
+            
+            for (var lat = Math.floor(southWest.lat / gridSize) * gridSize; lat < northEast.lat; lat += gridSize) {
+                for (var lng = Math.floor(southWest.lng / gridSize) * gridSize; lng < northEast.lng; lng += gridSize) {
+                    const rect = L.rectangle([
+                        [lat, lng],
+                        [lat + gridSize, lng + gridSize]
+                    ], {
+                        color: colors.grid,
+                        weight: 0.5,
+                        fill: false,
+                        opacity: 0.6
+                    }).addTo(map);
+                    
+                    // Mark this as a grid rectangle for later removal
+                    rect._gridRect = true;
+                }
+            }
+        }
+
+        map.on('zoomend moveend', drawGrid);
+        
+        function fetchRiverSheaf() {
+            var query = `[out:json];
+                way["waterway"="river"][name="River Sheaf"](53.35,-1.50,53.40,-1.45);
+                (._;>;);
+                out body;`;
+            
+            var url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(query);
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // First collect all nodes and their coordinates
+                    let nodes = {};
+                    data.elements.forEach(element => {
+                        if (element.type === "node") {
+                            nodes[element.id] = [element.lat, element.lon];
+                        }
+                    });
+                    
+                    // Then find ways and process each way separately
+                    let riverSegments = [];
+                    data.elements.forEach(element => {
+                        if (element.type === "way" && element.tags && 
+                            element.tags.waterway === "river" && 
+                            element.tags.name === "River Sheaf") {
+                            // Create a segment for this way
+                            let segment = [];
+                            element.nodes.forEach(nodeId => {
+                                if (nodes[nodeId]) {
+                                    segment.push(nodes[nodeId]);
+                                }
+                            });
+                            if (segment.length > 0) {
+                                riverSegments.push(segment);
+                            }
+                        }
+                    });
+                    
+                    // Draw each river segment separately with improved style
+                    riverSegments.forEach(segment => {
+                        L.polyline(segment, { 
+                            color: colors.river, 
+                            weight: 4,
+                            opacity: 0.8
+                        }).addTo(map);
+                    });
+                    
+                    // Track which points should be visible (those connected to grid centers)
+                    let visiblePoints = new Set();
+                    
+                    // Process grid centers for each point in each segment
+                    let gridCenters = new Map();
+                    riverSegments.forEach(segment => {
+                        segment.forEach(point => {
+                            var gridSize = 0.001;
+                            var centerLat = Math.floor(point[0] / gridSize) * gridSize + gridSize / 2;
+                            var centerLng = Math.floor(point[1] / gridSize) * gridSize + gridSize / 2;
+                            var gridCenter = [centerLat, centerLng];
+                            
+                            let gridKey = `${centerLat}_${centerLng}`;
+                            if (!gridCenters.has(gridKey)) {
+                                gridCenters.set(gridKey, gridCenter);
+                                L.circleMarker(gridCenter, {
+                                    color: 'black',
+                                    fillColor: colors.gridCenter,
+                                    radius: 6,
+                                    weight: 1,
+                                    fill: true,
+                                    fillOpacity: 1
+                                }).addTo(map).bindPopup('Grid Center');
+                                
+                                // Mark this point as visible and draw line from point to grid center
+                                visiblePoints.add(point.toString());
+                                L.polyline([point, gridCenter], { 
+                                    color: colors.centerToNode, 
+                                    weight: 2,
+                                    dashArray: '5, 5',
+                                    opacity: 0.7
+                                }).addTo(map);
+                                
+                                // For each grid center, find closest point on its segment
+                                let closestPoint = getClosestPointOnSegment(gridCenter, segment);
+                                if (closestPoint) {
+                                    L.polyline([gridCenter, closestPoint], { 
+                                        color: colors.centerToRiver, 
+                                        weight: 2,
+                                        opacity: 0.8 
+                                    }).addTo(map);
+                                }
+                            }
+                        });
+                    });
+                    
+                    // Only draw river nodes that connect to grid centers
+                    riverSegments.forEach(segment => {
+                        segment.forEach(point => {
+                            if (visiblePoints.has(point.toString())) {
+                                L.circleMarker(point, {
+                                    color: 'black',
+                                    fillColor: colors.riverNode,
+                                    radius: 5,
+                                    weight: 1,
+                                    fill: true,
+                                    fillOpacity: 1
+                                }).addTo(map).bindPopup('River Node');
+                            }
+                        });
+                    });
+                    
+                    // Pan to river if found
+                    if (riverSegments.length > 0 && riverSegments[0].length > 0) {
+                        const allPoints = riverSegments.flat();
+                        const bounds = L.latLngBounds(allPoints);
+                        map.fitBounds(bounds, { padding: [50, 50] });
+                    }
+                })
+                .catch(error => console.error("Error fetching OSM data:", error));
+        }
+        
+        function getClosestPointOnSegment(point, linePoints) {
+            let closestDist = Infinity;
+            let closestPoint = null;
+            
+            for (let i = 0; i < linePoints.length - 1; i++) {
+                let segmentStart = linePoints[i];
+                let segmentEnd = linePoints[i + 1];
+                let interpolatedPoint = projectPointOnSegment(point, segmentStart, segmentEnd);
+                let dist = distance(point, interpolatedPoint);
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestPoint = interpolatedPoint;
+                }
+            }
+            return closestPoint;
+        }
+
+        function projectPointOnSegment(p, a, b) {
+            let ap = [p[0] - a[0], p[1] - a[1]];
+            let ab = [b[0] - a[0], b[1] - a[1]];
+            let ab2 = ab[0] * ab[0] + ab[1] * ab[1];
+            let ap_ab = ap[0] * ab[0] + ap[1] * ab[1];
+            let t = Math.max(0, Math.min(1, ap_ab / ab2));
+            return [a[0] + t * ab[0], a[1] + t * ab[1]];
+        }
+
+        function distance(a, b) {
+            return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2);
+        }
+        
+        // Initialize
+        drawGrid();
+        fetchRiverSheaf();
+        addLegend();
+    </script>
+</body>
+</html>

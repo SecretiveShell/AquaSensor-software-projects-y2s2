@@ -51,7 +51,7 @@ async def get_sensor_readings_latest_by_id(sensorid: str) -> SensorStatus:
 
     return await get_status_by_id(sensorid)
 
-@app.get("/sensors/ids", dependencies=[auth_required])
+@app.get("/sensors/list", dependencies=[auth_required])
 async def get_sensor_ids() -> list:
     """Get all sensor ids."""
 

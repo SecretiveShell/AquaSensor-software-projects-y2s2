@@ -30,7 +30,7 @@ async def get_historical_data(
             )
         istream = response.aiter_text(1)
         for i in range(35):
-            _ = await anext(istream)
+            await anext(istream)
 
         # begin stream process
         while None != (buffer := [await anext(istream, None)])[0]:
@@ -39,12 +39,12 @@ async def get_historical_data(
                 buffer += [await anext(istream)]
             buffer[0], buffer[6] = buffer[6], buffer[0]
             buffer[1], buffer[7] = buffer[7], buffer[1]
-            _ = await anext(istream)
+            await anext(istream)
             buffer += ["T"]
             for i in range(8):
                 buffer += [await anext(istream)]
             dt = yearprefix + "".join(buffer)
-            _ = await anext(istream)
+            await anext(istream)
 
             # temperature
             buffer = []
@@ -56,9 +56,9 @@ async def get_historical_data(
                 temperature = "".join(buffer)
             else:
                 temperature += None
-                _ = await anext(istream)
-                _ = await anext(istream)
-                _ = await anext(istream)
+                await anext(istream)
+                await anext(istream)
+                await anext(istream)
 
             # dissolved oxygen
             buffer = []
@@ -70,9 +70,9 @@ async def get_historical_data(
                 dissolved_oxygen = "".join(buffer)
             else:
                 dissolved_oxygen = None
-                _ = await anext(istream)
-                _ = await anext(istream)
-                _ = await anext(istream)
+                await anext(istream)
+                await anext(istream)
+                await anext(istream)
 
             # dissolved oxygen
             buffer = []
@@ -84,9 +84,9 @@ async def get_historical_data(
                 percentage = "".join(buffer)
             else:
                 percentage = None
-                _ = await anext(istream)
-                _ = await anext(istream)
-                _ = await anext(istream)
+                await anext(istream)
+                await anext(istream)
+                await anext(istream)
 
             readings.append(
                 {

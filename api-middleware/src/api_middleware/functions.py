@@ -65,10 +65,11 @@ async def get_status_by_id(sensorid: str) -> dict:
 
     raise HTTPException(status_code=404, detail="Sensor not found")
 
+
 @cached()
 async def get_sensor_ids() -> list:
     status = await get_status()
     sensors = status["sensors"]
-    return [
-        {"id": sensor["id"], "name": sensor["name"]} for sensor in sensors
-    ]
+    return {
+        "sensors": [{"id": sensor["id"], "name": sensor["name"]} for sensor in sensors]
+    }

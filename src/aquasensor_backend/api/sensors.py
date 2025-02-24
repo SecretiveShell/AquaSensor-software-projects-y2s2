@@ -2,6 +2,7 @@ from datetime import datetime
 from fastapi import APIRouter
 from aquasensor_backend.security import get_logged_in_user_depends
 from aquasensor_backend.models.sensor import (
+    SensorListResponse,
     SensorStatus,
     SensorStatusResponse,
     SensorReadingsResponse,
@@ -67,5 +68,14 @@ async def get_sensor_readings_latest_by_id(
         response = await client.get(
             API_BASE_URL + f"/sensors/{sensorid}/readings/latest"
         )
+
+    return response.json()
+
+@router.get("/list")
+async def get_sensor_ids() -> SensorListResponse:
+    """Get all sensor ids."""
+
+    async with Client(headers={"api-key": API_API_KEY}) as client:
+        response = await client.get(API_BASE_URL + "/sensors/list")
 
     return response.json()

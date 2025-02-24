@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from api_middleware.downstream_auth import auth_required
 from api_middleware.models import (
     HealthCheckResponse,
+    SensorListResponse,
     SensorStatus,
     SensorStatusResponse,
     SensorReadingsResponse,
@@ -52,7 +53,7 @@ async def get_sensor_readings_latest_by_id(sensorid: str) -> SensorStatus:
     return await get_status_by_id(sensorid)
 
 @app.get("/sensors/list", dependencies=[auth_required])
-async def get_sensor_ids() -> list:
+async def get_sensor_ids() -> SensorListResponse:
     """Get all sensor ids."""
 
     return await get_sensor_ids_function()

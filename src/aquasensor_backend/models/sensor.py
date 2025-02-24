@@ -89,3 +89,17 @@ class SensorReadingsRequest(BaseModel):
             description="End datetime (ISO 8601) for filtering readings.",
         ),
     ]
+
+class Sensor(BaseModel):
+    """Model representing a single sensor."""
+
+    id: Annotated[str, Field(description="Unique sensor identifier.")]
+    name: Annotated[str, Field(description="Name or location of the sensor.")]
+
+class SensorListResponse(BaseModel):
+    """Response model for sensor list API."""
+
+    sensors: Annotated[
+        List[Sensor],
+        Field(description="List of sensors"),
+    ]

@@ -19,44 +19,60 @@ async def get_historical_data(
 
     print(url)
 
-    async with Client() as client:
-        response = await client.get(url)
+    async with Client().stream(method="GET",url=url) as response:
+        if response.status_code != 200:
+            raise HTTPException(
+                    status_code=response.status_code,
+                    detail="Failed to retrieve data"
+                )
+        istream = response.aiter_bytes(1)
+        for i in range(35):
+            await _ = next(istream)
+        dt=[]
+        temperature=[]
+        dissolved_oxygen=[]
+        percentage=[]
+        #begin stream process
+        while(None!=(buffer:=[next(istream,None)])[0]):
+            #datetime (left in aquasensor format in hopes they change it)
+            for i in range(7):
+                await buffer+=[next(istream)]
+            await _=next(istream)
+            buffer+=["T"]
+            for i in range(8):
+                await buffer+=[next(istream)]
+            dt+=[''.join(buffer)]
+            await _=next(istream)
 
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=response.status_code,
-            detail="Failed to retrieve historical data",
-        )
+            #temperature
+            buffer=[]
+            await while(','!=(cbuffer:=next(istream))):
+                buffer+=[cbuffer]
+            temperature+=[''.join(buffer)]
 
-    raw_data = response.text
-    data = raw_data.split("\n")
-    data = data[1:]
+            #dissolved oxygen
+            buffer=[]
+            await while(','!=(cbuffer:=next(istream))):
+                buffer+=[cbuffer]
+            dissolved_oxygen+=[''.join(buffer)]
+            
+            #dissolved oxygen
+            buffer=[]
+            await while('\n'!=(cbuffer:=next(istream))):
+                buffer+=[cbuffer]
+            percentage+=[''.join(buffer)]
+        #end stream process 
+  
+   
 
     readings = []
-    for row in data:
-        if row == "":
-            continue
-
-        row = row.split(",")
-
-        for i in range(len(row)):
-            row[i] = row[i].strip()
-
-        dt = datetime.strptime(f"{row[0]} {row[1]}", r"%d-%m-%y %H:%M:%S")
-
-        temperature = row[2] if row[2] and not isnan(float(row[2])) else None
-        dissolved_oxygen = row[3] if row[3] and not isnan(float(row[3])) else None
-        dissolved_oxygen_percent = (
-            row[4] if row[4] and not isnan(float(row[4])) else None
-        )
-
-        readings.append(
-            {
-                "datetime": dt,
-                "temperature": temperature,
-                "dissolved_oxygen": dissolved_oxygen,
-                "dissolved_oxygen_percent": dissolved_oxygen_percent,
-            }
-        )
+    readings.append(
+        {
+            "datetime": dt,
+            "temperature": temperature,
+            "dissolved_oxygen": dissolved_oxygen,
+            "dissolved_oxygen_percent": percentage,
+        }
+    )
 
     return {"readings": readings}

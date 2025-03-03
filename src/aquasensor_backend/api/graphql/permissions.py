@@ -9,10 +9,12 @@ class IsAuthenticated(BasePermission):
     message = "User is not authenticated"
 
     # This method can also be async!
-    def has_permission(
+    async def has_permission(
         self, source: typing.Any, info: strawberry.Info, **kwargs
     ) -> bool:
         
+        info.context["user"] = None
+
         request: Request = info.context.get("request")
         
         # this should never happen
@@ -25,6 +27,8 @@ class IsAuthenticated(BasePermission):
             return False
         
         # check if the api key is valid
-        user = get_logged_in_user(api_key)
+        user = await get_logged_in_user(api_key)
+
+        info.context["user"] = user
 
         return user

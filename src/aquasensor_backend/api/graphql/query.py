@@ -5,6 +5,7 @@ from strawberry.permission import PermissionExtension
 from loguru import logger
 
 from aquasensor_backend.config import API_API_KEY, API_BASE_URL
+from aquasensor_backend.models.auth import UserModel
 from aquasensor_backend.security import create_login_session, create_user_account, validate_username_password
 from .types import (
     AuthResponse,
@@ -104,6 +105,14 @@ class Query:
         ]
 
     @strawberry.field(extensions=[PermissionExtension(permissions=[IsAuthenticated()])])
-    async def user(self, token: str) -> Optional[User]:
+    async def user(self, info: strawberry.Info) -> Optional[User]:
         """Retrieves user details for the given authentication token."""
-        return User(username="mock_user", email="user@example.com")
+
+        user: UserModel = info.context["user"]
+        if not user:
+            return None
+
+        return User(
+            username=user.username,
+            email=str(user.email)
+        )

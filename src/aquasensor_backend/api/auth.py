@@ -1,4 +1,3 @@
-from datetime import timedelta
 from typing import Annotated
 
 from sqlalchemy import select, update
@@ -14,17 +13,16 @@ from aquasensor_backend.models.auth import (
     UserModel,
 )
 from aquasensor_backend.security import (
+    create_login_session,
+    create_user_account,
     hash_password,
     get_logged_in_user_depends,
     api_key_header,
 )
-from secrets import token_hex
 
 from argon2 import PasswordHasher
 
 router = APIRouter()
-
-AUTH_TOKEN_TTL = timedelta(days=1).total_seconds()
 
 
 @router.post("/login")
@@ -55,10 +53,7 @@ async def login(login: Login) -> LoginResponse:
             )
             await session.execute(up)
 
-        user = UserModel(username=user.username, email=user.email)
-        token = token_hex(128)
-
-        await cache.set(token, user, ttl=AUTH_TOKEN_TTL)
+        token = await create_login_session(user.username, user.email)
 
         return LoginResponse(success=True, token=token)
 
@@ -67,26 +62,12 @@ async def login(login: Login) -> LoginResponse:
 async def register(register: Register) -> RegisterResponse:
     """register a new user account"""
 
-    new_user = Users(
-        username=register.username,
-        email=register.email,
-        password=hash_password(register.password),
-    )
-
-    try:
-        async with AsyncSessionLocal() as session:
-            session.add(new_user)
-            await session.commit()
-
-    except Exception:
-        return RegisterResponse(
-            success=False, failure_reason="This account already exists."
-        )
-
-    user = UserModel(username=register.username, email=register.email)
-    token = token_hex(128)
-
-    await cache.set(token, user, ttl=AUTH_TOKEN_TTL)
+    success = await create_user_account(register.username, register.email, register.password)
+    
+    if not success:
+        return RegisterResponse(success=False, failure_reason="Username already taken.")
+    
+    token = await create_login_session(register.username, register.email)
 
     return RegisterResponse(success=True, token=token)
 

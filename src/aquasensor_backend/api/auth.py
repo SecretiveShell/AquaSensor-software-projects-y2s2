@@ -18,6 +18,7 @@ from aquasensor_backend.security import (
     hash_password,
     get_logged_in_user_depends,
     api_key_header,
+    validate_username_password,
 )
 
 from argon2 import PasswordHasher
@@ -28,34 +29,14 @@ router = APIRouter()
 @router.post("/login")
 async def login(login: Login) -> LoginResponse:
     """log in to your account and return a token"""
-    async with AsyncSessionLocal() as session:
-        stmt = select(Users).where(Users.username == login.username)
-        result = await session.execute(stmt)
-        user = result.scalars().first()
 
-        if user is None:
-            return LoginResponse(
-                success=False, failure_reason="Invalid username or password."
-            )
+    valid, message, email = validate_username_password(login.username, login.password)
 
-        # use compare_digest to prevent timing attacks
-        p = PasswordHasher()
-        try:
-            p.verify(user.password, login.password)
-        except Exception:
-            return LoginResponse(
-                success=False, failure_reason="Invalid username or password."
-            )
-        if p.check_needs_rehash(user.password):
-            h = p.hash(login.password)
-            up = (
-                update(Users).where(Users.username == login.username).values(password=h)
-            )
-            await session.execute(up)
-
-        token = await create_login_session(user.username, user.email)
-
+    if valid:
+        token = await create_login_session(login.username, email)
         return LoginResponse(success=True, token=token)
+    
+    return LoginResponse(success=False, message=message)
 
 
 @router.post("/register")

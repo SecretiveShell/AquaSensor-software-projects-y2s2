@@ -7,6 +7,7 @@ from argon2 import PasswordHasher
 from fastapi.security import APIKeyHeader
 from typing import Annotated
 from fastapi import Depends, HTTPException
+from sqlalchemy import select, update
 
 from aquasensor_backend.ORM import AsyncSessionLocal, Users
 from aquasensor_backend.cache import cache
@@ -75,3 +76,30 @@ async def create_user_account(username: str, email: str, password: str):
         return False
     
     return True
+
+async def validate_username_password(username: str, password: str) -> tuple[bool, str, str]:
+    """validate a username and password"""
+
+    async with AsyncSessionLocal() as session:
+        stmt = select(Users).where(Users.username == username)
+        result = await session.execute(stmt)
+        user = result.scalars().first()
+
+    if user is None:
+        return False, "Invalid username or password.", None
+
+    # use compare_digest to prevent timing attacks
+    p = PasswordHasher()
+    try:
+        p.verify(user.password, password)
+    except Exception:
+        return False, "Invalid username or password.", None
+    
+    if p.check_needs_rehash(user.password):
+        hash = p.hash(password)
+        up = (
+            update(Users).where(Users.username == username).values(password=hash)
+        )
+        await session.execute(up)
+
+    return True, "", user.email

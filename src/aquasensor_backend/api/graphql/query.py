@@ -1,8 +1,11 @@
 from datetime import datetime, timezone
+import httpx
 import strawberry
 from strawberry.permission import PermissionExtension
+from loguru import logger
 
-from aquasensor_backend.security import create_login_session, create_user_account
+from aquasensor_backend.config import API_API_KEY, API_BASE_URL
+from aquasensor_backend.security import create_login_session, create_user_account, validate_username_password
 from .types import (
     AuthResponse,
     Credentials,
@@ -29,11 +32,16 @@ class Query:
     async def login(self, credentials: Credentials) -> AuthResponse:
         """Authenticates a user and returns a token."""
 
-        try: 
-            token = await create_login_session(credentials.username, credentials.password)
-            return AuthResponse(success=True, token=token)
-        except Exception:
-            return AuthResponse(success=False, failure_reason="Invalid username or password.")
+        try:
+            valid, message, email = await validate_username_password(credentials.username, credentials.password)
+            if valid:
+                token = await create_login_session(credentials.username, email)
+                return AuthResponse(success=True, token=token)
+            else:
+                return AuthResponse(success=False, message=message)
+        except Exception as e:
+            logger.error(e)
+            return AuthResponse(success=False, message="Invalid username or password.")
 
     @strawberry.field
     async def register(self, registration: Registration) -> AuthResponse:
@@ -41,7 +49,7 @@ class Query:
         success = await create_user_account(registration.username, registration.email, registration.password)
 
         if not success:
-            return AuthResponse(success=False, failure_reason="Account already exists.")
+            return AuthResponse(success=False, message="Account already exists.")
 
         token = await create_login_session(registration.username, registration.email)
 
@@ -55,22 +63,23 @@ class Query:
     @strawberry.field(extensions=[PermissionExtension(permissions=[IsAuthenticated()])])
     async def sensors(self) -> List[Sensor]:
         """Retrieves all available sensors."""
-        return [
-            Sensor(id="1", name="Temperature Sensor"),
-            Sensor(id="2", name="Oxygen Sensor")
-        ]
+        async with httpx.AsyncClient(headers={"api-key": API_API_KEY}) as client:
+            response = await client.get(f"{API_BASE_URL}/sensors/list")
+            data = response.json()
+
+        return [Sensor(**sensor) for sensor in data["sensors"]]
 
     @strawberry.field(extensions=[PermissionExtension(permissions=[IsAuthenticated()])])
     async def sensor_status(self, sensor_id: str) -> Optional[SensorStatus]:
         """Fetches the real-time status of a specified sensor."""
-        return SensorStatus(
-            id=sensor_id,
-            name=f"Sensor {sensor_id}",
-            timestamp=current_utc_datetime(),
-            temperature=25.0,
-            dissolved_oxygen=0.5,
-            oxygen_saturation=50.0
-        )
+        async with httpx.AsyncClient(headers={"api-key": API_API_KEY}) as client:
+            response = await client.get(f"{API_BASE_URL}/sensors/{sensor_id}/status")
+            data: dict = response.json()
+
+        data["timestamp"] = data.pop("datetime")
+        data["oxygen_saturation"] = data.pop("dissolved_oxygen_percent")
+
+        return SensorStatus(**data)
 
     @strawberry.field(extensions=[PermissionExtension(permissions=[IsAuthenticated()])])
     async def latest_sensor_reading(self, sensor_id: str) -> Optional[SensorReading]:

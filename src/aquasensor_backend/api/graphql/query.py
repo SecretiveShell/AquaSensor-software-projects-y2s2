@@ -77,7 +77,7 @@ class Query:
             response = await client.get(f"{API_BASE_URL}/sensors/{sensor_id}/status")
             data: dict = response.json()
 
-        data["timestamp"] = data.pop("datetime")
+        data["timestamp"] = datetime.fromisoformat(data.pop("datetime"))
         data["oxygen_saturation"] = data.pop("dissolved_oxygen_percent")
 
         return SensorStatus(**data)

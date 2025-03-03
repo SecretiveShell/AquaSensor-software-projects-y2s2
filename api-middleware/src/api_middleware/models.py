@@ -19,7 +19,7 @@ class SensorStatus(BaseModel):
         datetime, Field(description="Timestamp of the latest reading (ISO 8601).")
     ]
     temperature: Annotated[
-        str | None,
+        float | None,
         Field(description="Temperature recorded by the sensor (e.g., '5.12C')."),
     ]
     dissolved_oxygen: Annotated[

@@ -20,6 +20,7 @@ dependencies = [
     "pydantic[email]>=2.10.6",
     "sqlalchemy>=2.0.37",
     "sqlalchemy-utils>=0.41.2",
+    "strawberry-graphql[fastapi]>=0.261.1",
     "uvicorn>=0.34.0",
 ]
 

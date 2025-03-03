@@ -8,13 +8,7 @@ from aquasensor_backend.models.sensor import (
     SensorReadingsResponse,
 )
 from httpx import AsyncClient as Client
-from os import getenv
-
-API_BASE_URL = getenv("API_BASE_URL")
-assert API_BASE_URL, "API_BASE_URL environment variable is not set."
-
-API_API_KEY = getenv("API_API_KEY")
-assert API_API_KEY, "API_API_KEY environment variable is not set."
+from aquasensor_backend.config import API_BASE_URL, API_API_KEY
 
 router = APIRouter()
 

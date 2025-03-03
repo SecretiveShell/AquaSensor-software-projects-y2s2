@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Response
 from fastapi.responses import HTMLResponse
 from aquasensor_backend.templates import templates
+from user-agents import parse
 
 router = APIRouter(include_in_schema=False)
 
@@ -60,8 +61,12 @@ async def read_privacypolicy(request:Request) -> HTMLResponse:
 
 @router.get("/studio")
 async def read_studio(request:Request) -> HTMLResponse:
+    uaString=request.headers.get("user-agent")
+    ua=parse(uaString)
+    if(ua.is_pc):
+        return templates.TemplateResponse("studio.html",{"request":request})
+    if(ua.is_mobile||us.is_tablet):
+        return templates.TemplateResponse("studio_mobile.html",{"request":request})
+    #pretty sure only bots should reach here
     return templates.TemplateResponse("studio.html",{"request":request})
 
-@router.get("/studio-mobile")
-async def read_studiomobile(request:Request) -> HTMLResponse:
-    return templates.TemplateResponse("studio_mobile.html",{"request":request})

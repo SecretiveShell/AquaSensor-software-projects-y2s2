@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
 import strawberry
 from strawberry.permission import PermissionExtension
+
+from aquasensor_backend.security import create_login_session, create_user_account
 from .types import (
     AuthResponse,
     Credentials,
@@ -26,12 +28,24 @@ class Query:
     @strawberry.field
     async def login(self, credentials: Credentials) -> AuthResponse:
         """Authenticates a user and returns a token."""
-        return AuthResponse(success=True, token="mock_token")
+
+        try: 
+            token = await create_login_session(credentials.username, credentials.password)
+            return AuthResponse(success=True, token=token)
+        except Exception:
+            return AuthResponse(success=False, failure_reason="Invalid username or password.")
 
     @strawberry.field
     async def register(self, registration: Registration) -> AuthResponse:
         """Registers a new user and returns a token."""
-        return AuthResponse(success=True, token="mock_token")
+        success = await create_user_account(registration.username, registration.email, registration.password)
+
+        if not success:
+            return AuthResponse(success=False, failure_reason="Account already exists.")
+
+        token = await create_login_session(registration.username, registration.email)
+
+        return AuthResponse(success=True, token=token)
 
     @strawberry.field(extensions=[PermissionExtension(permissions=[IsAuthenticated()])])
     async def logout(self, token: str) -> LogoutResponse:

@@ -14,6 +14,7 @@ from aquasensor_backend.models.auth import (
 )
 from aquasensor_backend.security import (
     create_login_session,
+    create_user_account,
     hash_password,
     get_logged_in_user_depends,
     api_key_header,
@@ -61,22 +62,11 @@ async def login(login: Login) -> LoginResponse:
 async def register(register: Register) -> RegisterResponse:
     """register a new user account"""
 
-    new_user = Users(
-        username=register.username,
-        email=register.email,
-        password=hash_password(register.password),
-    )
-
-    try:
-        async with AsyncSessionLocal() as session:
-            session.add(new_user)
-            await session.commit()
-
-    except Exception:
-        return RegisterResponse(
-            success=False, failure_reason="This account already exists."
-        )
-
+    success = await create_user_account(register.username, register.email, register.password)
+    
+    if not success:
+        return RegisterResponse(success=False, failure_reason="Username already taken.")
+    
     token = await create_login_session(register.username, register.email)
 
     return RegisterResponse(success=True, token=token)

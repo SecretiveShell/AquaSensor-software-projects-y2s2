@@ -8,6 +8,7 @@ from fastapi.security import APIKeyHeader
 from typing import Annotated
 from fastapi import Depends, HTTPException
 
+from aquasensor_backend.ORM import AsyncSessionLocal, Users
 from aquasensor_backend.cache import cache
 from aquasensor_backend.models.auth import UserModel
 
@@ -55,3 +56,22 @@ async def get_logged_in_user(token):
 
 
 get_logged_in_user_depends = Annotated[UserModel, Depends(fapi_get_user)]
+
+async def create_user_account(username: str, email: str, password: str):
+    """create a new user account"""
+    
+    new_user = Users(
+        username=username,
+        email=email,
+        password=hash_password(password),
+    )
+
+    try:
+        async with AsyncSessionLocal() as session:
+            session.add(new_user)
+            await session.commit()
+
+    except Exception:
+        return False
+    
+    return True

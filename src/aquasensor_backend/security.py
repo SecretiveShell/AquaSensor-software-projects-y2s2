@@ -34,7 +34,12 @@ async def create_login_session(username: str, email: str):
 
     return token
 
-async def get_logged_in_user(token: Annotated[str, Depends(api_key_header)]):
+async def fapi_get_user(token: Annotated[str, Depends(api_key_header)]):
+    """check if the user is logged in"""
+
+    return get_logged_in_user(token)
+
+async def get_logged_in_user(token):
     """check if the user is logged in"""
 
     cached_user = await cache.get(CACHE_TOKEN_KEY_PREFIX + token)
@@ -49,4 +54,4 @@ async def get_logged_in_user(token: Annotated[str, Depends(api_key_header)]):
     return user
 
 
-get_logged_in_user_depends = Annotated[UserModel, Depends(get_logged_in_user)]
+get_logged_in_user_depends = Annotated[UserModel, Depends(fapi_get_user)]

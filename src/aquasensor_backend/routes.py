@@ -61,3 +61,7 @@ async def read_privacypolicy(request:Request) -> HTMLResponse:
 @router.get("/studio")
 async def read_studio(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("studio.html",{"request":request})
+
+@router.get("/studio-mobile")
+async def read_studiomobile(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("studio_mobile.html",{"request":request})

@@ -45,6 +45,7 @@ async def get_status() -> dict:
         values = [cell.get_text(strip=True) for cell in row.find_all("td")]
         data = dict(zip(headers, values))
         data["datetime"] = datetime.strptime(data["datetime"], r"%d/%m/%y %H:%M")
+        data["temperature"] = float(data["temperature"].removesuffix("C").strip())
         data["dissolved_oxygen"] = float(
             data["dissolved_oxygen"].removesuffix(" mg/L").strip()
         )

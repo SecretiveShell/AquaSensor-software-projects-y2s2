@@ -29,6 +29,8 @@ services:
     build:
       context: .
       dockerfile: middleware.Dockerfile
+    ports:
+      - 8001:8000
     networks:
       - private
     environment:

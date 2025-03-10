@@ -7,6 +7,7 @@ services:
       - API_BASE_URL=http://middleware:8000
       - API_API_KEY=abc
       - CACHE_URL=redis://redis
+      - DATABASE_URL=postgresql+asyncpg://postgres:pgpasswd@postgres/postgres
     networks:
       - public
       - private
@@ -43,8 +44,23 @@ services:
     ports:
       - 6379:6379
 
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: pgpasswd
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    networks:
+      - private
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
 volumes:
   red:
+    external: false
+  pgdata:
+    external: false
 
 networks:
   public:

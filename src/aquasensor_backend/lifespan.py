@@ -9,7 +9,7 @@ from loguru import logger
 async def lifespan(app: FastAPI):
     try:
         await init_db()
-    except Exception:
-        logger.warning("failed to initialize database, is the database down?.")
+    except Exception as e:
+        logger.warning(f"failed to initialize database, is the database down?. {e}")
 
     yield

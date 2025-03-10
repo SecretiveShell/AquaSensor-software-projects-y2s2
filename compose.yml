@@ -52,33 +52,26 @@ services:
       POSTGRES_PASSWORD: pgpasswd
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
     networks:
       - private
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  influxdb:
-    image: influxdb
+  streamer:
+    build:
+      context: .
+      dockerfile: stream-processor.Dockerfile
     restart: always
-    volumes:
-      - influxdb_data:/var/lib/influxdb2
     networks:
       - private
-    ports:
-      - 8086:8086
+    depends_on:
+      - postgres
     environment:
-      - INFLUXDB_DB=sensorsdb
-      - INFLUXDB_ADMIN_USER=infliuxadmin
-      - INFLUXDB_ADMIN_PASSWORD=influxpasswd
-      - INFLUXDB_ORG=aquasensor
-      - INFLUXDB_BUCKET=sensors
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8086/health"]  
-      interval: 10s
-      retries: 5
-      start_period: 10s
+      - POSTGRES_URL=postgresql+asyncpg://postgres:pgpasswd@postgres/postgres
     env_file:
-      - envs/influx.env
+      - ./envs/streamer.env
 
 volumes:
   red:

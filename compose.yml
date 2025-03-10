@@ -33,7 +33,8 @@ services:
       - private
     environment:
       - MIDDLEWARE_API_KEY=abc
-    env_file: ".env"
+    env_file:
+      - envs/middleware.env
 
   redis:
     image: redis:8.0-M03-alpine
@@ -56,10 +57,35 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  influxdb:
+    image: influxdb
+    restart: always
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    networks:
+      - private
+    ports:
+      - 8086:8086
+    environment:
+      - INFLUXDB_DB=sensorsdb
+      - INFLUXDB_ADMIN_USER=infliuxadmin
+      - INFLUXDB_ADMIN_PASSWORD=influxpasswd
+      - INFLUXDB_ORG=aquasensor
+      - INFLUXDB_BUCKET=sensors
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8086/health"]  
+      interval: 10s
+      retries: 5
+      start_period: 10s
+    env_file:
+      - envs/influx.env
+
 volumes:
   red:
     external: false
   pgdata:
+    external: false
+  influxdb_data:
     external: false
 
 networks:

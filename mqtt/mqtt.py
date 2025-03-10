@@ -81,7 +81,7 @@ async def save_sensor_status(session: AsyncSession, sensor_data: SensorData):
 
     status = SensorStatus(
         sensor_id=sensor_data.sensor,
-        datetime=sensor_data.timestamp,
+        timestamp=sensor_data.timestamp,
         temperature=sensor_data.temperature,
         dissolved_oxygen=sensor_data.dissolved_oxygen,
         dissolved_oxygen_percent=None,  # Calculate if necessary

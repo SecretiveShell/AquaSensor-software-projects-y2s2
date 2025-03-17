@@ -6,7 +6,7 @@ from typing import Optional
 from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import String, Float, DateTime, ForeignKey
+from sqlalchemy import Integer, String, Float, DateTime, ForeignKey
 import gmqtt
 
 # Retrieve environment variables
@@ -26,24 +26,25 @@ class Base(DeclarativeBase):
     pass
 
 class Sensor(Base):
-    __tablename__ = "sensors"
+    __tablename__ = "Sensors"
 
     id: Mapped[str] = mapped_column(String, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
-    location: Mapped[str] = mapped_column(String, nullable=False)  # GPS coordinates
+    RiverId: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)  # Removed ForeignKey since Rivers table is not defined
+    latitude: Mapped[float] = mapped_column(Float, nullable=False)
+    longitude: Mapped[float] = mapped_column(Float, nullable=False)
 
     statuses = relationship("SensorStatus", back_populates="sensor")
 
 class SensorStatus(Base):
-    __tablename__ = "sensor_status"
+    __tablename__ = "SensorReadings"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    sensor_id: Mapped[str] = mapped_column(ForeignKey("sensors.id"), nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False)  # Renamed from `datetime`
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    sensor_id: Mapped[str] = mapped_column(ForeignKey("Sensors.id"), nullable=False)  # Fixed reference to "Sensors.id"
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
     temperature: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     dissolved_oxygen: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    dissolved_oxygen_percent: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
 
     sensor = relationship("Sensor", back_populates="statuses")
 
@@ -75,7 +76,7 @@ client.on_disconnect = on_disconnect
 async def save_sensor_status(session: AsyncSession, sensor_data: SensorData):
     sensor = await session.get(Sensor, sensor_data.sensor)
     if not sensor:
-        sensor = Sensor(id=sensor_data.sensor, name=f"Sensor {sensor_data.sensor}", location="Unknown")
+        sensor = Sensor(id=sensor_data.sensor, name=f"Sensor {sensor_data.sensor}", latitude=0.0, longitude=0.0)
         session.add(sensor)
         await session.commit()
 
@@ -84,7 +85,6 @@ async def save_sensor_status(session: AsyncSession, sensor_data: SensorData):
         timestamp=sensor_data.timestamp,
         temperature=sensor_data.temperature,
         dissolved_oxygen=sensor_data.dissolved_oxygen,
-        dissolved_oxygen_percent=None,  # Calculate if necessary
     )
     session.add(status)
     await session.commit()

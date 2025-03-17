@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 from loguru import logger
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, MetaData
-from sqlalchemy.orm import declarative_base, Mapped, mapped_column
+from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -43,20 +43,21 @@ class Sensors(Base):
     __tablename__ = "Sensors"
 
     id: Mapped[int] = mapped_column(String(32), primary_key=True)
-    RiverId: Mapped[int] = mapped_column(Integer, ForeignKey("Rivers.RiverId"))
+    RiverId: Mapped[int] = mapped_column(Integer, ForeignKey("Rivers.RiverId"), nullable=True)
     latitude: Mapped[float] = mapped_column(Float, nullable=False)
     longitude: Mapped[float] = mapped_column(Float, nullable=False)
     name: Mapped[str] = mapped_column(String(32), nullable=False)
 
+    readings = relationship("SensorReadings", back_populates="sensor")
 
 class SensorReadings(Base):
     __tablename__ = "SensorReadings"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     sensor_id: Mapped[str] = mapped_column(String(32), ForeignKey("Sensors.id"))
-    temp: Mapped[int] = mapped_column(Integer, nullable=True)
+    temperature: Mapped[int] = mapped_column(Integer, nullable=True)
     dissolved_oxygen: Mapped[int] = mapped_column(Integer, nullable=True)
-    time: Mapped[datetime] = mapped_column(DateTime, default=current_utc_datetime)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, default=current_utc_datetime)
 
 
 # session factory

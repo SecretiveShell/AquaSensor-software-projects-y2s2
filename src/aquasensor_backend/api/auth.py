@@ -30,7 +30,7 @@ router = APIRouter()
 async def login(login: Login) -> LoginResponse:
     """log in to your account and return a token"""
 
-    valid, message, email = validate_username_password(login.username, login.password)
+    valid, message, email = await validate_username_password(login.username, login.password)
 
     if valid:
         token = await create_login_session(login.username, email)

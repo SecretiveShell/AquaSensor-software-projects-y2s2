@@ -30,7 +30,7 @@ services:
       context: .
       dockerfile: middleware.Dockerfile
     ports:
-      - 8001:8000
+      - 127.0.0.1:8001:8000
     networks:
       - private
     environment:
@@ -45,7 +45,7 @@ services:
     networks:
       - private
     ports:
-      - 6379:6379
+      - 127.0.0.1:6379:6379
 
   postgres:
     image: postgres
@@ -55,7 +55,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
     ports:
-      - 5432:5432
+      - 127.0.0.1:5432:5432
     networks:
       - private
     volumes:

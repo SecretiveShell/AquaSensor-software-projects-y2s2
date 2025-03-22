@@ -16,14 +16,8 @@ function fetchRivers() {
   var maxLat = bounds.getNorth();
   var maxLng = bounds.getEast();
 
-  var overpassQuery = `
-        [out:json];
-        way[waterway=river](${minLat},${minLng},${maxLat},${maxLng});
-        out geom;
-    `;
   var overpassURL =
-    "https://overpass-api.de/api/interpreter?data=" +
-    encodeURIComponent(overpassQuery);
+    `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
 
   fetch(overpassURL)
     .then((response) => response.json())

@@ -1,12 +1,14 @@
 from datetime import datetime
-import aiocache
+from typing import Any
 from fastapi import APIRouter
 from httpx import AsyncClient
 from decimal import Decimal, ROUND_FLOOR, ROUND_CEILING
 
 from loguru import logger
+from sqlalchemy import Select
 
 from aquasensor_backend.cache import cache
+from aquasensor_backend.ORM import Sensors, SensorReadings, AsyncSessionLocal
 
 router = APIRouter()
 
@@ -75,6 +77,37 @@ async def get_river_points_overpass(x1: float, y1: float, x2: float, y2: float):
 
     return data
 
+async def get_sensors(x1: float, y1: float, x2: float, y2: float):
+    """Get sensors from the database."""
+    output = []
+
+    async with AsyncSessionLocal() as session:
+        sensorsq: Any = await session.execute(
+            Select(Sensors).where(Sensors.latitude >= x1).where(Sensors.longitude >= y1).where(Sensors.latitude <= x2).where(Sensors.longitude <= y2)
+        )
+        sensors = sensorsq.scalars().all()
+
+        for sensor in sensors:
+            readingq: Any = await session.execute(
+                Select(SensorReadings).where(SensorReadings.sensor_id == sensor.id).order_by(SensorReadings.timestamp.desc()).limit(1)
+            )
+            reading = readingq.scalars().first()
+
+            if reading is None:
+                continue
+            
+            output.append({
+                "id": sensor.id,
+                "latitude": sensor.latitude,
+                "longitude": sensor.longitude,
+                "name": sensor.name,
+                "temperature": reading.temperature,
+                "dissolved_oxygen": reading.dissolved_oxygen,
+                "timestamp": reading.timestamp,
+            })
+    
+    return output
+
 
 @router.get("/riverpoints")
 async def get_river_points(
@@ -87,5 +120,7 @@ async def get_river_points(
 
     # get data from overpass
     data = await get_river_points_overpass_cached(x1, y1, x2, y2)
+
+    print(f"sensors: {await get_sensors(x1, y1, x2, y2)}")
 
     return data

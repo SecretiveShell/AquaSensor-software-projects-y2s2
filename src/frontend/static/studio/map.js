@@ -69,3 +69,5 @@ function fetchRivers() {
 // Trigger river heatmap update
 map.on("load", fetchRivers);
 map.on("moveend", fetchRivers);
+
+fetchRivers();

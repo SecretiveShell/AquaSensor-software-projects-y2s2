@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import Literal
 import aiocache
 from fastapi import APIRouter
 from httpx import AsyncClient
 from decimal import Decimal, ROUND_FLOOR, ROUND_CEILING
 
 from loguru import logger
+
+from aquasensor_backend.cache import cache
 
 router = APIRouter()
 
@@ -23,8 +24,22 @@ def normalize_bbox(x1, y1, x2, y2, precision=1):
 
     return (x_min, y_min, x_max, y_max)
 
+async def get_river_points_overpass_cached(x1: float, y1: float, x2: float, y2: float):
+    key = f"river-points:{x1}_{y1}_{x2}_{y2}"
 
-@aiocache.cached(ttl=60 * 60)  # 1 hour
+    result = await cache.get(key)
+    if result is not None:
+        return result
+
+    result = await get_river_points_overpass(x1, y1, x2, y2)
+    await cache.set(
+        key=key, 
+        value=result, 
+        ttl=60 * 60 # 1 hour
+    )
+
+    return result
+
 async def get_river_points_overpass(x1: float, y1: float, x2: float, y2: float):
     """Get river geometry data from Overpass API."""
 
@@ -71,6 +86,6 @@ async def get_river_points(
     x1, y1, x2, y2 = normalize_bbox(x1, y1, x2, y2)
 
     # get data from overpass
-    data = await get_river_points_overpass(x1, y1, x2, y2)
+    data = await get_river_points_overpass_cached(x1, y1, x2, y2)
 
     return data

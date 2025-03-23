@@ -1,4 +1,4 @@
-var map = L.map("map").setView([53.3811, -1.4701], 14);
+var map = L.map("map").setView([53.32, -1.66], 15);
 
 L.tileLayer(
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",

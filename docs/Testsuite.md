@@ -1,0 +1,7 @@
+| Test Target | input data | Expected output | pass/fail criteria | Testing method |
+| ----------- | --------------- | ----------- | ----------- | ----------- |
+| Sign up | Username: Johndoe Password: PasswordPassword | Be taken directly to the logged in page or told sign up info is invalid | not taken to logged in page or flagged for invalid credentials | Attempt to sign up with a dummy accout username and password from the sign up page.
+| Log in | Same as above | same as above | same as above | Atteempt to Log in with previously used sign up credentials from the log in page.
+| display accessability | N/A | A light house score of 90 or above | a score of 90 or above will be considered a pass anything below 90 will be considered a faliure | using the lighthouse accessability extension to test the webpage accessability of both mobile and regular webpage displays. 
+River Map gradient display | To be decided | The river color gradient between two sensor point will change colour gradually between two points | A successful gradient displaying the temperature change between two points will constitute a success | using test data streamed to two sensor nodes on the river map, we should see the gradient display between the two of them function properly.
+Requests per second | N/A | somewhere from 100-1000 RPS which is considered a moderate load | an RPS below 100 or over 1000 would be considered a failiure | Using a software such as apache j meter to measure the requests per second.

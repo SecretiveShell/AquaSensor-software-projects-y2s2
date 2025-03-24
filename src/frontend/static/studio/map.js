@@ -150,11 +150,17 @@ function fetchRivers() {
                 const marker = L.marker([lat, lon], {
                   title: `Sensor: ${node.sensor_id}`,
                   opacity: 0, // start hidden
-                }).bindPopup(
+                })
+                
+                marker.bindPopup(
                   `Temperature: ${temp}°C<br/>DO: ${
                     node.sensor_dissolved_oxygen || "?"
                   }`
                 );
+
+                marker.addEventListener("click", () => {
+                  renderInfoPanel(node.sensor_name, node.sensor_dissolved_oxygen, node.sensor_temperature);
+                });
 
                 marker._icon?.classList?.add("sensor-hidden"); // class for control
                 window.riverTempLayerGroup.addLayer(marker);

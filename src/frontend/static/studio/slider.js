@@ -37,15 +37,33 @@ function updateDatePicker(offsetDays) {
 // Initial update
 updateDatePicker(slider.value);
 
-slider.addEventListener("input", (e) => {
-  updateDatePicker(e.target.value);
-});
-
 // Prevent picking future dates manually
 datePicker.max = today.toISOString().split("T")[0];
+
+var fetching = false;
+
+function debounced_fetch_rivers() {
+  if (fetching) return;
+
+  fetching = true;
+  setTimeout(() => {
+    fetchRivers();
+  }, 2000);
+
+  fetching = false;
+}
 
 slider.addEventListener("input", () => {
   console.log("slider moved");
   updateDatePicker(slider.value);
-  fetchRivers();
+  debounced_fetch_rivers();
+});
+
+datePicker.addEventListener("input", (e) => {
+  const selected = new Date(e.target.value);
+  const offset = Math.floor((selected - baseDate) / (1000 * 60 * 60 * 24));
+  if (offset >= 0 && offset <= maxDays) {
+    slider.value = offset;
+    debounced_fetch_rivers();
+  }
 });

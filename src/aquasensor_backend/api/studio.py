@@ -162,6 +162,7 @@ def enrich_geometry_nodes_with_sensors(river_elements: list, sensors: list, max_
                     node["sensor_dissolved_oxygen"] = f"{sensor['dissolved_oxygen']:.2f}"
                     node["sensor_timestamp"] = sensor["timestamp"].isoformat()
                     node["sensor_id"] = sensor["id"]
+                    node["sensor_name"] = sensor["name"]
 
     return river_elements
 

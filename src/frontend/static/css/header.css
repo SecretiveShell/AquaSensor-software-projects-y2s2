@@ -39,7 +39,7 @@ img {
 .sidebar span {
   font-size: 30px;
   cursor: pointer;
-  color: black; 
+  color: white; 
   transition: color 0.3s ease; 
 }
 
@@ -55,6 +55,9 @@ img {
 .side-bottom{
 	position:absolute;
 	bottom:20px;
+}
+.side-bottom .btn{
+  background: transparent;
 }
 header .logo {
   max-height: 100px;
@@ -81,7 +84,7 @@ header .logo {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: #f1f1f1;
   display: block;
   transition: 0.3s;
 }
@@ -160,7 +163,7 @@ p {
 .btn {
   width: 100px;
   height: 40px;
-  background: red;
+  background: rgb(42, 90, 107);
   margin-top: 13px;
   color: black;
   font-size: 15px;
@@ -168,7 +171,7 @@ p {
 }
 
 .btn:hover {
-  color: crimson;
+  color: gray;
 }
 
 .srch {

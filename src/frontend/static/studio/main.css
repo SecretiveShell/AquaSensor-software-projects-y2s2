@@ -7,6 +7,8 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    scrollbar-width: 0px;
 }
 
 div#container {
@@ -20,6 +22,8 @@ div#left {
     width: 15cm;
     height: 100%;
     background-color: red;
+    margin: 0px;
+    border: 0px
 }
 
 div#left-top {
@@ -125,4 +129,9 @@ div.info-panel-content-item-title {
 div.info-panel-content-item-value {
   width: 30%;
   text-align: right;
+}
+
+div#map-controls > label {
+  display: block;
+  margin: 10px;
 }

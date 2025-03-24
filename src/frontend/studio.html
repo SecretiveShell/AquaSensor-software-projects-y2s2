@@ -9,7 +9,7 @@
     <link
       rel="icon"
       type="image/png"
-      href="/static/cropped-logo-32x32.png"
+      href="/static/favicon.png"
       sizes="32x32"
     />
     <!-- for the map in the center -->
@@ -32,12 +32,15 @@
     <script src="/static/studio/infoPanel.js" defer></script>
     <script src="/static/studio/map.js" defer></script>
     <script src="/static/studio/slider.js" defer></script>
+    <script src="/static/studio/mapControls.js" defer></script>
     <!-- end of map -->
   </head>
   <body>
     <div id="container">
       <div id="left">
-        <div id="left-top"></div>
+        <div id="left-top">
+          <div id="map-controls"></div>
+        </div>
         <div id="left-bottom"></div>
       </div>
       <div id="center">

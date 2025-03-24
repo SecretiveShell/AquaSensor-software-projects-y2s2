@@ -1,68 +1,69 @@
 const slider = document.getElementById("date-slider-input");
 const datePicker = document.getElementById("map-date-picker");
 
-// Get today's date
 const today = new Date();
-
-// Calculate base date = 3 months ago
 const baseDate = new Date();
 baseDate.setMonth(baseDate.getMonth() - 3);
+baseDate.setMinutes(0, 0, 0); // normalize to full hour
 
-// Ensure base date is valid (handles end-of-month edge cases)
-if (baseDate.getDate() !== today.getDate()) {
-  // Some months (e.g., Feb) have fewer days, reset to last valid date
-  baseDate.setDate(0);
-}
+// Handle end-of-month rollover
+if (baseDate.getDate() !== today.getDate()) baseDate.setDate(0);
 
-// Calculate max number of days between baseDate and today
 const diffTime = today - baseDate;
-const maxDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+const maxHours = Math.floor(diffTime / (1000 * 60 * 60));
 
-// Configure slider
+// Slider setup
 slider.min = 0;
-slider.max = maxDays;
-slider.value = maxDays; // Default to today
+slider.max = maxHours;
+slider.value = maxHours;
 
-function updateDatePicker(offsetDays) {
+
+function updateDatePicker(offsetHours) {
   const newDate = new Date(baseDate);
-  newDate.setDate(baseDate.getDate() + parseInt(offsetDays));
+  newDate.setHours(baseDate.getHours() + parseInt(offsetHours));
 
   const yyyy = newDate.getFullYear();
   const mm = String(newDate.getMonth() + 1).padStart(2, "0");
   const dd = String(newDate.getDate()).padStart(2, "0");
+  const hh = String(newDate.getHours()).padStart(2, "0");
+  const min = "00";
 
-  datePicker.value = `${yyyy}-${mm}-${dd}`;
+  datePicker.value = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
 }
 
 // Initial update
 updateDatePicker(slider.value);
 
 // Prevent picking future dates manually
-datePicker.max = today.toISOString().split("T")[0];
+const isoNow = today.toISOString().slice(0, 16); // up to minutes
+datePicker.max = isoNow;
 
-var fetching = false;
+let fetchTimeout = null;
+const FETCH_DEBOUNCE_MS = 200;
 
 function debounced_fetch_rivers() {
-  if (fetching) return;
-
-  fetching = true;
-  setTimeout(() => {
-    fetchRivers();
-  }, 2000);
-
-  fetching = false;
+  if (fetchTimeout) clearTimeout(fetchTimeout);
+  fetchTimeout = setTimeout(async () => {
+    try {
+      await fetchRivers();
+    } catch (e) {
+      console.error("Error during debounced fetch:", e);
+    } finally {
+      fetchTimeout = null;
+    }
+  }, FETCH_DEBOUNCE_MS);
 }
 
+
 slider.addEventListener("input", () => {
-  console.log("slider moved");
   updateDatePicker(slider.value);
   debounced_fetch_rivers();
 });
 
 datePicker.addEventListener("input", (e) => {
   const selected = new Date(e.target.value);
-  const offset = Math.floor((selected - baseDate) / (1000 * 60 * 60 * 24));
-  if (offset >= 0 && offset <= maxDays) {
+  const offset = Math.floor((selected - baseDate) / (1000 * 60 * 60));
+  if (offset >= 0 && offset <= maxHours) {
     slider.value = offset;
     debounced_fetch_rivers();
   }

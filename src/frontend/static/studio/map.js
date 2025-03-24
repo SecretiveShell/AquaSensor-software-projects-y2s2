@@ -55,126 +55,106 @@ function tempToColor(temp) {
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
-function fetchRivers() {
-  const bounds = map.getBounds();
-  const minLat = bounds.getSouth();
-  const minLng = bounds.getWest();
-  const maxLat = bounds.getNorth();
-  const maxLng = bounds.getEast();
-  const mapCenter = map.getCenter();
+async function fetchRivers() {
+  try {
+    const bounds = map.getBounds();
+    const minLat = bounds.getSouth();
+    const minLng = bounds.getWest();
+    const maxLat = bounds.getNorth();
+    const maxLng = bounds.getEast();
+    const dateStr = datePicker.value;
 
-  var url = `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
+    let url = `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
+    if (dateStr) {
+      url += `&date=${encodeURIComponent(dateStr)}`;
+    }
 
-  const dateStr = datePicker.value;
-  if (dateStr && dateStr !== new Date().toISOString().split("T")[0]) {
-    url += `&date=${encodeURIComponent(dateStr)}`;
-  }
+    const res = await fetch(url);
+    const data = await res.json();
 
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      if (window.riverTempLayerGroup) {
-        window.riverTempLayerGroup.clearLayers();
-      } else {
-        window.riverTempLayerGroup = L.layerGroup().addTo(map);
+    if (window.riverTempLayerGroup) {
+      window.riverTempLayerGroup.clearLayers();
+    } else {
+      window.riverTempLayerGroup = L.layerGroup().addTo(map);
+    }
+
+    for (const el of data.elements) {
+      if (el.type !== "way" || !Array.isArray(el.geometry)) continue;
+
+      const coords = imputeMissingTemperatures(el.geometry);
+
+      for (let i = 0; i < coords.length - 1; i++) {
+        const nodeA = coords[i];
+        const nodeB = coords[i + 1];
+        const t1 = nodeA.sensor_temperature_imputed;
+        const t2 = nodeB.sensor_temperature_imputed;
+
+        if (t1 !== undefined && t2 !== undefined) {
+          const avgTemp = (t1 + t2) / 2;
+          const color = tempToColor(avgTemp);
+
+          const polyline = L.polyline(
+            [
+              [nodeA.lat, nodeA.lon],
+              [nodeB.lat, nodeB.lon],
+            ],
+            {
+              color: color,
+              weight: 16,
+              opacity: 1,
+            },
+          );
+
+          window.riverTempLayerGroup.addLayer(polyline);
+        }
       }
 
-      data.elements
-        .filter((el) => el.type === "way" && Array.isArray(el.geometry))
-        .forEach((el) => {
-          const coords = imputeMissingTemperatures(el.geometry);
+      for (const node of coords) {
+        const { lat, lon, sensor_temperature, sensor_dissolved_oxygen, sensor_id, sensor_name } = node;
 
-          for (let i = 0; i < coords.length - 1; i++) {
-            const nodeA = coords[i];
-            const nodeB = coords[i + 1];
+        if (sensor_temperature !== undefined) {
+          const temp = parseFloat(sensor_temperature);
+          const color = tempToColor(temp);
 
-            const t1 = nodeA.sensor_temperature_imputed;
-            const t2 = nodeB.sensor_temperature_imputed;
+          const circle = L.circleMarker([lat, lon], {
+            radius: 12,
+            fillColor: color,
+            fillOpacity: 0.95,
+            color: color,
+            weight: 1,
+            opacity: 1,
+            className: "sensor-hidden",
+          }).bindPopup(`🌡️ Temp: ${temp}°C<br/>🧪 DO: ${sensor_dissolved_oxygen || "?"}`);
 
-            if (t1 !== undefined && t2 !== undefined) {
-              const avgTemp = (t1 + t2) / 2;
-              const color = tempToColor(avgTemp);
-              const midLat = (nodeA.lat + nodeB.lat) / 2;
-              const midLon = (nodeA.lon + nodeB.lon) / 2;
-
-              const polyline = L.polyline(
-                [
-                  [nodeA.lat, nodeA.lon],
-                  [nodeB.lat, nodeB.lon],
-                ],
-                {
-                  color: color,
-                  weight: 16,
-                  opacity: 1,
-                },
-              );
-
-              window.riverTempLayerGroup.addLayer(polyline);
-            }
-          }
-
-          // Add markers, hidden by default
-          coords.forEach((node) => {
-            const lat = node.lat;
-            const lon = node.lon;
-
-            if (node.sensor_temperature !== undefined) {
-              const temp = parseFloat(node.sensor_temperature);
-              const color = tempToColor(temp);
-
-              const circle = L.circleMarker([lat, lon], {
-                radius: 12,
-                fillColor: color,
-                fillOpacity: 0.95,
-                color: color,
-                weight: 1,
-                opacity: 1,
-                className: "sensor-hidden", // <-- Custom class
-              }).bindPopup(
-                `🌡️ Temp: ${temp}°C<br/>🧪 DO: ${
-                  node.sensor_dissolved_oxygen || "?"
-                }`,
-              );
-
-              circle.addEventListener("click", () => {
-                renderInfoPanel(
-                  node.sensor_name,
-                  node.sensor_dissolved_oxygen,
-                  node.sensor_temperature,
-                );
-              });
-
-              window.riverTempLayerGroup.addLayer(circle);
-
-              if (node.sensor_id) {
-                const marker = L.marker([lat, lon], {
-                  title: `Sensor: ${node.sensor_id}`,
-                  opacity: 0, // start hidden
-                });
-
-                marker.bindPopup(
-                  `Temperature: ${temp}°C<br/>DO: ${
-                    node.sensor_dissolved_oxygen || "?"
-                  }`,
-                );
-
-                marker.addEventListener("click", () => {
-                  renderInfoPanel(
-                    node.sensor_name,
-                    node.sensor_dissolved_oxygen,
-                    node.sensor_temperature,
-                  );
-                });
-
-                marker._icon?.classList?.add("sensor-hidden"); // class for control
-                window.riverTempLayerGroup.addLayer(marker);
-              }
-            }
+          circle.addEventListener("click", () => {
+            renderInfoPanel(sensor_name, sensor_dissolved_oxygen, sensor_temperature);
           });
-        });
-    })
-    .catch((err) => console.error("Error fetching riverpoints:", err));
+
+          window.riverTempLayerGroup.addLayer(circle);
+
+          if (sensor_id) {
+            const marker = L.marker([lat, lon], {
+              title: `Sensor: ${sensor_id}`,
+              opacity: 0,
+            });
+
+            marker.bindPopup(`Temperature: ${temp}°C<br/>DO: ${sensor_dissolved_oxygen || "?"}`);
+
+            marker.addEventListener("click", () => {
+              renderInfoPanel(sensor_name, sensor_dissolved_oxygen, sensor_temperature);
+            });
+
+            marker._icon?.classList?.add("sensor-hidden");
+            window.riverTempLayerGroup.addLayer(marker);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Error fetching riverpoints:", err);
+  }
 }
+
 
 // Trigger river heatmap update
 map.on("load", fetchRivers);

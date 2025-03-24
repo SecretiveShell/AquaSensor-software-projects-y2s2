@@ -1,21 +1,39 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AquaSensor</title>
-  </head>
-  <body>
+{% extends "base.html" %} {% block title %}AquaSensor{% endblock %}
+
+{% block contentHead %}
+<script>
+	async function _isLogged(){
+		let tok=window.sessionStorage["AquaSensorToken"];
+		return await fetch(
+			"{{ base_url }}" + "/api/v1/auth/me",
+			{headers: {
+				'Accept': 'application/json',
+				'AquaSensor-Login-Token': tok
+			}}).then(
+				(response)=>response.json()).then(
+					(response)=>{return ('email' in response)});
+	}
+</script>
+{% endblock %}
+
+{% block content %}
     <div id="main">
       <p>
         The AquaSensor solution provides low cost, real-time river quality
         monitoring, which ensures legal compliance, saves money and protects the
         environment.
       </p>
+      <div id="here">
+      </div>
+      <script>
+	      _isLogged().then((value)=>{
+		      var writeto=document.getElementById('here');
+		      if(value){
+			      writeto.innerHTML="USER LOGGED IN";
+		      }else{
+			      writeto.innerHTML="USER NOT LOGGED IN";
+		      }
+	      });
+      </script>
     </div>
-    {% endblock %}
-  </body>
-</html>
+{% endblock %}

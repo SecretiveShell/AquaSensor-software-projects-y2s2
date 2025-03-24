@@ -3,6 +3,7 @@ from typing import Any
 from fastapi import APIRouter
 from httpx import AsyncClient
 from decimal import Decimal, ROUND_FLOOR, ROUND_CEILING
+from shapely.geometry import Point
 
 from loguru import logger
 from sqlalchemy import Select
@@ -109,6 +110,55 @@ async def get_sensors(x1: float, y1: float, x2: float, y2: float):
     return output
 
 
+def enrich_geometry_nodes_with_sensors(river_elements: list, sensors: list, max_distance: float = 0.01):
+    """Attach sensor data to the closest node (lat/lon) in river geometries."""
+    
+    # Preprocess sensors as Points
+    sensor_points = [
+        (
+            Point(sensor["longitude"], sensor["latitude"]),
+            sensor,
+        )
+        for sensor in sensors
+    ]
+
+    for element in river_elements:
+        if element["type"] != "way" or "geometry" not in element:
+            continue
+
+        geometry = element["geometry"]
+
+        # Convert geometry to Points
+        node_points = [
+            (i, Point(node["lon"], node["lat"])) for i, node in enumerate(geometry)
+        ]
+
+        # Track which sensor is closest to which node
+        for spoint, sensor in sensor_points:
+            closest_index = None
+            min_dist = float("inf")
+
+            for i, node_point in node_points:
+                dist = spoint.distance(node_point)
+                if dist < min_dist:
+                    min_dist = dist
+                    closest_index = i
+
+            if closest_index is not None and min_dist <= max_distance:
+                node = geometry[closest_index]
+                # Only attach if not already present (or prefer latest timestamp)
+                if (
+                    "sensor_timestamp" not in node
+                    or sensor["timestamp"].isoformat() > node["sensor_timestamp"]
+                ):
+                    node["sensor_temperature"] = f"{sensor['temperature']:.2f}"
+                    node["sensor_dissolved_oxygen"] = f"{sensor['dissolved_oxygen']:.2f}"
+                    node["sensor_timestamp"] = sensor["timestamp"].isoformat()
+                    node["sensor_id"] = sensor["id"]
+
+    return river_elements
+
+
 @router.get("/riverpoints")
 async def get_river_points(
     x1: float, y1: float, x2: float, y2: float, date: datetime | None = None
@@ -118,9 +168,20 @@ async def get_river_points(
     # normalize the bbox and make x1/y1 the smallest value
     x1, y1, x2, y2 = normalize_bbox(x1, y1, x2, y2)
 
-    # get data from overpass
-    data = await get_river_points_overpass_cached(x1, y1, x2, y2)
+    # get river data
+    river_data = await get_river_points_overpass_cached(x1, y1, x2, y2)
+    sensors = await get_sensors(x1, y1, x2, y2)
 
-    print(f"sensors: {await get_sensors(x1, y1, x2, y2)}")
+    # enrich river data with sensor data
+    enriched = enrich_geometry_nodes_with_sensors(
+        river_data.get("elements", []),
+        sensors
+    )
 
-    return data
+    # return enriched river data
+    return {
+        "version": 0.6,
+        "generator": "aquasensor-backend",
+        "elements": enriched,
+    }
+

@@ -2,77 +2,97 @@
   box-sizing: border-box;
 }
 
+nav {
+  height: 5%;
+  padding: 10px;
+  color: black;
+  background-color: #007eb8;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+}
+
 html,
 body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   scrollbar-width: 0px;
 }
 
 div#container {
   width: 100%;
-  height: 100%;
+  height: 95%;
   display: flex;
   flex-direction: row;
+  border: 1px solid #68bbd9;
 }
 
 div#left {
   width: 15cm;
   height: 100%;
-  background-color: red;
+  background-color: #fff;
   margin: 0px;
-  border: 0px;
+  border: 5px solid #68bbd9;
+  display: flex;
+  flex-direction: column;
 }
 
 div#left-top {
   height: 50%;
   width: 100%;
-  background-color: yellow;
+  background-color: #fff;
 }
 
 div#left-bottom {
   height: 50%;
   width: 100%;
-  background-color: orange;
+  background-color: #fff;
+  border-top: 5px solid #68bbd9;
 }
 
 div#center {
   width: 100%;
   height: 100%;
-  background-color: blue;
+  background-color: #fff;
 }
 
 div#center-top {
   height: 80%;
   width: 100%;
-  background-color: pink;
+  background-color: #fff;
 }
 
 div#center-bottom {
   height: 20%;
   width: 100%;
-  background-color: purple;
+  background-color: #fff;
+  border-top: 5px solid #68bbd9;
+  border-bottom: 5px solid #68bbd9;
 }
 
 div#right {
   width: 15cm;
   height: 100%;
-  background-color: green;
+  background-color: #fff;
+  border: 5px solid #68bbd9;
 }
 
 div#right-top {
   height: 50%;
   width: 100%;
-  background-color: cyan;
+  background-color: #fff;
 }
 
 div#right-bottom {
   height: 50%;
   width: 100%;
-  background-color: brown;
+  background-color: #fff;
+  border-top: 5px solid #68bbd9;
 }
 
 div#center-top > div#map {
@@ -94,7 +114,6 @@ div#date-slider > input {
   margin: 0;
   padding: 0;
   border: none;
-  outline: none;
   background-color: transparent;
 }
 

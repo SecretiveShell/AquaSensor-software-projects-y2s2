@@ -24,6 +24,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="/static/studio/map.js" defer></script>
+    <script src="/static/studio/slider.js" defer></script>
     <!-- end of map -->
   </head>
   <body>
@@ -36,7 +37,14 @@
         <div id="center-top">
           <div id="map"></div>
         </div>
-        <div id="center-bottom"></div>
+        <div id="center-bottom">
+          <div id="date-slider">
+            <input type="range" min="1" max="100" value="50" class="slider" id="date-slider-input">
+          </div>
+          <div>
+            <input type="date" id="map-date-picker" />
+          </div>
+        </div>
       </div>
       <div id="right">
         <div id="right-top"></div>

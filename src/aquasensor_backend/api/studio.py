@@ -78,7 +78,7 @@ async def get_river_points_overpass(x1: float, y1: float, x2: float, y2: float):
 
     return data
 
-async def get_sensors(x1: float, y1: float, x2: float, y2: float):
+async def get_sensors(x1: float, y1: float, x2: float, y2: float, date: datetime | None = None):
     """Get sensors from the database."""
     output = []
 
@@ -89,10 +89,17 @@ async def get_sensors(x1: float, y1: float, x2: float, y2: float):
         sensors = sensorsq.scalars().all()
 
         for sensor in sensors:
-            readingq: Any = await session.execute(
-                Select(SensorReadings).where(SensorReadings.sensor_id == sensor.id).order_by(SensorReadings.timestamp.desc()).limit(1)
-            )
-            reading = readingq.scalars().first()
+            if date:
+                readingq: Any = await session.execute(
+                    Select(SensorReadings).where(SensorReadings.sensor_id == sensor.id).where(SensorReadings.timestamp <= date).order_by(SensorReadings.timestamp.desc()).limit(1)
+                )
+                reading = readingq.scalars().first()
+
+            else:
+                readingq: Any = await session.execute(
+                    Select(SensorReadings).where(SensorReadings.sensor_id == sensor.id).order_by(SensorReadings.timestamp.desc()).limit(1)
+                )
+                reading = readingq.scalars().first()
 
             if reading is None:
                 continue
@@ -170,7 +177,7 @@ async def get_river_points(
 
     # get river data
     river_data = await get_river_points_overpass_cached(x1, y1, x2, y2)
-    sensors = await get_sensors(x1, y1, x2, y2)
+    sensors = await get_sensors(x1, y1, x2, y2, date)
 
     # enrich river data with sensor data
     enriched = enrich_geometry_nodes_with_sensors(

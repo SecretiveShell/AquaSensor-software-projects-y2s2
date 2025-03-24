@@ -12,9 +12,7 @@ L.tileLayer(
 
 function imputeMissingTemperatures(coords) {
   const temps = coords.map((n) =>
-    n.sensor_temperature !== undefined
-      ? parseFloat(n.sensor_temperature)
-      : null
+    n.sensor_temperature !== undefined ? parseFloat(n.sensor_temperature) : null
   );
 
   for (let i = 0; i < coords.length; i++) {
@@ -52,7 +50,8 @@ function imputeMissingTemperatures(coords) {
 }
 
 function tempToColor(temp) {
-  const minT = 0, maxT = 25;
+  const minT = 0,
+    maxT = 25;
   const clamped = Math.max(minT, Math.min(maxT, temp));
   const ratio = (clamped - minT) / (maxT - minT);
 
@@ -72,7 +71,12 @@ function fetchRivers() {
   const maxLng = bounds.getEast();
   const mapCenter = map.getCenter();
 
-  const url = `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
+  var url = `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
+
+  const dateStr = datePicker.value;
+  if (dateStr && dateStr !== new Date().toISOString().split('T')[0]) {
+    url += `&date=${encodeURIComponent(dateStr)}`;
+  }  
 
   fetch(url)
     .then((res) => res.json())
@@ -135,20 +139,26 @@ function fetchRivers() {
                 opacity: 1,
                 className: "sensor-hidden", // <-- Custom class
               }).bindPopup(
-                `🌡️ Temp: ${temp}°C<br/>🧪 DO: ${node.sensor_dissolved_oxygen || "?"}`
+                `🌡️ Temp: ${temp}°C<br/>🧪 DO: ${
+                  node.sensor_dissolved_oxygen || "?"
+                }`
               );
 
               window.riverTempLayerGroup.addLayer(circle);
-            }
 
-            if (node.sensor_id) {
-              const marker = L.marker([lat, lon], {
-                title: `Sensor: ${node.sensor_id}`,
-                opacity: 0, // start hidden
-              }).bindPopup(`Temperature: ${temp}°C<br/>DO: ${node.sensor_dissolved_oxygen || "?"}`);
+              if (node.sensor_id) {
+                const marker = L.marker([lat, lon], {
+                  title: `Sensor: ${node.sensor_id}`,
+                  opacity: 0, // start hidden
+                }).bindPopup(
+                  `Temperature: ${temp}°C<br/>DO: ${
+                    node.sensor_dissolved_oxygen || "?"
+                  }`
+                );
 
-              marker._icon?.classList?.add("sensor-hidden"); // class for control
-              window.riverTempLayerGroup.addLayer(marker);
+                marker._icon?.classList?.add("sensor-hidden"); // class for control
+                window.riverTempLayerGroup.addLayer(marker);
+              }
             }
           });
         });
@@ -156,9 +166,6 @@ function fetchRivers() {
     .catch((err) => console.error("Error fetching riverpoints:", err));
 }
 
-
 // Trigger river heatmap update
 map.on("load", fetchRivers);
 map.on("moveend", fetchRivers);
-
-fetchRivers();

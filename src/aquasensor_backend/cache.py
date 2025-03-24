@@ -6,7 +6,7 @@ import os
 from loguru import logger
 from pydantic import BaseModel
 
-from typing import TypeVar
+from typing import Any, TypeVar
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -21,11 +21,16 @@ if CACHE_URL is None:
 
 
 class PydanticSerializer(BaseSerializer):
-    def dumps(self, obj: "BaseModel") -> bytes:
-        return obj.model_dump_json().encode("utf-8")
+    def dumps(self, value: "BaseModel" | Any) -> str:
+        if not isinstance(value, BaseModel):
+            return json.dumps(value)
+        
+        return value.model_dump_json()
 
-    def loads(self, data: bytes) -> dict:
-        return json.loads(data)
+    def loads(self, value: bytes | str | None) -> dict | None:
+        if value is None:
+            return None
+        return json.loads(value)
 
 
 cache = Cache.from_url(CACHE_URL)

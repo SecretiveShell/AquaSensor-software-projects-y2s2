@@ -1,9 +1,10 @@
-var map = L.map("map").setView([53.3811, -1.4701], 14);
+var map = L.map("map").setView([53.32, -1.66], 15);
 
 L.tileLayer(
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
   {
-    maxZoom: 19,
+    maxZoom: 17,
+    minZoom: 10,
     attribution:
       "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
   }
@@ -16,14 +17,8 @@ function fetchRivers() {
   var maxLat = bounds.getNorth();
   var maxLng = bounds.getEast();
 
-  var overpassQuery = `
-        [out:json];
-        way[waterway=river](${minLat},${minLng},${maxLat},${maxLng});
-        out geom;
-    `;
   var overpassURL =
-    "https://overpass-api.de/api/interpreter?data=" +
-    encodeURIComponent(overpassQuery);
+    `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
 
   fetch(overpassURL)
     .then((response) => response.json())
@@ -74,3 +69,5 @@ function fetchRivers() {
 // Trigger river heatmap update
 map.on("load", fetchRivers);
 map.on("moveend", fetchRivers);
+
+fetchRivers();

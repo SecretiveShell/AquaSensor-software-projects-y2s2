@@ -7,7 +7,7 @@ header {
   border-bottom: 2px solid black;
   color: rgb(0, 0, 0);
 }
-.title{
+.title {
   width: 95%;
   height: 100%;
   display: flex;
@@ -22,41 +22,41 @@ img {
   width: 150px;
 }
 .leaflet-tile {
-	border: 0px;
-	border-radius: 0px;
-	padding: 0px;
+  border: 0px;
+  border-radius: 0px;
+  padding: 0px;
 }
 
 .sidebar {
-  position : relative;
+  position: relative;
   display: flex;
   align-self: right;
   justify-content: flex-end;
   padding: 0;
-  background-color: #f8f8f8; 
+  background-color: #f8f8f8;
 }
 
 .sidebar span {
   font-size: 30px;
   cursor: pointer;
-  color: white; 
-  transition: color 0.3s ease; 
+  color: white;
+  transition: color 0.3s ease;
 }
 
 .sidebar span:hover {
   color: grey;
 }
 
-.side-top{
-	position:absolute;
-	top:35px;
+.side-top {
+  position: absolute;
+  top: 35px;
 }
 
-.side-bottom{
-	position:absolute;
-	bottom:20px;
+.side-bottom {
+  position: absolute;
+  bottom: 20px;
 }
-.side-bottom .btn{
+.side-bottom .btn {
   background: transparent;
 }
 header .logo {
@@ -110,15 +110,15 @@ header .logo {
     font-size: 18px;
   }
 }*/
-@media screen and (max-width: 768px){
-	.sidenav a{
-		font-size: 20px;
-	}
+@media screen and (max-width: 768px) {
+  .sidenav a {
+    font-size: 20px;
+  }
 }
-@media screen and (max-width: 320px){
-	.sidenav a{
-		font-size: 18px;
-	}
+@media screen and (max-width: 320px) {
+  .sidenav a {
+    font-size: 18px;
+  }
 }
 /* Content */
 .body {
@@ -216,5 +216,5 @@ p {
 }
 
 @media screen and (-ms-high-contrast: active), (forced-colors: active) {
-	/* high contrast changes here*/
+  /* high contrast changes here*/
 }

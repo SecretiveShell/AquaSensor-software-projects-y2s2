@@ -1,18 +1,10 @@
 var map = L.map("map").setView([53.32, -1.66], 15);
 
-// L.tileLayer(
-//   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-//   {
-//     maxZoom: 17,
-//     minZoom: 10,
-//     attribution:
-//       "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-//   }
-// ).addTo(map);
-
 function imputeMissingTemperatures(coords) {
   const temps = coords.map((n) =>
-    n.sensor_temperature !== undefined ? parseFloat(n.sensor_temperature) : null
+    n.sensor_temperature !== undefined
+      ? parseFloat(n.sensor_temperature)
+      : null,
   );
 
   for (let i = 0; i < coords.length; i++) {
@@ -50,8 +42,8 @@ function imputeMissingTemperatures(coords) {
 }
 
 function tempToColor(temp) {
-  const minT = 0,
-    maxT = 25;
+  const minT = 3,
+    maxT = 18;
   const clamped = Math.max(minT, Math.min(maxT, temp));
   const ratio = (clamped - minT) / (maxT - minT);
 
@@ -74,9 +66,9 @@ function fetchRivers() {
   var url = `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
 
   const dateStr = datePicker.value;
-  if (dateStr && dateStr !== new Date().toISOString().split('T')[0]) {
+  if (dateStr && dateStr !== new Date().toISOString().split("T")[0]) {
     url += `&date=${encodeURIComponent(dateStr)}`;
-  }  
+  }
 
   fetch(url)
     .then((res) => res.json())
@@ -114,7 +106,7 @@ function fetchRivers() {
                   color: color,
                   weight: 16,
                   opacity: 1,
-                }
+                },
               );
 
               window.riverTempLayerGroup.addLayer(polyline);
@@ -141,11 +133,15 @@ function fetchRivers() {
               }).bindPopup(
                 `🌡️ Temp: ${temp}°C<br/>🧪 DO: ${
                   node.sensor_dissolved_oxygen || "?"
-                }`
+                }`,
               );
 
               circle.addEventListener("click", () => {
-                renderInfoPanel(node.sensor_name, node.sensor_dissolved_oxygen, node.sensor_temperature);
+                renderInfoPanel(
+                  node.sensor_name,
+                  node.sensor_dissolved_oxygen,
+                  node.sensor_temperature,
+                );
               });
 
               window.riverTempLayerGroup.addLayer(circle);
@@ -154,16 +150,20 @@ function fetchRivers() {
                 const marker = L.marker([lat, lon], {
                   title: `Sensor: ${node.sensor_id}`,
                   opacity: 0, // start hidden
-                })
-                
+                });
+
                 marker.bindPopup(
                   `Temperature: ${temp}°C<br/>DO: ${
                     node.sensor_dissolved_oxygen || "?"
-                  }`
+                  }`,
                 );
 
                 marker.addEventListener("click", () => {
-                  renderInfoPanel(node.sensor_name, node.sensor_dissolved_oxygen, node.sensor_temperature);
+                  renderInfoPanel(
+                    node.sensor_name,
+                    node.sensor_dissolved_oxygen,
+                    node.sensor_temperature,
+                  );
                 });
 
                 marker._icon?.classList?.add("sensor-hidden"); // class for control

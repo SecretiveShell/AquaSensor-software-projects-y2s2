@@ -1,151 +1,143 @@
 {% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
 content %}
-  <style>
-    .form-container {
-      min-height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      padding-bottom: 60px;
-      background: #eee;
-    }
+<style>
+  .form-container {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    padding-bottom: 60px;
+    background: #eee;
+  }
 
-    .form-container form {
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-      background: #fff;
-      text-align: center;
-      width: 500px;
-    }
+  .form-container form {
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    text-align: center;
+    width: 500px;
+  }
 
-    .form-container form h3 {
-      font-size: 30px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      color: #333;
-    }
+  .form-container form h3 {
+    font-size: 30px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #333;
+  }
 
-    .form-container form input,
-    .form-container form select {
-      width: 80%;
-      padding: 10px 15px;
-      font-size: 17px;
-      margin: 8px 0;
-      background: #eee;
-      border-radius: 5px;
-    }
+  .form-container form input,
+  .form-container form select {
+    width: 80%;
+    padding: 10px 15px;
+    font-size: 17px;
+    margin: 8px 0;
+    background: #eee;
+    border-radius: 5px;
+  }
 
-    .form-container form select option {
-      background: #fff;
-    }
+  .form-container form select option {
+    background: #fff;
+  }
 
-    .form-container form .form-btn {
-      background: #fbd0d9;
-      color: crimson;
-      text-transform: capitalize;
-      font-size: 20px;
-      cursor: pointer;
-    }
+  .form-container form .form-btn {
+    background: #fbd0d9;
+    color: crimson;
+    text-transform: capitalize;
+    font-size: 20px;
+    cursor: pointer;
+  }
 
-    .form-container form .form-btn:hover {
-      background: crimson;
-      color: #fff;
-    }
+  .form-container form .form-btn:hover {
+    background: crimson;
+    color: #fff;
+  }
 
-    .form-container form p {
-      margin-top: 10px;
-      font-size: 20px;
-      color: #333;
-    }
+  .form-container form p {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #333;
+  }
 
-    .form-container form p a {
-      color: crimson;
-    }
+  .form-container form p a {
+    color: crimson;
+  }
 
-    .form-container form .error-msg {
-      margin: 10px 0;
-      display: block;
-      background: crimson;
-      color: #fff;
-      border-radius: 5px;
-      font-size: 20px;
-      padding: 10px;
-    }
-  </style>
+  .form-container form .error-msg {
+    margin: 10px 0;
+    display: block;
+    background: crimson;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 20px;
+    padding: 10px;
+  }
+</style>
 
-    <div class="page-container">
-      <div class="form-container">
-        <form id="regform" method="none" action="javascript:void(0)">
-          <h3>Register</h3>
-          <input
-            type="text"
-            placeholder="Enter Username"
-            name="username"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Enter Password"
-            name="password"
-            required
-          />
-          <input 
-	    type="text"
-	    placeholder="Enter Email"
-	    name="email"
-	    required
-	  />
-          <input
-	    type="submit"
-	    value="Submit"
-	    onclick="process()"
-	  />
-        </form>
-	<script>
-	async function process(){
-		var f=new FormData(document.getElementById("regform"));
+<div class="page-container">
+  <div class="form-container">
+    <form id="regform" method="none" action="javascript:void(0)">
+      <h3>Register</h3>
+      <input
+        type="text"
+        placeholder="Enter Username"
+        name="username"
+        required
+      />
+      <input
+        type="password"
+        placeholder="Enter Password"
+        name="password"
+        required
+      />
+      <input type="text" placeholder="Enter Email" name="email" required />
+      <input type="submit" value="Submit" onclick="process()" />
+    </form>
+    <script>
+      async function process() {
+        var f = new FormData(document.getElementById("regform"));
 
-		//validation
-		if(!(f.get("username") && f.get("password") && f.get("email"))){
-			alert("Please fill out all fields");
-		}
+        //validation
+        if (!(f.get("username") && f.get("password") && f.get("email"))) {
+          alert("Please fill out all fields");
+        }
 
-		//
-		var req=await fetch('{{ base_url }}/api/v1/auth/register',{
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({"username":f.get("username"),"email":f.get("email"),"password":f.get("password")})
-		});
-		var res=await req.json();
-		if(res["success"]==false){
-			if(res["type"]=="string_too_short"){
-				alert("Password must be 16 characters");
-			}
-			/*
+        //
+        var req = await fetch("{{ base_url }}/api/v1/auth/register", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: f.get("username"),
+            email: f.get("email"),
+            password: f.get("password"),
+          }),
+        });
+        var res = await req.json();
+        if (res["success"] == false) {
+          if (res["type"] == "string_too_short") {
+            alert("Password must be 16 characters");
+          }
+          /*
 			if(res["type"]=="duplicate_email"){
 				alert("Email in use");
 			}
 			*/
-			alert("Reistration failed");
-		}
-		if(res["success"]==true){
-			window.sessionStorage.setItem("AquaSensorToken",res["token"]);
-			window.location.href = "{{ base_url }}/sensormap";
-			return;
-		}
-		alert("Registration failed");
-		return;
-	}
-	</script>
-
-
-      </div>
-    </div>
-
+          alert("Reistration failed");
+        }
+        if (res["success"] == true) {
+          window.sessionStorage.setItem("AquaSensorToken", res["token"]);
+          window.location.href = "{{ base_url }}/sensormap";
+          return;
+        }
+        alert("Registration failed");
+        return;
+      }
+    </script>
+  </div>
+</div>
 
 {% endblock %}

@@ -1,8 +1,8 @@
 const container = document.getElementById("right-bottom");
 
 function renderInfoPanel(name, sensor_dissolved_oxygen, sensor_temperature) {
-    container.innerHTML = ""; // clean content
-    container.innerHTML = `
+  container.innerHTML = ""; // clean content
+  container.innerHTML = `
         <div class="info-panel">
             <div class="info-panel-header">
                 <div class="info-panel-header-title">${name}</div>
@@ -19,5 +19,5 @@ function renderInfoPanel(name, sensor_dissolved_oxygen, sensor_temperature) {
             </div>
         </div>
     `;
-    console.log("drawn info box");
+  console.log("drawn info box");
 }

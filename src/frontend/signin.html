@@ -96,40 +96,43 @@ content %}
   </div>
 </div>
 <script>
-  async function process(){
-   var f = new FormData(document.getElementById("loginform"));
+  async function process() {
+    var f = new FormData(document.getElementById("loginform"));
 
-   // validation code
-  if (!(f.get("username") && f.get("password"))){
-    alert("Please enter username and password");
-    return;
-  }
+    // validation code
+    if (!(f.get("username") && f.get("password"))) {
+      alert("Please enter username and password");
+      return;
+    }
 
-   // call the api
-   var req = await fetch('{{ request.url_for("login") }}',{
-    method: 'POST',
-    headers: {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({"username":f.get("username"),"password":f.get("password")})
-   });
-   var res=await req.json();
-   if(res["success"]==false){
-    alert("login failed");
-    return
-   }
-   if(res["success"]==true){
-    /*let d = new Date();
+    // call the api
+    var req = await fetch('{{ request.url_for("login") }}', {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: f.get("username"),
+        password: f.get("password"),
+      }),
+    });
+    var res = await req.json();
+    if (res["success"] == false) {
+      alert("login failed");
+      return;
+    }
+    if (res["success"] == true) {
+      /*let d = new Date();
     d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
     Document.cookie="AquaSensorToken="+res["token"]+"; expires="+d.toGMTString()+"; path=/";*/
-    window.sessionStorage.setItem("AquaSensorToken",res["token"]);
-    window.location.href = "{{ base_url }}/sensormap";
-    return
-   }
-   //panic here
-   alert("login failed");
-   return
+      window.sessionStorage.setItem("AquaSensorToken", res["token"]);
+      window.location.href = "{{ base_url }}/sensormap";
+      return;
+    }
+    //panic here
+    alert("login failed");
+    return;
   }
 </script>
 {% endblock %}

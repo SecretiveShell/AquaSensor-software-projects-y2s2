@@ -109,7 +109,7 @@ function fetchRivers() {
                 {
                   color: color,
                   weight: 16,
-                  opacity: 0,
+                  opacity: 1,
                 }
               );
 
@@ -130,9 +130,9 @@ function fetchRivers() {
                 radius: 12,
                 fillColor: color,
                 fillOpacity: 0.95,
-                color: "#111",
+                color: color,
                 weight: 1,
-                opacity: 0,
+                opacity: 1,
                 className: "sensor-hidden", // <-- Custom class
               }).bindPopup(
                 `🌡️ Temp: ${temp}°C<br/>🧪 DO: ${node.sensor_dissolved_oxygen || "?"}`
@@ -145,9 +145,9 @@ function fetchRivers() {
               const marker = L.marker([lat, lon], {
                 title: `Sensor: ${node.sensor_id}`,
                 opacity: 0, // start hidden
-              }).bindPopup(`📍 Sensor ID: ${node.sensor_id}`);
+              }).bindPopup(`Temperature: ${temp}°C<br/>DO: ${node.sensor_dissolved_oxygen || "?"}`);
 
-              marker._icon?.classList?.add("sensor-hidden");
+              marker._icon?.classList?.add("sensor-hidden"); // class for control
               window.riverTempLayerGroup.addLayer(marker);
             }
           });

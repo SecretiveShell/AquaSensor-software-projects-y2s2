@@ -11,18 +11,18 @@ const tileLayers = {
       attribution: "© OpenStreetMap contributors",
     },
   ),
-  "Stadia Dark": L.tileLayer(
-    "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
-    {
-      attribution: "© Stadia Maps, © OpenStreetMap",
-    },
-  ),
-  "Stadia Smooth": L.tileLayer(
-    "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png",
-    {
-      attribution: "© Stadia Maps, © OpenStreetMap",
-    },
-  ),
+  // "Stadia Dark": L.tileLayer(
+  //   "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
+  //   {
+  //     attribution: "© Stadia Maps, © OpenStreetMap",
+  //   },
+  // ),
+  // "Stadia Smooth": L.tileLayer(
+  //   "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png",
+  //   {
+  //     attribution: "© Stadia Maps, © OpenStreetMap",
+  //   },
+  // ),
   "CartoDB Light": L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
     {

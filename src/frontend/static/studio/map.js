@@ -144,6 +144,10 @@ function fetchRivers() {
                 }`
               );
 
+              circle.addEventListener("click", () => {
+                renderInfoPanel(node.sensor_name, node.sensor_dissolved_oxygen, node.sensor_temperature);
+              });
+
               window.riverTempLayerGroup.addLayer(circle);
 
               if (node.sensor_id) {

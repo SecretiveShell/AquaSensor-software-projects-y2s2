@@ -1,0 +1,42 @@
+<link rel="icon" type="image/png" href="/static/aquasensor logo.png" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+<link rel="stylesheet" href="/static/css/header.css" />
+<header>
+  <div class="title">
+    <a href="/"><img src="/static/aquasensor logo.png" /></a>
+  </div>
+  <div class="PROFILE">
+    <span id="profileOpen" onclick="openProfile()"><a href="/"><img src=""/></a></span>
+  </div>
+
+    <div id="Profile" class="profile">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeProfile()">
+        &times;
+            </a>
+        <div class="profilelinks">
+            <a href="chart"><i class="fa fa-fw fa-wrench"></i>River Data</a>
+            <a href="map"><i class="fa fa-fw fa-map"></i>Map</a>
+            <a href="sensormap">Sensors</a>
+            <a href="aboutus"><i class="fa fa-fw fa-user"></i>Client</a>
+            <a href="contactus"><i class="fa fa-fw fa-envelope"></i>Contact Us</a>
+            <a href="studio"><i class="fa fa-fw-home"></i>Dashboard</a>
+        </div>
+    </div>
+    <script>
+        function openNav() {
+          document.getElementById("Profile").style.width = "250px";
+          document.getElementById("main").style.marginLeft = "250px";
+          document.body.style.backgroundColor = "rgba(0,0,0,0)";
+          document.getElementById("openProfile").onclick=closeNav;
+        }
+        function closeNav() {
+          document.getElementById("Profile").style.width = "0";
+          document.getElementById("main").style.marginLeft = "0";
+          document.body.style.backgroundColor = "white";
+          document.getElementById("openProfile").onclick=openNav;
+        }
+      </script>
+</header>

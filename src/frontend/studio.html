@@ -26,7 +26,14 @@
     <script src="/static/studio/map.js" defer></script>
     <!-- end of map -->
   </head>
+  <script>
+    $(function(){
+      $("#header").load("header.html");
+      $("#footer").load("footer.html");
+    });
+  </script>
   <body>
+    <div id="header"></div>
     <div id="container">
       <div id="left">
         <div id="left-top">
@@ -80,5 +87,6 @@
         </div>
       </div>
     </div>
+    <div id="footer"></div>
   </body>
 </html>

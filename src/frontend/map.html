@@ -46,7 +46,28 @@ Network{% endblock %} {% block content %}
 <script>
   var map = L.map("map").setView([53.3811, -1.4701], 14);
 
-  L.tileLayer(
+  async function intimap(){
+    const Sensor1 = {lat: 53.35604 , lng: -1.703837};
+    const Sensor2 = {lat: 53.32952 , lng: -1.667412};
+    const Sensor3 = {lat: 53.330086 , lng: -1.668134};
+    
+    const {AdvancedMarkerElement} = await leaflet.maps.importLibary("marker");
+    const marker1 = new AdvancedMarkerElement({
+      map: map,
+      position: Sensor1,
+      title: "Sensor 1",
+    });
+    const marker2 = new AdvancedMarkerElement({
+      map: map,
+      position: Sensor2,
+      title: "Sensor 2",
+    });
+    const marker3 = new AdvancedMarkerElement({
+      map: map,
+      position: Sensor3,
+      title: "Sensor 3",
+    });
+    L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     {
       maxZoom: 19,
@@ -135,6 +156,63 @@ Network{% endblock %} {% block content %}
   // Trigger river heatmap update
   map.on("load", fetchRivers);
   map.on("moveend", fetchRivers);
+  }
+  intimap();
+
+ /* const service = new google.map.place.Placeservice(map)
+  const request = {
+    location: targetcords,
+    radius: '5000',
+    query: 'river sensors' 
+  };
+  Service.textsearch(request, status) => {
+    if(status === google.maps.places.PlaceserviceStatus.ok){
+      results.forEach(place => {
+        console.log('River Name: ', place.name);
+        console.log('River cords: ', placegeometry.location); 
+      });
+    };
+  }
+  function combineData(filtersensor, rivercords){
+    const combineData = filtersensor.map(sensor => {
+      const nearestriver = findNearestRiver(sensor, rivercords);
+      return{
+        ...sensor,
+        nearRiver,
+      };
+    });
+    console.log('combine data', combineData);
+    return combineData;
+  }
+  function findNearestRiver(sensor, river){
+    let nearestriver = null;
+    let minDistance = Infinity;
+    river.forEach(river => {
+      const distance = Math.sqrt(
+        Math.pow(sensor.latitude - river.lat, 2) +
+        Math.sqrt(sensor.longitude - river.lng, 2)
+      )
+      if(distance < minDistance){
+        minDistance = distance;
+        nearestriver = river
+      }
+      return nearestriver;
+    })
+  }
+  function displayData(combineData){
+    const container = document.getElementById('map');
+    container.innerHTML = '';
+    combineData.forEach(item => {
+      const div = document.createElement('div');
+      div.innerHTML = `
+      <h3>Sensor ID: ${item.id}</h3>
+      <p>Coordinates: (${item.latitude}, ${item.longitude})</p>
+      <p>Nearest River: ${item.nearestRiver.name} (${item.nearestRiver.lat}, ${item.nearestRiver.lng})</p>
+    `;
+    container.appendChild(div);
+    })
+  }
+  displayData(combineData);*/
 </script>
 
 {% endblock %}

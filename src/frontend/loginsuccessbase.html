@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}AquaSensor{% endblock %}</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+	max-width:100%;
+        /*background-color: grey;*/
+      }
+      main {
+        margin: 0;
+        padding: 0;
+        min-height: 82vh;
+	max-width:100%;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/static/cropped-logo-32x32.png"
+      sizes="32x32"
+    />
+    {% block contentHead %}{% endblock %}
+  </head>
+  <body>
+    <header>{% include "private/loginsuccessheader.html" %}</header>
+
+    <main id="main">{% block content %}{% endblock %}</main>
+
+    <footer>{% include "private/footer.html" %}</footer>
+  </body>
+</html>

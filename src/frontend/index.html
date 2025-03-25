@@ -1,31 +1,3 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AquaSensor</title>
-  </head>
-  <style>
-    .main p{
-      font-size: 20px;
-      width: 200px;
-      height: auto;
-    }
-  </style>
-  <body>
-    <div id="main">
-      <p>
-        The AquaSensor solution provides low cost, real-time river quality
-        monitoring, which ensures legal compliance, saves money and protects the
-        environment.
-      </p>
-    </div>
-    {% endblock %}
-  </body>
-</html>
 {% extends "base.html" %} {% block title %}AquaSensor{% endblock %}
 {% block contentHead %}
 <script>
@@ -45,13 +17,30 @@ content %}
 </script>
 
 <style>
+.main p{
+      font-size: 20px;
+      width: 200px;
+      height: auto;
+}
+
 #datalist div{
-	display:flex;
 	margin-left: 3vw;
-	min-width:16vw;
-	min-height:16vw;
 	border:1px solid black;
-	float: left;
+}
+@media screen and (min-width:480px){
+	#datalist div{
+		display:flex;
+		min-width:45vw;
+		min-height:400vw;
+	}
+}
+@media screen and (min-width:801px){
+	#datalist div{
+		display:inline-block;
+		min-width:16vw;
+		min-height:16vw;
+		float: left;
+	}
 }
 #datalist div p{
 	word-wrap: break-word;

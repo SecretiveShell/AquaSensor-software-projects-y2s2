@@ -1,14 +1,20 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
+content %}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AquaSensor</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js" integrity="sha384-zsLANmosWr//2pfNcbDMJ6JzPZgkyybwmBiHz5Xns/gPlVdfWpro3MaaDKXBABED" crossorigin="anonymous"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js"
+      integrity="sha384-zsLANmosWr//2pfNcbDMJ6JzPZgkyybwmBiHz5Xns/gPlVdfWpro3MaaDKXBABED"
+      crossorigin="anonymous"
+    ></script>
     <script src="/eSmoothing.js"></script>
     <style>
-      html, body {
+      html,
+      body {
         margin: 0;
         padding: 0;
         height: 100%;
@@ -40,7 +46,7 @@
         <label for="sensorDropdown">Select Sensor:</label>
         <select id="sensorDropdown"></select>
       </div>
-      
+
       <div class="chart-container">
         <h2>Today's River Data</h2>
         <div id="todayChart" class="chart-box"></div>
@@ -58,7 +64,7 @@
     </div>
 
     <script>
-      window.onload = function() {
+      window.onload = function () {
         function getToken() {
           const token = sessionStorage.getItem("AquaSensorToken");
           if (!token) {
@@ -70,23 +76,42 @@
         function renderChart(containerId, title, xData, yData, color) {
           var chart = echarts.init(document.getElementById(containerId));
           var option = {
-            title: { text: title, left: 'center' },
-            xAxis: { type: 'category', data: xData, name: 'Time', boundaryGap: false },
-            yAxis: { type: 'value', name: 'Water Temperature (°C)' },
-            dataZoom: [{ type: 'inside' }],
-            series: [{ data: yData, type: 'line', smooth: true, lineStyle: { color: color } }]
+            title: { text: title, left: "center" },
+            xAxis: {
+              type: "category",
+              data: xData,
+              name: "Time",
+              boundaryGap: false,
+            },
+            yAxis: { type: "value", name: "Water Temperature (°C)" },
+            dataZoom: [{ type: "inside" }],
+            series: [
+              {
+                data: yData,
+                type: "line",
+                smooth: true,
+                lineStyle: { color: color },
+              },
+            ],
           };
           chart.setOption(option);
         }
 
-        async function fetchDataAndRenderChart(sensorId, startDate, endDate, containerId, title, color) {
+        async function fetchDataAndRenderChart(
+          sensorId,
+          startDate,
+          endDate,
+          containerId,
+          title,
+          color,
+        ) {
           try {
             const apiUrl = `/api/v1/sensors/sensors/${sensorId}/readings?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
             const response = await fetch(apiUrl, {
               headers: {
-                'Content-Type': 'application/json',
-                'AquaSensor-Login-Token': getToken()
-              }
+                "Content-Type": "application/json",
+                "AquaSensor-Login-Token": getToken(),
+              },
             });
 
             if (!response.ok) {
@@ -98,26 +123,28 @@
               throw new Error("Invalid data format received.");
             }
 
-            const xData = data.readings.map(entry => new Date(entry.datetime).toLocaleString());
-            const yData = data.readings.map(entry => entry.temperature);
+            const xData = data.readings.map((entry) =>
+              new Date(entry.datetime).toLocaleString(),
+            );
+            const yData = data.readings.map((entry) => entry.temperature);
             const smoothedYData = eSmoothing(yData);
 
             renderChart(containerId, title, xData, smoothedYData, color);
           } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error("Error fetching data:", error);
           }
         }
 
         function populateSensorDropdown() {
-          const sensorDropdown = document.getElementById('sensorDropdown');
+          const sensorDropdown = document.getElementById("sensorDropdown");
           const sensors = [
             { id: "sensor022", name: "Derwent 13" },
             { id: "sensor044", name: "Derwent 13-50" },
-            { id: "941205", name: "Derwent 21" }
+            { id: "941205", name: "Derwent 21" },
           ];
 
-          sensors.forEach(sensor => {
-            const option = document.createElement('option');
+          sensors.forEach((sensor) => {
+            const option = document.createElement("option");
             option.value = sensor.id;
             option.textContent = sensor.name;
             sensorDropdown.appendChild(option);
@@ -125,21 +152,44 @@
         }
 
         function refreshCharts() {
-          const sensorId = document.getElementById('sensorDropdown').value;
-          const today = new Date().toISOString().split('T')[0];
+          const sensorId = document.getElementById("sensorDropdown").value;
+          const today = new Date().toISOString().split("T")[0];
           const yesterday = new Date();
           yesterday.setDate(yesterday.getDate() - 1);
-          const yesterdayDate = yesterday.toISOString().split('T')[0];
+          const yesterdayDate = yesterday.toISOString().split("T")[0];
 
           Promise.all([
-            fetchDataAndRenderChart(sensorId, today, today, "todayChart", "Today's Water Temperature", "blue"),
-            fetchDataAndRenderChart(sensorId, yesterdayDate, yesterdayDate, "yesterdayChart", "Yesterday's Water Temperature", "green"),
-            fetchDataAndRenderChart(sensorId, "2019-01-01", today, "fiveYearChart", "Last 5 Years Water Temperature", "red")
+            fetchDataAndRenderChart(
+              sensorId,
+              today,
+              today,
+              "todayChart",
+              "Today's Water Temperature",
+              "blue",
+            ),
+            fetchDataAndRenderChart(
+              sensorId,
+              yesterdayDate,
+              yesterdayDate,
+              "yesterdayChart",
+              "Yesterday's Water Temperature",
+              "green",
+            ),
+            fetchDataAndRenderChart(
+              sensorId,
+              "2019-01-01",
+              today,
+              "fiveYearChart",
+              "Last 5 Years Water Temperature",
+              "red",
+            ),
           ]);
         }
 
         populateSensorDropdown();
-        document.getElementById('sensorDropdown').addEventListener('change', refreshCharts);
+        document
+          .getElementById("sensorDropdown")
+          .addEventListener("change", refreshCharts);
 
         refreshCharts();
       };

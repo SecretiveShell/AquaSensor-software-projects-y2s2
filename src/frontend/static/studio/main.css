@@ -1,117 +1,143 @@
+/* GLOBAL RESET AND BASE STYLES */
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+/* NAVIGATION BAR */
+nav {
+  height: 48px;
+  padding: 10px;
+  color: black;
+  background-color: #007eb8;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+}
+
+/* MAIN FLEX CONTAINER */
+#container {
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - 48px);
+  width: 100%;
+  border-left: 6px solid #68bbd9;
+  border-right: 6px solid #68bbd9;
+  border-bottom: 6px solid #68bbd9;
+}
+
+/* LEFT & RIGHT PANES */
+#left,
+#right {
+  width: 18%;
+  display: flex;
+  flex-direction: column;
+  background-color: #ddd;
+  min-width: 0;
+}
+
+#left {
+  border-right: 4px solid #68bbd9;
+}
+
+#right {
+  border-left: 4px solid #68bbd9;
+}
+
+#left-top,
+#left-bottom,
+#right-top,
+#right-bottom {
+  flex: 1;
+  background-color: #ddd;
+  overflow: auto;
+}
+
+#left-top {
+  border-top: 4px solid #68bbd9;
+}
+
+#left-bottom,
+#right-bottom,
+#right-top {
+  border-top: 4px solid #68bbd9;
+}
+
+#map-controls > label {
+  display: block;
+  margin: 10px;
+}
+
+/* CENTER PANE */
+#center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #ddd;
+  min-width: 0;
+}
+
+#center-top {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+}
+
 #map {
-    height: 300px;
-    width: 100%;
-    border-radius: 8px;
-  }
-
-div#center-top > div#map {
-    height: 100%;
-    width: 100%;
-}
-.chart-selector {
-    display: relative;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-  
-  .chart-container {
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .chart-container:hover {
-    transform: scale(1.05);
-  }
-  
-  .chart-box {
-    height: 150px;
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 8px;
-  }
-  .chart-container.enlarged {
-    position: fixed;
-    top: 10%;
-    left: 10%;
-    width: 80%;
-    height: 80%;
-    z-index: 1000;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .chart-container.enlarged .chart-box {
-    height: calc(100% - 20px);
-    width: calc(100% - 20px);
-  }
-html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #eee;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
-div#container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
+#map * {
+  image-rendering: auto;
 }
 
-div#left {
-    width: 13cm;
-    height: 100%;
-    background-color: rgb(42, 90, 107);
+/* CENTER BOTTOM (Slider + Date Picker) */
+#center-bottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: #ddd;
+  padding: 10px;
+  border-top: 4px solid #68bbd9;
 }
 
-div#left-top {
-    height: 50%;
-    width: 100%;
-    background-color: rgb(42, 90, 107);
+#date-slider {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-div#left-bottom {
-    height: 50%;
-    width: 100%;
-    background-color: rgb(42, 90, 107);
-}
-
-div#center {
-    width: 100%;
-    height: 100%;
-    background-color: blue;
-}
-
-div#center-top {
-    height: 100%;
-    width: 100%;
-    background-color: gray;
-}
-
-#right{
-    background-color: rgb(42, 90, 107);
-}
-
-div#right-top {
-    height: 100%;
-    width: 100%;
-    background-color: rgb(42, 90, 107);
-}
-
-div#right-bottom {
-    height: 50%;
-    width: 100%;
-    background-color: rgb(42, 90, 107);
-}
-
-div#center-top > div#map {
-    height: 100%;
-    width: 100%;
+#date-slider input {
+  width: 90%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
 }

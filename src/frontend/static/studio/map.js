@@ -1,73 +1,161 @@
 var map = L.map("map").setView([53.32, -1.66], 15);
 
-L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-  {
-    maxZoom: 17,
-    minZoom: 10,
-    attribution:
-      "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+function imputeMissingTemperatures(coords) {
+  const temps = coords.map((n) =>
+    n.sensor_temperature !== undefined
+      ? parseFloat(n.sensor_temperature)
+      : null,
+  );
+
+  for (let i = 0; i < coords.length; i++) {
+    if (temps[i] !== null) continue;
+
+    // Look backward
+    let leftIdx = i - 1;
+    while (leftIdx >= 0 && temps[leftIdx] === null) leftIdx--;
+
+    // Look forward
+    let rightIdx = i + 1;
+    while (rightIdx < temps.length && temps[rightIdx] === null) rightIdx++;
+
+    if (leftIdx >= 0 && rightIdx < temps.length) {
+      // Interpolate linearly
+      const leftTemp = temps[leftIdx];
+      const rightTemp = temps[rightIdx];
+      const frac = (i - leftIdx) / (rightIdx - leftIdx);
+      temps[i] = leftTemp + frac * (rightTemp - leftTemp);
+    } else if (leftIdx >= 0) {
+      temps[i] = temps[leftIdx];
+    } else if (rightIdx < temps.length) {
+      temps[i] = temps[rightIdx];
+    }
   }
-).addTo(map);
 
-function fetchRivers() {
-  var bounds = map.getBounds();
-  var minLat = bounds.getSouth();
-  var minLng = bounds.getWest();
-  var maxLat = bounds.getNorth();
-  var maxLng = bounds.getEast();
+  // Save into the node under a new key
+  for (let i = 0; i < coords.length; i++) {
+    if (temps[i] !== null) {
+      coords[i].sensor_temperature_imputed = temps[i];
+    }
+  }
 
-  var overpassURL =
-    `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
+  return coords;
+}
 
-  fetch(overpassURL)
-    .then((response) => response.json())
-    .then((data) => {
-      var riverPoints = [];
+function tempToColor(temp) {
+  const minT = 3,
+    maxT = 18;
+  const clamped = Math.max(minT, Math.min(maxT, temp));
+  const ratio = (clamped - minT) / (maxT - minT);
 
-      data.elements
-        .filter((element) => element.type === "way" && element.geometry)
-        .forEach((element) => {
-          var coords = element.geometry.map((coord) => [coord.lat, coord.lon]);
+  // Hue: 240 (blue) to 0 (red)
+  const hue = 240 - 240 * ratio;
+  const saturation = 100;
+  const lightness = 50;
 
-          // Add original points
-          coords.forEach((point) => riverPoints.push([...point, 0.9]));
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
 
-          // Interpolate extra points to fill gaps
-          for (let i = 0; i < coords.length - 1; i++) {
-            let [lat1, lon1] = coords[i];
-            let [lat2, lon2] = coords[i + 1];
-            let numInterpolatedPoints = Math.ceil(
-              L.latLng(lat1, lon1).distanceTo(L.latLng(lat2, lon2)) / 20
-            ); // Controls density
+async function fetchRivers() {
+  try {
+    const bounds = map.getBounds();
+    const minLat = bounds.getSouth();
+    const minLng = bounds.getWest();
+    const maxLat = bounds.getNorth();
+    const maxLng = bounds.getEast();
+    const dateStr = datePicker.value;
 
-            for (let j = 1; j < numInterpolatedPoints; j++) {
-              let frac = j / numInterpolatedPoints;
-              let latInterp = lat1 + frac * (lat2 - lat1);
-              let lonInterp = lon1 + frac * (lon2 - lon1);
-              riverPoints.push([latInterp, lonInterp, 0.6]); // Lower intensity for smooth blending
-            }
-          }
-        });
+    let url = `/api/v1/studio/riverpoints?x1=${minLat}&y1=${minLng}&x2=${maxLat}&y2=${maxLng}`;
+    if (dateStr) {
+      url += `&date=${encodeURIComponent(dateStr)}`;
+    }
 
-      // Remove previous river heat points if any
-      if (window.riverHeatLayer) {
-        map.removeLayer(window.riverHeatLayer);
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (window.riverTempLayerGroup) {
+      window.riverTempLayerGroup.clearLayers();
+    } else {
+      window.riverTempLayerGroup = L.layerGroup().addTo(map);
+    }
+
+    for (const el of data.elements) {
+      if (el.type !== "way" || !Array.isArray(el.geometry)) continue;
+
+      const coords = imputeMissingTemperatures(el.geometry);
+
+      for (let i = 0; i < coords.length - 1; i++) {
+        const nodeA = coords[i];
+        const nodeB = coords[i + 1];
+        const t1 = nodeA.sensor_temperature_imputed;
+        const t2 = nodeB.sensor_temperature_imputed;
+
+        if (t1 !== undefined && t2 !== undefined) {
+          const avgTemp = (t1 + t2) / 2;
+          const color = tempToColor(avgTemp);
+
+          const polyline = L.polyline(
+            [
+              [nodeA.lat, nodeA.lon],
+              [nodeB.lat, nodeB.lon],
+            ],
+            {
+              color: color,
+              weight: 16,
+              opacity: 1,
+            },
+          );
+
+          window.riverTempLayerGroup.addLayer(polyline);
+        }
       }
 
-      // Add river heat layer to the existing heatmap
-      window.riverHeatLayer = L.heatLayer(riverPoints, {
-        radius: 20, // Increased for smoother water effect
-        blur: 40,
-        maxZoom: 17,
-        max: 1.0,
-      }).addTo(map);
-    })
-    .catch((error) => console.error("Error loading river data:", error));
+      for (const node of coords) {
+        const { lat, lon, sensor_temperature, sensor_dissolved_oxygen, sensor_id, sensor_name } = node;
+
+        if (sensor_temperature !== undefined) {
+          const temp = parseFloat(sensor_temperature);
+          const color = tempToColor(temp);
+
+          const circle = L.circleMarker([lat, lon], {
+            radius: 12,
+            fillColor: color,
+            fillOpacity: 0.95,
+            color: color,
+            weight: 1,
+            opacity: 1,
+            className: "sensor-hidden",
+          }).bindPopup(`🌡️ Temp: ${temp}°C<br/>🧪 DO: ${sensor_dissolved_oxygen || "?"}`);
+
+          circle.addEventListener("click", () => {
+            renderInfoPanel(sensor_name, sensor_dissolved_oxygen, sensor_temperature);
+          });
+
+          window.riverTempLayerGroup.addLayer(circle);
+
+          if (sensor_id) {
+            const marker = L.marker([lat, lon], {
+              title: `Sensor: ${sensor_id}`,
+              opacity: 0,
+            });
+
+            marker.bindPopup(`Temperature: ${temp}°C<br/>DO: ${sensor_dissolved_oxygen || "?"}`);
+
+            marker.addEventListener("click", () => {
+              renderInfoPanel(sensor_name, sensor_dissolved_oxygen, sensor_temperature);
+            });
+
+            marker._icon?.classList?.add("sensor-hidden");
+            window.riverTempLayerGroup.addLayer(marker);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Error fetching riverpoints:", err);
+  }
 }
+
 
 // Trigger river heatmap update
 map.on("load", fetchRivers);
 map.on("moveend", fetchRivers);
-
-fetchRivers();

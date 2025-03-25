@@ -39,7 +39,7 @@ async def create_login_session(username: str, email: str):
 async def fapi_get_user(token: Annotated[str, Depends(api_key_header)]):
     """check if the user is logged in"""
 
-    return get_logged_in_user(token)
+    return await get_logged_in_user(token)
 
 async def get_logged_in_user(token):
     """check if the user is logged in"""

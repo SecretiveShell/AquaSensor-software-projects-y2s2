@@ -73,7 +73,7 @@ Network{% endblock %} {% block content %}
       maxZoom: 19,
       attribution:
         "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-    }
+    },
   ).addTo(map);
 
   var legend = L.control({ position: "bottomright" });
@@ -125,7 +125,7 @@ Network{% endblock %} {% block content %}
               let [lat1, lon1] = coords[i];
               let [lat2, lon2] = coords[i + 1];
               let numInterpolatedPoints = Math.ceil(
-                L.latLng(lat1, lon1).distanceTo(L.latLng(lat2, lon2)) / 20
+                L.latLng(lat1, lon1).distanceTo(L.latLng(lat2, lon2)) / 20,
               ); // Controls density
 
               for (let j = 1; j < numInterpolatedPoints; j++) {

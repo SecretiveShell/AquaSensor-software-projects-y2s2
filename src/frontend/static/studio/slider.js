@@ -1,6 +1,3 @@
-const slider = document.getElementById("date-slider-input");
-const datePicker = document.getElementById("map-date-picker");
-
 const today = new Date();
 const baseDate = new Date();
 baseDate.setMonth(baseDate.getMonth() - 3);
@@ -41,11 +38,11 @@ datePicker.max = isoNow;
 let fetchTimeout = null;
 const FETCH_DEBOUNCE_MS = 200;
 
-function debounced_fetch_rivers() {
+function debounced_updater() {
   if (fetchTimeout) clearTimeout(fetchTimeout);
   fetchTimeout = setTimeout(async () => {
     try {
-      await fetchRivers();
+      Promise.all(fetchRivers(), fetchAndRenderCharts());
     } catch (e) {
       console.error("Error during debounced fetch:", e);
     } finally {
@@ -57,7 +54,7 @@ function debounced_fetch_rivers() {
 
 slider.addEventListener("input", () => {
   updateDatePicker(slider.value);
-  debounced_fetch_rivers();
+  debounced_updater();
 });
 
 datePicker.addEventListener("input", (e) => {
@@ -65,6 +62,6 @@ datePicker.addEventListener("input", (e) => {
   const offset = Math.floor((selected - baseDate) / (1000 * 60 * 60));
   if (offset >= 0 && offset <= maxHours) {
     slider.value = offset;
-    debounced_fetch_rivers();
+    debounced_updater();
   }
 });

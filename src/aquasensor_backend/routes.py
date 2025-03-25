@@ -18,10 +18,6 @@ async def read_chart(request: Request) -> HTMLResponse:
 async def read_map(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("map.html", {"request": request})
 
-@router.get("/eSmoothing.js")
-async def read_smooth(request:Request) -> Response:
-    return Response(templates.TemplateResponse("eSmoothing.js",{"request": request}).body, media_type="application/javascript")
-
 @router.get("/dataLoading.js")
 async def read_datfunc(request:Request) -> Response:
     return Response(templates.TemplateResponse("dataLoading.js",{"request": request}).body, media_type="application/javascript")
@@ -65,6 +61,7 @@ async def read_studio(request:Request) -> HTMLResponse:
 @router.get("/studio-mobile")
 async def read_studiomobile(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("studio-mobile.html",{"request":request})
+
 @router.get("/loginsuccess")
 async def read_loginsuccess(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("loginsuccess.html",{"request":request})

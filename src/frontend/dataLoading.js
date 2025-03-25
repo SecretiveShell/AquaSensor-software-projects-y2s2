@@ -5,7 +5,7 @@ async function call(x) {
   let from = now.toISOString().substring(0, 10);
   let r = await fetch(
     "{{ base_url }}" +
-      "/api/v1/sensors/sensors/" +
+      "/api/v1/sensors/" +
       x +
       "/readings?start_date=" +
       from +

@@ -127,6 +127,8 @@ async function fetchRivers() {
           }).bindPopup(`🌡️ Temp: ${temp}°C<br/>🧪 DO: ${sensor_dissolved_oxygen || "?"}`);
 
           circle.addEventListener("click", () => {
+            observeSensorId(sensor_id);
+            fetchAndRenderCharts();
             renderInfoPanel(sensor_name, sensor_dissolved_oxygen, sensor_temperature);
           });
 
@@ -141,6 +143,8 @@ async function fetchRivers() {
             marker.bindPopup(`Temperature: ${temp}°C<br/>DO: ${sensor_dissolved_oxygen || "?"}`);
 
             marker.addEventListener("click", () => {
+              observeSensorId(sensor_id);
+              fetchAndRenderCharts();
               renderInfoPanel(sensor_name, sensor_dissolved_oxygen, sensor_temperature);
             });
 

@@ -1,0 +1,162 @@
+{% extends "base.html" %} {% block title %}AquaSensor flow tracker{% endblock %}
+{% block contentHead %}
+<script src="/static/isLogged.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js" integrity="sha384-zsLANmosWr//2pfNcbDMJ6JzPZgkyybwmBiHz5Xns/gPlVdfWpro3MaaDKXBABED" crossorigin="anonymous"></script>
+
+<script>
+	//daily mean flow
+	const flowApi = "https://environment.data.gov.uk/hydrology/id/measures/cad502d9-12f9-4449-a1e5-568b9f7d32e6-flow-m-86400-m3s-qualified/readings?";
+	//daily min level
+	const levelApi = "https://environment.data.gov.uk/hydrology/id/measures/cad502d9-12f9-4449-a1e5-568b9f7d32e6-level-min-86400-m-qualified/readings?";
+	const DerwentWidthM = 6;
+	/*
+	flow=m3/s
+	level=m
+	width=m
+	l*w/f=s/m
+	
+	distance=m
+	s*m/m = s
+	*/
+
+	var warnList={'flowError':false,'levelError':false};
+
+	async function getFlow(d){
+		str=d.toISOString().substring(0,10);
+		url=flowApi+"mineq-date="+str+"&maxeq-date="+str;
+		let r = await fetch(url);
+		let j = await r.json();
+		if(j["items"].length==0){
+			url=flowApi+"latest";
+			r= await fetch(url);
+			j= await r.json();
+			warnList['flowError']=true;
+		}
+		return j["items"][0]["value"];
+	}
+
+	async function getLevel(d){
+		str=d.toISOString().substring(0,10);
+		url=levelApi+"mineq-date="+str+"&maxeq-date="+str;
+		let r = await fetch(url);
+		let j = await r.json();
+		if(j["items"].length==0){
+			url=levelApi+"latest";
+			r= await fetch(url);
+			j= await r.json();
+			warnList['levelError']=true;
+		}
+		return j["items"][0]["value"];
+	}
+	function parseWarnings(){
+		var warn=document.getElementById("warnings");
+		warn.innerHTML="";
+		if(warnList['flowError']){
+			warn.innerHTML+="<em>Issues retreiving requested flow rate, latest reading used instead</em>"
+			warnList['flowError']=false;
+		}
+		if(warnList['levelError']){
+			warn.innerHTML+="<em>Issues retreiving requested river level, latest reading used instead</em>"
+			warnList['levelError']=false;
+		}
+	}
+</script>
+
+<link rel="stylesheet" href="/static/css/correlation.css"/>
+{% endblock %}
+{% block content %}
+
+<div id="warnings">
+</div>
+<div id="settings" class="corr">
+	<form>
+		<div id="temp-oxy-view">
+			<p>variable toggles</p>
+			<br/>
+			<span id="r">
+			<label for="temp">temp</label>
+			<input type="checkbox" id="temp" checked></input>
+			</span>
+			<br/>
+			<span id="r">
+			<label for="oxygen">oxygen</label>
+			<input type="checkbox" id="oxygen" checked></input>
+			</span>
+		</div>
+		<div id="dist-and-flow">
+			<p>manual settings</p>
+			<label id=flowLabel" for="flow">flow</label>
+			<label id="distLabel"for="dist">distance</label>
+			<br/>
+			<input type="checkbox" id="flow"></input>
+			<input type="checkbox" id="dist"></input>
+			<br/>
+			<p>Derwent 21</p>
+			<br/>
+			<input type="text" id="flowA"></input><label id="flowALabel" for="flowA">m/s3</label>
+			<input type="text" id="distA"></input><label id="distALabel" for="distA">m</label>
+			<br/>
+			<p>Derwent 13-50</p>
+			<br/>
+			<input type="text" id="flowB"></input><label id="flowBLabel" for="flowB">m/s3</label>
+			<input type="text" id="distB"></input><label id="distBLabel" for="distB">m</label>
+			<br/>
+			<p>Derwent 13</p><br/>
+		</div>
+		<label id="levelCheckLabel" for="levelCheck">level</label><input type=checkbox id="levelCheck"></input>
+		<input type=number id="level"></input><label for="level" id="levelLabel">m</label>
+		<br/>
+		<input type="submit" value="recalculate"></input>
+	</form>
+</div>
+<div id="graph" class="corr">
+	<div id="chart-section">
+	</div>
+</div>
+<div id="form" class="corr">
+	<form>
+		<p>River Derwent<br/><sub><em>(other rivers to supported in future)</em></sub></p>
+		<input type="datetime-local"></input>
+	</form>
+</div>
+<script>
+  _isLogged().then((value)=>{
+  if(value){
+    var chart=echarts.init(document.getElementById("chart-section"));
+    let initOptions= {
+      xAxis: [
+        {
+          type: "time",
+          boundaryGap: false,
+          data: [],
+        },
+      ],
+      yAxis: [
+        {
+          type: "value",
+        },
+      ],
+      series: [
+        {
+          name: "Dissolved Oxygen",
+          type: "line",
+          smooth: false,
+          data: [],
+        },
+        {
+          name: "Temperature",
+          type: "line",
+          smooth: false,
+          data: [],
+        },
+      ],
+    };
+    chart.setOption(initOptions);
+  }
+  else{
+	  document.getElementById("warnings").innerHTML+="<p><em>No Authentication, please <a href=\"login?r=/correlate\">login</a> to use this page</em></p>";
+  }
+});
+</script>
+{% endblock %}

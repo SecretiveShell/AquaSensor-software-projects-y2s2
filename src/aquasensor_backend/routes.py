@@ -65,6 +65,11 @@ async def read_studio(request:Request) -> HTMLResponse:
 @router.get("/studio-mobile")
 async def read_studiomobile(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("studio-mobile.html",{"request":request})
+
 @router.get("/loginsuccess")
 async def read_loginsuccess(request:Request) -> HTMLResponse:
     return templates.TemplateResponse("loginsuccess.html",{"request":request})
+
+@router.get("/correlate")
+async def read_correlate(request:Request) -> HTMLResponse:
+    return templates.TemplateResponse("correlation.html",{"request":request})

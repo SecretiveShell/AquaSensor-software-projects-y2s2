@@ -106,7 +106,7 @@ content %}
     }
 
     // call the api
-    var req = await fetch('{{ request.url_for("login") }}', {
+    var req = await fetch('/api/auth/login', {
       method: "POST",
       headers: {
         Accept: "application/json",

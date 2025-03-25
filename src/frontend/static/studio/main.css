@@ -141,3 +141,38 @@ nav a {
   border: none;
   background-color: transparent;
 }
+
+/* INFO PANEL */
+div.info-panel {
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+div.info-panel-header {
+  width: 100%;
+  padding: 20px;
+  height: 20%;
+  font-size: x-large;
+  text-align: center;
+}
+
+div.info-panel-content {
+  height: 80%;
+  width: 100%;
+}
+
+div.info-panel-content-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+div.info-panel-content-item-title {
+  width: 60%;
+}
+
+div.info-panel-content-item-value {
+  width: 30%;
+  text-align: right;
+}

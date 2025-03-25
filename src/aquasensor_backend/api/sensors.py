@@ -2,6 +2,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from zoneinfo import ZoneInfo
 
 from aquasensor_backend.ORM import AsyncSessionLocal
 from aquasensor_backend.api.utils import do_saturation_percent
@@ -98,10 +99,14 @@ async def get_sensor_readings_by_id(
     db: AsyncSession = Depends(get_db),
 ) -> SensorReadingsResponse:
     """Get sensor readings by ID."""
+
+    start = start_date.astimezone(ZoneInfo("UTC")).replace(tzinfo=None)
+    end = end_date.astimezone(ZoneInfo("UTC")).replace(tzinfo=None)
+
     result = await db.execute(
         select(SensorReadingsModel)
         .filter(SensorReadingsModel.sensor_id == sensorid)
-        .filter(SensorReadingsModel.timestamp.between(start_date, end_date))
+        .filter(SensorReadingsModel.timestamp.between(start, end))
     )
     readings = result.scalars().all()
 

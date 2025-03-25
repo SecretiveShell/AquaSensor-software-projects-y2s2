@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 from typing import Any
 from fastapi import APIRouter
@@ -177,8 +178,10 @@ async def get_river_points(
     x1, y1, x2, y2 = normalize_bbox(x1, y1, x2, y2)
 
     # get river data
-    river_data = await get_river_points_overpass_cached(x1, y1, x2, y2)
-    sensors = await get_sensors(x1, y1, x2, y2, date)
+    river_data, sensors = await asyncio.gather(
+        get_river_points_overpass_cached(x1, y1, x2, y2),
+        get_sensors(x1, y1, x2, y2, date),
+    )
 
     # enrich river data with sensor data
     enriched = enrich_geometry_nodes_with_sensors(

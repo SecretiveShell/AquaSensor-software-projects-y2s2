@@ -1,9 +1,3 @@
-function getToken() {
-  const token = sessionStorage.getItem("AquaSensorToken");
-  if (!token) window.location.href = "/login";
-  return token;
-}
-
 function renderTemperatureChart(containerId, xData, yData, color) {
   const chart = echarts.init(document.getElementById(containerId));
   const title = "Water Temperature";
@@ -52,7 +46,8 @@ function renderDOChart(containerId, xData, yData, color) {
   });
 }
 
-async function fetchAndRenderCharts(sensorId) {
+async function fetchAndRenderCharts() {
+  sensorId = getObservedSensorId();
   const selectedDate = new Date(datePicker.value);
   if (isNaN(selectedDate)) {
     console.error("Invalid date selected.");

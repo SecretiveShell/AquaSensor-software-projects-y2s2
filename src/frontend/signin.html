@@ -127,7 +127,7 @@ content %}
     d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
     Document.cookie="AquaSensorToken="+res["token"]+"; expires="+d.toGMTString()+"; path=/";*/
       window.sessionStorage.setItem("AquaSensorToken", res["token"]);
-      window.location.href = "{{ base_url }}/sensormap";
+      window.location.href = "/sensormap";
       return;
     }
     //panic here

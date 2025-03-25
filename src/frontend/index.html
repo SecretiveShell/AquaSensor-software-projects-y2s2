@@ -22,13 +22,25 @@
       width: 200px;
       height: auto;
 }
+
 #datalist div{
-	display:flex;
 	margin-left: 3vw;
-	min-width:16vw;
-	min-height:16vw;
 	border:1px solid black;
-	float: left;
+}
+@media screen and (min-width:480px){
+	#datalist div{
+		display:flex;
+		min-width:45vw;
+		min-height:400vw;
+	}
+}
+@media screen and (min-width:801px){
+	#datalist div{
+		display:inline-block;
+		min-width:16vw;
+		min-height:16vw;
+		float: left;
+	}
 }
 #datalist div p{
 	word-wrap: break-word;

@@ -55,6 +55,13 @@ function debounced_updater() {
 slider.addEventListener("input", () => {
   updateDatePicker(slider.value);
   debounced_updater();
+  if (realtimeCheckbox.checked) {
+    realtimeCheckbox.checked = false;
+  }
+  if (slider.value == slider.max) {
+    realtimeCheckbox.checked = true;
+    setrealtime(true);
+  }
 });
 
 datePicker.addEventListener("input", (e) => {
@@ -63,5 +70,8 @@ datePicker.addEventListener("input", (e) => {
   if (offset >= 0 && offset <= maxHours) {
     slider.value = offset;
     debounced_updater();
+  }
+  if (realtimeCheckbox.checked) {
+    realtimeCheckbox.checked = false;
   }
 });

@@ -80,25 +80,37 @@ function renderDOChart(containerId, xData, yData, color, selectedDate) {
 
 async function fetchAndRenderCharts() {
   const sensorId = getObservedSensorId();
-  const selectedDate = new Date(datePicker.value);
-  if (isNaN(selectedDate)) {
-    console.error("Invalid date selected.");
-    return;
-  }
+  var selectedDate = new Date(datePicker.value);
 
-  const startDateObj = new Date(selectedDate);
-  startDateObj.setUTCDate(startDateObj.getUTCDate() - 1);
-  const endDateObj = new Date(selectedDate);
-  endDateObj.setUTCDate(endDateObj.getUTCDate() + 1);
-
-  const startDate = startDateObj.toISOString();
-  const endDate = endDateObj.toISOString();
   const color = "blue";
 
   const token = getToken();
-  const url = `/api/v1/sensors/${sensorId}/readings?start_date=${encodeURIComponent(
-    startDate
-  )}&end_date=${encodeURIComponent(endDate)}`;
+
+  var url;
+
+  if (!realtimeCheckbox.checked) {
+    if (isNaN(selectedDate)) {
+      console.error("Invalid date selected.");
+      return;
+    }
+
+    const startDateObj = new Date(selectedDate);
+    startDateObj.setUTCDate(startDateObj.getUTCDate() - 1);
+    const endDateObj = new Date(selectedDate);
+    endDateObj.setUTCDate(endDateObj.getUTCDate() + 1);
+  
+    const startDate = startDateObj.toISOString();
+    const endDate = endDateObj.toISOString();
+
+    url = `/api/v1/sensors/${sensorId}/readings?start_date=${encodeURIComponent(
+      startDate
+    )}&end_date=${encodeURIComponent(endDate)}`;
+  }
+
+  else {
+    url = `/api/v1/sensors/${sensorId}/readings/latest?limit=10`;
+    selectedDate = new Date();
+  }
 
   try {
     const response = await fetch(url, {

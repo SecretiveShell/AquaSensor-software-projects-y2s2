@@ -61,7 +61,9 @@ async function fetchRivers() {
     const dateStr = datePicker.value;
     let url = `/api/v1/studio/riverpoints?x1=${sw.lat}&y1=${sw.lng}&x2=${ne.lat}&y2=${ne.lng}`;
 
-    if (dateStr) url += `&date=${encodeURIComponent(dateStr)}`;
+    const realtime = realtimeCheckbox.checked;
+
+    if (dateStr && !realtime) url += `&date=${encodeURIComponent(dateStr)}`;
 
     const res = await fetch(url);
     const { elements } = await res.json();

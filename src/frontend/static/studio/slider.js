@@ -42,7 +42,7 @@ function debounced_updater() {
   if (fetchTimeout) clearTimeout(fetchTimeout);
   fetchTimeout = setTimeout(async () => {
     try {
-      Promise.all(fetchRivers(), fetchAndRenderCharts());
+      Promise.all([fetchRivers(), fetchAndRenderCharts()]);
     } catch (e) {
       console.error("Error during debounced fetch:", e);
     } finally {

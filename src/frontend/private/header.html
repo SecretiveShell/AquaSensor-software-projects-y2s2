@@ -1,56 +1,75 @@
+<!-- Head assets -->
 <link rel="icon" type="image/png" href="/static/favicon.png" />
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-/>
 <link rel="stylesheet" href="/static/css/header.css" />
-<script src="/src/frontend/static/darkmode.js" defer></script>
-<script src="static/darkmode.js" defer></script>
-<script src="static/google-translate" defer></script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<script src="/static/darkmode.js" defer></script>
+<script src="/static/google-translate.js" defer></script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!-- Header layout -->
 <header>
   <div class="title">
-    <a href="/"><img src="/static/aquasensor logo.png" /></a>
-  </div>
-  <div class="sidebar">
-    <span id="sideOpen" onclick="openNav()">&#9776;</span>
+    <a href="/">
+      <img src="/static/aquasensor logo.png" alt="AquaSensor Logo" />
+    </a>
   </div>
 
-  <div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">
-      &times;
-    </a>
+  <div class="sidebar">
+    <span id="sideToggle">&#9776;</span>
+  </div>
+
+  <nav id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" id="closeNavBtn">&times;</a>
+
     <div class="side-top">
       <div class="google-translate"></div>
-      <label class="switch">
-        <a><input type="checkbox" id="dark-mode-toggle">Dark Mode</a>
-        <span class="slider round"></span>
-      </label>
+
       <a href="/"><i class="fa fa-fw fa-home"></i>Home</a>
-      <a href="chart"><i class="fa fa-fw fa-wrench"></i>River Data</a>
-      <a href="map"><i class="fa fa-fw fa-map"></i>Map</a>
-      <a href="sensormap"><i class="fa fa-fw fa-wrench"></i>Sensors</a>
-      <a href="aboutus"><i class="fa fa-fw fa-user"></i>Client</a>
-      <a href="contactus"><i class="fa fa-fw fa-envelope"></i>Contact Us</a>
-      <a href="studio"><i class="fa fa-fw fa-home"></i>Dashboard</a>
+      <a href="/studio"><i class="fa fa-fw fa-home"></i>Dashboard</a>
+      <a href="/chart"><i class="fa fa-fw fa-wrench"></i>River Data</a>
+      <a href="/sensormap"><i class="fa fa-fw fa-wrench"></i>Sensors</a>
+      <a href="/aboutus"><i class="fa fa-fw fa-user"></i>Client</a>
+      <a href="/contactus"><i class="fa fa-fw fa-envelope"></i>Contact Us</a>
     </div>
+
     <div class="side-bottom">
-      <a href="login"><i class="fa fa-fw fa-user"></i>Signin</a>
-      <a href="register"><i class="fa fa-fw fa-user"></i>Register</a>
+      <a href="/login"><i class="fa fa-fw fa-user"></i>Signin</a>
+      <a href="/register"><i class="fa fa-fw fa-user"></i>Register</a>
     </div>
-  </div>
+  </nav>
+
   <script>
-    function openNav() {
-      document.getElementById("mySidenav").style.width = "250px";
-      //document.getElementById("main").style.marginLeft = "250px";
-      document.body.style.backgroundColor = "rgba(0,0,0,0)";
-      document.getElementById("sideOpen").onclick = closeNav;
-    }
-    function closeNav() {
-      document.getElementById("mySidenav").style.width = "0";
-      //document.getElementById("main").style.marginLeft = "0";
-      document.body.style.backgroundColor = "white";
-      document.getElementById("sideOpen").onclick = openNav;
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+      const sidenav = document.getElementById("mySidenav");
+      const toggleBtn = document.getElementById("sideToggle");
+      const closeBtn = document.getElementById("closeNavBtn");
+
+      var navopen = false;
+
+      function openNav() {
+        navopen = true;
+        sidenav.style.width = "250px";
+        document.body.style.backgroundColor = "rgba(0,0,0,0)";
+      }
+
+      function closeNav() {
+        navopen = false;
+        sidenav.style.width = "0";
+        document.body.style.backgroundColor = "white";
+      }
+
+      function toggleNav() {
+        if (navopen) {
+          closeNav()
+        }
+        else {
+          openNav()
+        }
+      }
+
+      toggleBtn.addEventListener("click", toggleNav);
+      closeBtn.addEventListener("click", closeNav);
+    });
   </script>
 </header>

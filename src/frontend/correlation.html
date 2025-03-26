@@ -23,8 +23,8 @@
 	var warnList={'flowError':false,'levelError':false};
 
 	async function getFlow(d){
-		str=d.toISOString().substring(0,10);
-		url=flowApi+"mineq-date="+str+"&maxeq-date="+str;
+		let str=d.toISOString().substring(0,10);
+		let url=flowApi+"mineq-date="+str+"&maxeq-date="+str;
 		let r = await fetch(url);
 		let j = await r.json();
 		if(j["items"].length==0){
@@ -37,8 +37,8 @@
 	}
 
 	async function getLevel(d){
-		str=d.toISOString().substring(0,10);
-		url=levelApi+"mineq-date="+str+"&maxeq-date="+str;
+		let str=d.toISOString().substring(0,10);
+		let url=levelApi+"mineq-date="+str+"&maxeq-date="+str;
 		let r = await fetch(url);
 		let j = await r.json();
 		if(j["items"].length==0){
@@ -65,6 +65,17 @@
 		}
 		return c;
 	}
+
+	async function dataRequest(id,start,till){
+		console.log("api/v1/sensors/"+id+"/readings?start_date="start.toISOString()+"&end_date="till.toISOString());
+		return fetch("api/v1/sensors/"+id+"/readings?start_date="+start.toISOString()+"&end_date="+till.toISOString(),{
+			headers: {
+				Accept: "appication/json",
+				"AquaSensor-Login-Token": window.sessionStorage["AquaSensorToken"]
+			}
+		});
+	}
+		
 </script>
 
 <link rel="stylesheet" href="/static/css/correlation.css"/>
@@ -142,6 +153,10 @@
 <script type="module">
   var logged;
   await _isLogged().then((value)=>logged=value);
+  if(!logged){
+	  document.getElementById("warnings").innerHTML+="<p><em>No Authentication, please <a href=\"login?r=/correlate\">login</a> to use this page</em></p>";
+	  Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
+  }
   if(logged){
     //
     var chart=echarts.init(document.getElementById("chart-section"));
@@ -173,16 +188,40 @@
         },
       ],
     };
-    chart.setOption(initOptions);
+
     var level;
     var flow;
     let now=new Date();
     await getLevel(now).then((value)=>level=value);
     await getFlow(now).then((value)=>flow=value);
-  }
-  else{
-	  document.getElementById("warnings").innerHTML+="<p><em>No Authentication, please <a href=\"login?r=/correlate\">login</a> to use this page</em></p>";
-	  Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
+    
+    var sm=DerwentWidthM*level/flow;
+    
+    //temporary values until I make the distance endpoint
+    //distance end point will probably be added post merge, as to avoid conflicts
+    var d1=5;
+    var d2=3;
+
+    let timeoff1=d1*sm;
+    let timeoff2=d2*sm;
+
+    let start=new Date();
+    start.setDate(now.getDate()-1);
+    start.setHours(23,0,0);
+    let till=new Date();
+    till.setDate(now.getDate()+1);
+    till.setHours(1,0,0);
+    
+    var data21;
+    let r21 = await dataRequest("941205",start,till);
+    await r21.json().then((value)=>data21=value);
+    var data1350;
+    let r1350 = await dataRequest("sensor044",start,till);
+    await r1350.json().then((value)=>data1350=value);
+    var data13;
+    let r13 = await dataRequest("sensor022",start,till);
+    await r13.json().then((value)=>data13=value);
+    console.log(data13); 
   }
 </script>
 {% endblock %}

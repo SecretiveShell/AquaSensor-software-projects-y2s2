@@ -1,10 +1,13 @@
 {% extends "base.html" %} {% block title %}AquaSensor flow tracker{% endblock %}
 {% block contentHead %}
 <script src="/static/isLogged.js"></script>
+<script src="/static/dateAddSeconds.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js" integrity="sha384-zsLANmosWr//2pfNcbDMJ6JzPZgkyybwmBiHz5Xns/gPlVdfWpro3MaaDKXBABED" crossorigin="anonymous"></script>
 
 <script>
+
+
 	//daily mean flow
 	const flowApi = "https://environment.data.gov.uk/hydrology/id/measures/cad502d9-12f9-4449-a1e5-568b9f7d32e6-flow-m-86400-m3s-qualified/readings?";
 	//daily min level
@@ -23,8 +26,8 @@
 	var warnList={'flowError':false,'levelError':false};
 
 	async function getFlow(d){
-		let str=d.toISOString().substring(0,10);
-		let url=flowApi+"mineq-date="+str+"&maxeq-date="+str;
+		let s=d.toISOString().substring(0,10);
+		let url=flowApi+"mineq-date="+s+"&maxeq-date="+s;
 		let r = await fetch(url);
 		let j = await r.json();
 		if(j["items"].length==0){
@@ -37,8 +40,8 @@
 	}
 
 	async function getLevel(d){
-		let str=d.toISOString().substring(0,10);
-		let url=levelApi+"mineq-date="+str+"&maxeq-date="+str;
+		let s=d.toISOString().substring(0,10);
+		let url=levelApi+"mineq-date="+s+"&maxeq-date="+s;
 		let r = await fetch(url);
 		let j = await r.json();
 		if(j["items"].length==0){
@@ -67,15 +70,14 @@
 	}
 
 	async function dataRequest(id,start,till){
-		console.log("api/v1/sensors/"+id+"/readings?start_date="start.toISOString()+"&end_date="till.toISOString());
+		console.log("api/v1/sensors/"+id+"/readings?start_date="+start.toISOString()+"&end_date="+till.toISOString());
 		return fetch("api/v1/sensors/"+id+"/readings?start_date="+start.toISOString()+"&end_date="+till.toISOString(),{
 			headers: {
 				Accept: "appication/json",
 				"AquaSensor-Login-Token": window.sessionStorage["AquaSensorToken"]
 			}
 		});
-	}
-		
+	}	
 </script>
 
 <link rel="stylesheet" href="/static/css/correlation.css"/>
@@ -146,7 +148,7 @@
 </div>
 <div id="form" class="corr">
 	<form>
-		<p>River Derwent<br/><sub><em>(other rivers to supported in future)</em></sub></p>
+		<p>River Derwent<br/><sub><em>(other rivers to be supported in future)</em></sub></p>
 		<input type="datetime-local"></input>
 	</form>
 </div>
@@ -160,34 +162,7 @@
   if(logged){
     //
     var chart=echarts.init(document.getElementById("chart-section"));
-    let initOptions= {
-      xAxis: [
-        {
-          type: "time",
-          boundaryGap: false,
-          data: [],
-        },
-      ],
-      yAxis: [
-        {
-          type: "value",
-        },
-      ],
-      series: [
-        {
-          name: "Dissolved Oxygen",
-          type: "line",
-          smooth: false,
-          data: [],
-        },
-        {
-          name: "Temperature",
-          type: "line",
-          smooth: false,
-          data: [],
-        },
-      ],
-    };
+
 
     var level;
     var flow;
@@ -212,16 +187,45 @@
     till.setDate(now.getDate()+1);
     till.setHours(1,0,0);
     
-    var data21;
-    let r21 = await dataRequest("941205",start,till);
-    await r21.json().then((value)=>data21=value);
-    var data1350;
-    let r1350 = await dataRequest("sensor044",start,till);
-    await r1350.json().then((value)=>data1350=value);
-    var data13;
-    let r13 = await dataRequest("sensor022",start,till);
-    await r13.json().then((value)=>data13=value);
-    console.log(data13); 
-  }
+    var data21={'time':[],'temperature':[],'dissolved_oxygen':[]};
+    var data1350={'time':[],'temperature':[],'dissolved_oxygen':[]};
+    var data13={'time':[],'temperature':[],'dissolved_oxygen':[]};
+    let r21 = dataRequest("941205",start,till); 
+    let r1350 = dataRequest("sensor044",start,till);
+    let r13 = dataRequest("sensor022",start,till);
+    await r21.then((value)=>
+    	value.json().then((value)=>
+		value["readings"].forEach((v)=>
+			{
+				data21['time']+=new Date(v.datetime).addSeconds(timeoff1+timeoff2);
+				data21['temperature']+=v.temperature;
+				data21['dissolved_oxygen']+=v.dissolved_oxygen;
+			}
+		)
+	)
+    );
+    await r1350.then((value)=>
+    	value.json().then((value)=>
+		value["readings"].forEach((v)=>
+			{
+				data1350['time']+=new Date(v.datetime).addSeconds(timeoff1+timeoff2);
+				data1350['temperature']+=v.temperature;
+				data1350['dissolved_oxygen']+=v.dissolved_oxygen;
+			}
+		)
+	)
+    );
+    await r13.then((value)=>
+    	value.json().then((value)=>
+		value["readings"].forEach((v)=>
+			{
+				data13['time']+=new Date(v.datetime).addSeconds(timeoff1+timeoff2);
+				data13['temperature']+=v.temperature;
+				data13['dissolved_oxygen']+=v.dissolved_oxygen;
+			}
+		)
+	)
+    );
+ }
 </script>
 {% endblock %}

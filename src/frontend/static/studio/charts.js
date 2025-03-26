@@ -1,3 +1,26 @@
+function chartClickHandler(chart) {
+  const zr = chart.getZr();
+
+  zr.off("click");
+
+  zr.on("click", function (params) {
+    console.log("clicked on graph");
+    const pixel = [params.offsetX, params.offsetY];
+
+    const dataCoord = chart.convertFromPixel("grid", pixel);
+
+    const timestamp = dataCoord[0];
+    const date = new Date(timestamp);
+
+    console.log("Timestamp:", timestamp);
+    console.log("Date:", date.toISOString());
+
+    const formatted = date.toISOString().slice(0, 16);
+    datePicker.value = formatted;
+    debounced_updater();
+  });
+}
+
 function renderTemperatureChart(
   containerId,
   xData,
@@ -8,6 +31,7 @@ function renderTemperatureChart(
   const chart = echarts.init(document.getElementById(containerId));
   chart.setOption({
     title: { text: "Water Temperature", left: "center" },
+    grid: { left: 50, right: 50, bottom: 60, top: 60 },
     xAxis: {
       type: "time",
       name: "Time (UTC)",
@@ -39,12 +63,14 @@ function renderTemperatureChart(
       },
     ],
   });
+  chartClickHandler(chart);
 }
 
 function renderDOChart(containerId, xData, yData, color, selectedDate) {
   const chart = echarts.init(document.getElementById(containerId));
   chart.setOption({
     title: { text: "Dissolved Oxygen", left: "center" },
+    grid: { left: 50, right: 50, bottom: 60, top: 60 },
     xAxis: {
       type: "time",
       name: "Time (UTC)",
@@ -76,6 +102,7 @@ function renderDOChart(containerId, xData, yData, color, selectedDate) {
       },
     ],
   });
+  chartClickHandler(chart);
 }
 
 async function fetchAndRenderCharts() {
@@ -98,16 +125,14 @@ async function fetchAndRenderCharts() {
     startDateObj.setUTCDate(startDateObj.getUTCDate() - 1);
     const endDateObj = new Date(selectedDate);
     endDateObj.setUTCDate(endDateObj.getUTCDate() + 1);
-  
+
     const startDate = startDateObj.toISOString();
     const endDate = endDateObj.toISOString();
 
     url = `/api/v1/sensors/${sensorId}/readings?start_date=${encodeURIComponent(
       startDate
     )}&end_date=${encodeURIComponent(endDate)}`;
-  }
-
-  else {
+  } else {
     url = `/api/v1/sensors/${sensorId}/readings/latest?limit=10`;
     selectedDate = new Date();
   }

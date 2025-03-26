@@ -46,7 +46,11 @@
   <body>
     <div id="header"></div>
     <nav>
-      <a href="/"><img src="static/aquasensor logo.png"></a>
+      <a href="/">
+        <div class="logo-container">
+          <img src="static/aquasensor logo.png">
+        </div>
+      </a>
       <a href=""></a>
     </nav>
     <div id="container">
@@ -73,6 +77,8 @@
           </div>
           <div>
             <input type="datetime-local" id="map-date-picker" />
+            <label for="realtime-checkbox">Realtime:</label>
+            <input type="checkbox" id="realtime-checkbox" />
           </div>
         </div>
       </div>

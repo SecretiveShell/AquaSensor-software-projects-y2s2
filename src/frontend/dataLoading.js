@@ -4,8 +4,7 @@ async function call(x) {
   now.setDate(now.getDate() - document.getElementById("DateRange").value + 1);
   let from = now.toISOString().substring(0, 10);
   let r = await fetch(
-    "{{ base_url }}" +
-      "/api/v1/sensors/" +
+    "/api/v1/sensors/" +
       x +
       "/readings?start_date=" +
       from +

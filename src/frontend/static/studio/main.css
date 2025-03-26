@@ -29,6 +29,15 @@ nav a {
   color: black;
 }
 
+div.logo-container {
+  height: 40px;
+  width: auto;
+}
+
+div.logo-container > img {
+  height: 100%;
+}
+
 /* MAIN FLEX CONTAINER */
 #container {
   display: flex;

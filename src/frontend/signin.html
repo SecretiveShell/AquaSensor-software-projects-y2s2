@@ -106,7 +106,7 @@ content %}
     }
 
     // call the api
-    var req = await fetch('{{ request.url_for("login") }}', {
+    var req = await fetch('/api/v1/auth/login', {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -127,7 +127,14 @@ content %}
     d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
     Document.cookie="AquaSensorToken="+res["token"]+"; expires="+d.toGMTString()+"; path=/";*/
       window.sessionStorage.setItem("AquaSensorToken", res["token"]);
-      window.location.href = "{{ base_url }}/sensormap";
+      let get=window.location.search.substr(1);
+      get=get.split("&");
+      var ref="/";
+      get.forEach(function(arg){
+        let x=arg.split('=')
+	if(x[0]=='r')ref=x[1];
+      })
+      window.location.href = ref;
       return;
     }
     //panic here

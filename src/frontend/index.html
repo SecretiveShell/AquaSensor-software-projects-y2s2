@@ -3,7 +3,7 @@
 <script>
   async function _isLogged() {
     let tok = window.sessionStorage["AquaSensorToken"];
-    return await fetch("{{ base_url }}" + "/api/v1/auth/me", {
+    return await fetch("/api/v1/auth/me", {
       headers: {
         Accept: "application/json",
         "AquaSensor-Login-Token": tok,
@@ -145,14 +145,14 @@
 	      writeto.innerHTML=
 "<h3>Data Correlation Tools:</h3><span id=\"datalist\"><div id=\"first\"></div><div id=\"second\"></div><div id=\"third\"></div></span>";
 	      document.getElementById('first').innerHTML=
-"<h4><a href=\"{{ base_url }}/studio\">Sensor map</a></h4><p>An interactive map which allows an easy overview of the sensor readings</p><img src=\"static/screenshots/studio.webp\" alt=\"A picture of map with a river section highlighted, the highlight is a gradient over shades of blue\"></img>";
+"<h4><a href=\"/studio\">Sensor map</a></h4><p>An interactive map which allows an easy overview of the sensor readings</p><img src=\"static/screenshots/studio.webp\" alt=\"A picture of map with a river section highlighted, the highlight is a gradient over shades of blue\"></img>";
 	      document.getElementById('second').innerHTML=
 "<h4><a href=\"\">TBD</a></h4>"
 	      document.getElementById('third').innerHTML=
 "<h4><a href=\"\">TBD</a></h4>"
       } else {
         writeto.innerHTML =
-          "<a href='{{ base_url }}/login'><p>Sign in</p></a><a href='{{ base_url }}/register'><p>Register</p></a>";
+          "<a href='/login'><p>Sign in</p></a><a href='/register'><p>Register</p></a>";
       }
     });
   </script>

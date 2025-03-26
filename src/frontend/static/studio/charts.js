@@ -1,70 +1,116 @@
-function renderTemperatureChart(containerId, xData, yData, color) {
+function renderTemperatureChart(
+  containerId,
+  xData,
+  yData,
+  color,
+  selectedDate
+) {
   const chart = echarts.init(document.getElementById(containerId));
-  const title = "Water Temperature";
   chart.setOption({
-    title: { text: title, left: "center" },
+    title: { text: "Water Temperature", left: "center" },
     xAxis: {
-      type: "category",
-      data: xData,
-      name: "Time",
+      type: "time",
+      name: "Time (UTC)",
       boundaryGap: false,
     },
     yAxis: { type: "value", name: "Water Temperature (°C)" },
     dataZoom: [{ type: "inside" }],
     series: [
       {
-        data: yData,
+        data: xData.map((time, i) => [time, yData[i]]),
         type: "line",
         smooth: true,
         lineStyle: { color },
+        symbol: "none", // <-- Hide data point symbols
+        markLine: {
+          data: [
+            {
+              xAxis: selectedDate.toISOString(),
+              label: {
+                formatter: "Selected Time",
+                position: "insideTop",
+                color: "red",
+              },
+            },
+          ],
+          lineStyle: { type: "dashed", color: "red" },
+          symbol: "none",
+        },
       },
     ],
   });
 }
 
-function renderDOChart(containerId, xData, yData, color) {
+function renderDOChart(containerId, xData, yData, color, selectedDate) {
   const chart = echarts.init(document.getElementById(containerId));
-  const title = "Dissolved Oxygen";
   chart.setOption({
-    title: { text: title, left: "center" },
+    title: { text: "Dissolved Oxygen", left: "center" },
     xAxis: {
-      type: "category",
-      data: xData,
-      name: "Time",
+      type: "time",
+      name: "Time (UTC)",
       boundaryGap: false,
     },
     yAxis: { type: "value", name: "Dissolved Oxygen" },
     dataZoom: [{ type: "inside" }],
     series: [
       {
-        data: yData,
+        data: xData.map((time, i) => [time, yData[i]]),
         type: "line",
         smooth: true,
         lineStyle: { color },
+        symbol: "none", // <-- Hide data point symbols
+        markLine: {
+          data: [
+            {
+              xAxis: selectedDate.toISOString(),
+              label: {
+                formatter: "Selected Time",
+                position: "insideTop",
+                color: "red",
+              },
+            },
+          ],
+          lineStyle: { type: "dashed", color: "red" },
+          symbol: "none",
+        },
       },
     ],
   });
 }
 
 async function fetchAndRenderCharts() {
-  sensorId = getObservedSensorId();
-  const selectedDate = new Date(datePicker.value);
-  if (isNaN(selectedDate)) {
-    console.error("Invalid date selected.");
-    return;
-  }
+  const sensorId = getObservedSensorId();
+  var selectedDate = new Date(datePicker.value);
 
-  const startDateObj = new Date(selectedDate);
-  startDateObj.setDate(startDateObj.getDate() - 1);
-  const endDateObj = new Date(selectedDate);
-  endDateObj.setDate(endDateObj.getDate() + 1);
-
-  const startDate = startDateObj.toISOString();
-  const endDate = endDateObj.toISOString();
   const color = "blue";
 
   const token = getToken();
-  const url = `/api/v1/sensors/${sensorId}/readings?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+
+  var url;
+
+  if (!realtimeCheckbox.checked) {
+    if (isNaN(selectedDate)) {
+      console.error("Invalid date selected.");
+      return;
+    }
+
+    const startDateObj = new Date(selectedDate);
+    startDateObj.setUTCDate(startDateObj.getUTCDate() - 1);
+    const endDateObj = new Date(selectedDate);
+    endDateObj.setUTCDate(endDateObj.getUTCDate() + 1);
+  
+    const startDate = startDateObj.toISOString();
+    const endDate = endDateObj.toISOString();
+
+    url = `/api/v1/sensors/${sensorId}/readings?start_date=${encodeURIComponent(
+      startDate
+    )}&end_date=${encodeURIComponent(endDate)}`;
+  }
+
+  else {
+    url = `/api/v1/sensors/${sensorId}/readings/latest?limit=10`;
+    selectedDate = new Date();
+  }
 
   try {
     const response = await fetch(url, {
@@ -79,16 +125,22 @@ async function fetchAndRenderCharts() {
     const { readings } = await response.json();
     if (!Array.isArray(readings)) throw new Error("Invalid readings format.");
 
-    const xData = readings.map(r => new Date(r.datetime).toLocaleString());
-    const yData = readings.map(r => r.temperature);
-    const smoothedYData = typeof eSmoothing === "function" ? eSmoothing(yData) : yData;
+    const xData = readings.map((r) => new Date(r.datetime));
+    const yData = readings.map((r) => r.temperature);
+    const smoothedYData =
+      typeof eSmoothing === "function" ? eSmoothing(yData) : yData;
+    renderTemperatureChart(
+      "right-top",
+      xData,
+      smoothedYData,
+      color,
+      selectedDate
+    );
 
-    renderTemperatureChart("right-top", xData, smoothedYData, color);
-
-    const doData = readings.map(r => r.dissolved_oxygen);
-    const smoothedDOData = typeof eSmoothing === "function" ? eSmoothing(doData) : doData;
-    renderDOChart("right-bottom", xData, smoothedDOData, color);
-
+    const doData = readings.map((r) => r.dissolved_oxygen);
+    const smoothedDOData =
+      typeof eSmoothing === "function" ? eSmoothing(doData) : doData;
+    renderDOChart("right-bottom", xData, smoothedDOData, color, selectedDate);
   } catch (err) {
     console.error("Data fetch/render error:", err);
   }

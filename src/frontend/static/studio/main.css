@@ -18,7 +18,7 @@ nav {
   height: 48px;
   padding: 10px;
   color: black;
-  background-color: #007eb8;
+  background-color: #68bbd9;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -27,6 +27,15 @@ nav {
 nav a {
   text-decoration: none;
   color: black;
+}
+
+div.logo-container {
+  height: 40px;
+  width: auto;
+}
+
+div.logo-container > img {
+  height: 100%;
 }
 
 /* MAIN FLEX CONTAINER */
@@ -140,4 +149,107 @@ nav a {
   padding: 0;
   border: none;
   background-color: transparent;
+}
+
+/* INFO PANEL */
+div.info-panel {
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+div.info-panel-header {
+  width: 100%;
+  padding: 20px;
+  height: 20%;
+  font-size: x-large;
+  text-align: center;
+}
+
+div.info-panel-content {
+  height: 80%;
+  width: 100%;
+}
+
+div.info-panel-content-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+div.info-panel-content-item-title {
+  width: 60%;
+}
+
+div.info-panel-content-item-value {
+  width: 30%;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    padding: 5px;
+  }
+
+  .logo-container {
+    margin-bottom: 10px;
+  }
+
+  #container {
+    flex-direction: column;
+  }
+
+  #left, #center, #right {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #left-top, #left-bottom,
+  #center-top, #center-bottom,
+  #right-top, #right-bottom {
+    margin-bottom: 15px;
+  }
+
+  #map-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  #center-bottom {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #center-bottom > div {
+    margin-bottom: 10px;
+  }
+
+  #map-date-picker, #realtime-checkbox {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  label[for="realtime-checkbox"] {
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+
+/* Dark mode support */
+.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.dark-mode #header,
+.dark-mode #footer,
+.dark-mode nav {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.dark-mode #map {
+  background-color: #2d2d2d;
 }

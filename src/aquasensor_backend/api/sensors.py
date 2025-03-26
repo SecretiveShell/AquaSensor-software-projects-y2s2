@@ -2,8 +2,10 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from zoneinfo import ZoneInfo
 
 from aquasensor_backend.ORM import AsyncSessionLocal
+from aquasensor_backend.api.utils import do_saturation_percent
 from aquasensor_backend.security import get_logged_in_user_depends
 from aquasensor_backend.models.sensor import (
     SensorListResponse,
@@ -58,7 +60,7 @@ async def get_sensor_status(
     return SensorStatusResponse(sensors=response)
 
 
-@router.get("/sensors/{sensorid}/status")
+@router.get("/{sensorid}/status")
 async def get_sensor_status_by_id(
     logged_in_user: get_logged_in_user_depends,
     sensorid: str,
@@ -84,11 +86,11 @@ async def get_sensor_status_by_id(
         datetime=latest_reading.timestamp if latest_reading else datetime.utcnow(),
         temperature=latest_reading.temperature if latest_reading else None,
         dissolved_oxygen=latest_reading.dissolved_oxygen if latest_reading else None,
-        dissolved_oxygen_percent=None,
+        dissolved_oxygen_percent=do_saturation_percent(latest_reading.temperature, latest_reading.dissolved_oxygen) if latest_reading else None,
     )
 
 
-@router.get("/sensors/{sensorid}/readings")
+@router.get("/{sensorid}/readings")
 async def get_sensor_readings_by_id(
     logged_in_user: get_logged_in_user_depends,
     sensorid: str,
@@ -97,10 +99,14 @@ async def get_sensor_readings_by_id(
     db: AsyncSession = Depends(get_db),
 ) -> SensorReadingsResponse:
     """Get sensor readings by ID."""
+
+    start = start_date.astimezone(ZoneInfo("UTC")).replace(tzinfo=None)
+    end = end_date.astimezone(ZoneInfo("UTC")).replace(tzinfo=None)
+
     result = await db.execute(
         select(SensorReadingsModel)
         .filter(SensorReadingsModel.sensor_id == sensorid)
-        .filter(SensorReadingsModel.timestamp.between(start_date, end_date))
+        .filter(SensorReadingsModel.timestamp.between(start, end))
     )
     readings = result.scalars().all()
 
@@ -109,39 +115,57 @@ async def get_sensor_readings_by_id(
             datetime=reading.timestamp,
             temperature=reading.temperature,
             dissolved_oxygen=reading.dissolved_oxygen,
-            dissolved_oxygen_percent=None,
+            dissolved_oxygen_percent=do_saturation_percent(reading.temperature, reading.dissolved_oxygen),
         )
         for reading in readings
     ]
     return SensorReadingsResponse(readings=response)
 
 
-@router.get("/sensors/{sensorid}/readings/latest")
+@router.get("/{sensorid}/readings/latest")
 async def get_sensor_readings_latest_by_id(
     logged_in_user: get_logged_in_user_depends,
     sensorid: str,
     db: AsyncSession = Depends(get_db),
-) -> SensorStatus:
+    limit: int = Query(1, description="Limit the number of readings returned", ge=1, le=100),
+) -> SensorStatus | SensorReadingsResponse:
     """Get latest sensor readings by ID."""
+
     result = await db.execute(
         select(SensorReadingsModel)
         .filter(SensorReadingsModel.sensor_id == sensorid)
         .order_by(SensorReadingsModel.timestamp.desc())
-        .limit(1)
+        .limit(limit)
     )
-    latest_reading = result.scalar()
-    if not latest_reading:
-        return None
+    
+    if limit == 1:
+        latest_reading = result.scalar()
+        if not latest_reading:
+            return None
 
-    return SensorStatus(
-        id=sensorid,
-        name="Unknown",  # Fetch sensor name if needed
-        datetime=latest_reading.timestamp,
-        temperature=latest_reading.temperature,
-        dissolved_oxygen=latest_reading.dissolved_oxygen,
-        dissolved_oxygen_percent=None,
-    )
+        return SensorStatus(
+            id=sensorid,
+            name="Unknown",  # Fetch sensor name if needed
+            datetime=latest_reading.timestamp,
+            temperature=latest_reading.temperature,
+            dissolved_oxygen=latest_reading.dissolved_oxygen,
+            dissolved_oxygen_percent=do_saturation_percent(latest_reading.temperature, latest_reading.dissolved_oxygen),
+        )
 
+    else:
+        readings = result.scalars().all()
+        out = []
+        for reading in readings:
+            out.append(
+                SensorReadings(
+                    datetime=reading.timestamp,
+                    temperature=reading.temperature,
+                    dissolved_oxygen=reading.dissolved_oxygen,
+                    dissolved_oxygen_percent=do_saturation_percent(reading.temperature, reading.dissolved_oxygen),
+                )
+            )
+
+        return SensorReadingsResponse(readings=out)
 
 @router.get("/list")
 async def get_sensor_ids(db: AsyncSession = Depends(get_db)) -> SensorListResponse:

@@ -146,6 +146,16 @@ header .logo {
     font-size: 18px;
   }
 }
+
+.skip {
+	text-align:center;
+	height:0px;
+	display:block;
+	overflow:hidden;
+}
+.skip:focus {
+	height:auto;
+}
 /* Content */
 .body {
   display: flex;

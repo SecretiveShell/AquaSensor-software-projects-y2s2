@@ -4,6 +4,10 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 />
 <link rel="stylesheet" href="/static/css/header.css" />
+<script src="/src/frontend/static/darkmode.js" defer></script>
+<script src="static/darkmode.js" defer></script>
+<script src="static/google-translate" defer></script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <header>
   <div class="title">
     <a href="/"><img src="/static/aquasensor logo.png" /></a>
@@ -11,20 +15,21 @@
   <div class="sidebar">
     <span id="sideOpen" onclick="openNav()">&#9776;</span>
   </div>
-  <div class="Search">
-    <input class="srch" type="search" name="" placeholder="Search" /><a
-      href="map"><button class="btn">Search</button><i class="fas fa-search"></i></a>
-  </div>
 
   <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">
       &times;
     </a>
     <div class="side-top">
+      <div class="google-translate"></div>
+      <label class="switch">
+        <a><input type="checkbox" id="dark-mode-toggle">Dark Mode</a>
+        <span class="slider round"></span>
+      </label>
       <a href="/"><i class="fa fa-fw fa-home"></i>Home</a>
       <a href="chart"><i class="fa fa-fw fa-wrench"></i>River Data</a>
       <a href="map"><i class="fa fa-fw fa-map"></i>Map</a>
-      <a href="sensormap">Sensors</a>
+      <a href="sensormap"><i class="fa fa-fw fa-wrench"></i>Sensors</a>
       <a href="aboutus"><i class="fa fa-fw fa-user"></i>Client</a>
       <a href="contactus"><i class="fa fa-fw fa-envelope"></i>Contact Us</a>
       <a href="studio"><i class="fa fa-fw fa-home"></i>Dashboard</a>
@@ -37,13 +42,13 @@
   <script>
     function openNav() {
       document.getElementById("mySidenav").style.width = "250px";
-      document.getElementById("main").style.marginLeft = "250px";
+      //document.getElementById("main").style.marginLeft = "250px";
       document.body.style.backgroundColor = "rgba(0,0,0,0)";
       document.getElementById("sideOpen").onclick = closeNav;
     }
     function closeNav() {
       document.getElementById("mySidenav").style.width = "0";
-      document.getElementById("main").style.marginLeft = "0";
+      //document.getElementById("main").style.marginLeft = "0";
       document.body.style.backgroundColor = "white";
       document.getElementById("sideOpen").onclick = openNav;
     }

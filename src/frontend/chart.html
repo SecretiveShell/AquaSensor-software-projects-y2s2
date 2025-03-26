@@ -11,7 +11,7 @@ content %}
       integrity="sha384-zsLANmosWr//2pfNcbDMJ6JzPZgkyybwmBiHz5Xns/gPlVdfWpro3MaaDKXBABED"
       crossorigin="anonymous"
     ></script>
-    <script src="/eSmoothing.js"></script>
+    <script src="/static/eSmoothing.js"></script>
     <style>
       html,
       body {
@@ -68,7 +68,7 @@ content %}
         function getToken() {
           const token = sessionStorage.getItem("AquaSensorToken");
           if (!token) {
-            window.location.href = "{{ request.url_for('read_login') }}";
+            window.location.href = "/login";
           }
           return token;
         }
@@ -106,7 +106,7 @@ content %}
           color,
         ) {
           try {
-            const apiUrl = `/api/v1/sensors/sensors/${sensorId}/readings?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+            const apiUrl = `/api/v1/sensors/${sensorId}/readings?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
             const response = await fetch(apiUrl, {
               headers: {
                 "Content-Type": "application/json",

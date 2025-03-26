@@ -139,9 +139,10 @@
 		<input type="datetime-local"></input>
 	</form>
 </div>
-<script>
-  _isLogged().then((value)=>{
-  if(value){
+<script type="module">
+  var logged;
+  await _isLogged().then((value)=>logged=value);
+  if(logged){
     //
     var chart=echarts.init(document.getElementById("chart-section"));
     let initOptions= {
@@ -173,11 +174,15 @@
       ],
     };
     chart.setOption(initOptions);
+    var level;
+    var flow;
+    let now=new Date();
+    await getLevel(now).then((value)=>level=value);
+    await getFlow(now).then((value)=>flow=value);
   }
   else{
 	  document.getElementById("warnings").innerHTML+="<p><em>No Authentication, please <a href=\"login?r=/correlate\">login</a> to use this page</em></p>";
 	  Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
   }
-});
 </script>
 {% endblock %}

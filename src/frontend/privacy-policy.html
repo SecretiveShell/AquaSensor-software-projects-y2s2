@@ -1,17 +1,78 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AquaSensor</title>
-  </head>
-  <body>
-    <div id="main">
-      <p>Privacy Policy page</p>
-    </div>
-    {% endblock %}
-  </body>
-</html>
+{% extends "base.html" %}
+{% block title %}AquaSensor{% endblock %}
+
+{% block content %}
+<style>
+  .privacy-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  .privacy-container h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .privacy-container h2 {
+    font-size: 22px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+
+  .privacy-container p {
+    margin-bottom: 16px;
+  }
+
+  .privacy-container code {
+    background-color: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+</style>
+
+<div class="privacy-container">
+  <h1>Privacy Policy</h1>
+  <p><strong>Note:</strong> This is a <em>demo privacy policy</em> for testing and development purposes only. It is not legally binding and should be replaced with a real policy before production deployment.</p>
+
+  <h2>1. Data Collection</h2>
+  <p>
+    AquaSensor may collect the following types of information:
+  </p>
+  <ul>
+    <li>Username and password (used for authentication only)</li>
+    <li>Email address (used for account identification)</li>
+    <li>Session tokens stored in <code>sessionStorage</code></li>
+  </ul>
+
+  <h2>2. How We Use Your Data</h2>
+  <p>
+    All data collected is used for demonstration purposes only. No data is sold, shared, or used for advertising. Data is stored temporarily and may be wiped at any time.
+  </p>
+
+  <h2>3. Cookies & Storage</h2>
+  <p>
+    This app does not use traditional cookies. Instead, we store authentication tokens in <code>window.sessionStorage</code>.
+  </p>
+
+  <h2>4. Third-Party Access</h2>
+  <p>
+    No third-party services have access to your data. This demo operates entirely within its own backend API.
+  </p>
+
+  <h2>5. Deletion & Data Retention</h2>
+  <p>
+    Since this is a demo, data may be reset or deleted at any time without notice. If you'd like to delete your test account, simply do not use it — data is not persistent.
+  </p>
+
+  <h2>6. Contact</h2>
+  <p>
+    For questions, please contact the dev team at <code>demo@example.com</code>. (Note: this is a fake address).
+  </p>
+</div>
+{% endblock %}

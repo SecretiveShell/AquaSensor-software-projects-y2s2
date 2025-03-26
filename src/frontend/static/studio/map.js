@@ -1,7 +1,7 @@
 const map = L.map("map").setView([53.32, -1.66], 15);
 
 function imputeMissingTemperatures(coords) {
-  const temps = coords.map(n =>
+  const temps = coords.map((n) =>
     n.sensor_temperature !== undefined ? parseFloat(n.sensor_temperature) : null
   );
 
@@ -32,7 +32,8 @@ function imputeMissingTemperatures(coords) {
 }
 
 function tempToColor(temp) {
-  const minT = 3, maxT = 18;
+  const minT = 3,
+    maxT = 18;
   const clamped = Math.max(minT, Math.min(maxT, temp));
   const ratio = (clamped - minT) / (maxT - minT);
   const hue = 240 - 240 * ratio;
@@ -65,7 +66,14 @@ async function fetchRivers() {
 
     if (dateStr && !realtime) url += `&date=${encodeURIComponent(dateStr)}`;
 
-    const res = await fetch(url);
+    const token = getToken();
+
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "AquaSensor-Login-Token": token,
+      },
+    });
     const { elements } = await res.json();
 
     if (window.riverTempLayerGroup) {
@@ -81,12 +89,17 @@ async function fetchRivers() {
 
       // Render temperature polylines
       for (let i = 0; i < coords.length - 1; i++) {
-        const a = coords[i], b = coords[i + 1];
-        const t1 = a.sensor_temperature_imputed, t2 = b.sensor_temperature_imputed;
+        const a = coords[i],
+          b = coords[i + 1];
+        const t1 = a.sensor_temperature_imputed,
+          t2 = b.sensor_temperature_imputed;
         if (t1 !== undefined && t2 !== undefined) {
           const avgTemp = (t1 + t2) / 2;
           const polyline = L.polyline(
-            [[a.lat, a.lon], [b.lat, b.lon]],
+            [
+              [a.lat, a.lon],
+              [b.lat, b.lon],
+            ],
             { color: tempToColor(avgTemp), weight: 16, opacity: 1 }
           );
           window.riverTempLayerGroup.addLayer(polyline);
@@ -95,7 +108,14 @@ async function fetchRivers() {
 
       // Render valid sensors as visible circle markers with black outline
       for (const node of coords) {
-        const { lat, lon, sensor_temperature, sensor_dissolved_oxygen, sensor_id, sensor_name } = node;
+        const {
+          lat,
+          lon,
+          sensor_temperature,
+          sensor_dissolved_oxygen,
+          sensor_id,
+          sensor_name,
+        } = node;
 
         if (!isValidSensor(node)) continue;
         if (sensor_temperature === undefined) continue;
@@ -103,15 +123,20 @@ async function fetchRivers() {
         const temp = parseFloat(sensor_temperature);
         const color = tempToColor(temp);
         const popupContent = createPopupContent(temp, sensor_dissolved_oxygen);
-        const clickHandler = createSensorClickHandler(sensor_id, sensor_name, sensor_dissolved_oxygen, temp);
+        const clickHandler = createSensorClickHandler(
+          sensor_id,
+          sensor_name,
+          sensor_dissolved_oxygen,
+          temp
+        );
 
         const circle = L.circleMarker([lat, lon], {
           radius: 12,
           fillColor: color,
           fillOpacity: 0.95,
-          color: 'black',      // black outline
-          weight: 2,           // stroke thickness
-          opacity: 1
+          color: "black", // black outline
+          weight: 2, // stroke thickness
+          opacity: 1,
         }).bindPopup(popupContent);
 
         circle.addEventListener("click", clickHandler);

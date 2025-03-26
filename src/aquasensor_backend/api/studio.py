@@ -1,16 +1,17 @@
 import asyncio
 from datetime import datetime
+from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from typing import Any
+
 from fastapi import APIRouter
 from httpx import AsyncClient
-from decimal import Decimal, ROUND_FLOOR, ROUND_CEILING
-from shapely.geometry import Point
-
 from loguru import logger
+from shapely.geometry import Point
 from sqlalchemy import Select
 
 from aquasensor_backend.cache import cache
-from aquasensor_backend.ORM import Sensors, SensorReadings, AsyncSessionLocal
+from aquasensor_backend.ORM import AsyncSessionLocal, SensorReadings, Sensors
+from aquasensor_backend.security import get_logged_in_user_depends
 
 router = APIRouter()
 
@@ -28,6 +29,7 @@ def normalize_bbox(x1, y1, x2, y2, precision=1):
 
     return (x_min, y_min, x_max, y_max)
 
+
 async def get_river_points_overpass_cached(x1: float, y1: float, x2: float, y2: float):
     key = f"river-points:{x1}_{y1}_{x2}_{y2}"
 
@@ -37,12 +39,13 @@ async def get_river_points_overpass_cached(x1: float, y1: float, x2: float, y2: 
 
     result = await get_river_points_overpass(x1, y1, x2, y2)
     await cache.set(
-        key=key, 
-        value=result, 
-        ttl=60 * 60 # 1 hour
+        key=key,
+        value=result,
+        ttl=60 * 60,  # 1 hour
     )
 
     return result
+
 
 async def get_river_points_overpass(x1: float, y1: float, x2: float, y2: float):
     """Get river geometry data from Overpass API."""
@@ -79,48 +82,66 @@ async def get_river_points_overpass(x1: float, y1: float, x2: float, y2: float):
 
     return data
 
-async def get_sensors(x1: float, y1: float, x2: float, y2: float, date: datetime | None = None):
+
+async def get_sensors(
+    x1: float, y1: float, x2: float, y2: float, date: datetime | None = None
+):
     """Get sensors from the database."""
     output = []
 
     async with AsyncSessionLocal() as session:
         sensorsq: Any = await session.execute(
-            Select(Sensors).where(Sensors.latitude >= x1).where(Sensors.longitude >= y1).where(Sensors.latitude <= x2).where(Sensors.longitude <= y2)
+            Select(Sensors)
+            .where(Sensors.latitude >= x1)
+            .where(Sensors.longitude >= y1)
+            .where(Sensors.latitude <= x2)
+            .where(Sensors.longitude <= y2)
         )
         sensors = sensorsq.scalars().all()
 
         for sensor in sensors:
             if date:
                 readingq: Any = await session.execute(
-                    Select(SensorReadings).where(SensorReadings.sensor_id == sensor.id).where(SensorReadings.timestamp <= date).order_by(SensorReadings.timestamp.desc()).limit(1)
+                    Select(SensorReadings)
+                    .where(SensorReadings.sensor_id == sensor.id)
+                    .where(SensorReadings.timestamp <= date)
+                    .order_by(SensorReadings.timestamp.desc())
+                    .limit(1)
                 )
                 reading = readingq.scalars().first()
 
             else:
                 readingq: Any = await session.execute(
-                    Select(SensorReadings).where(SensorReadings.sensor_id == sensor.id).order_by(SensorReadings.timestamp.desc()).limit(1)
+                    Select(SensorReadings)
+                    .where(SensorReadings.sensor_id == sensor.id)
+                    .order_by(SensorReadings.timestamp.desc())
+                    .limit(1)
                 )
                 reading = readingq.scalars().first()
 
             if reading is None:
                 continue
-            
-            output.append({
-                "id": sensor.id,
-                "latitude": sensor.latitude,
-                "longitude": sensor.longitude,
-                "name": sensor.name,
-                "temperature": reading.temperature,
-                "dissolved_oxygen": reading.dissolved_oxygen,
-                "timestamp": reading.timestamp,
-            })
-    
+
+            output.append(
+                {
+                    "id": sensor.id,
+                    "latitude": sensor.latitude,
+                    "longitude": sensor.longitude,
+                    "name": sensor.name,
+                    "temperature": reading.temperature,
+                    "dissolved_oxygen": reading.dissolved_oxygen,
+                    "timestamp": reading.timestamp,
+                }
+            )
+
     return output
 
 
-def enrich_geometry_nodes_with_sensors(river_elements: list, sensors: list, max_distance: float = 0.01):
+def enrich_geometry_nodes_with_sensors(
+    river_elements: list, sensors: list, max_distance: float = 0.01
+):
     """Attach sensor data to the closest node (lat/lon) in river geometries."""
-    
+
     # Preprocess sensors as Points
     sensor_points = [
         (
@@ -160,7 +181,9 @@ def enrich_geometry_nodes_with_sensors(river_elements: list, sensors: list, max_
                     or sensor["timestamp"].isoformat() > node["sensor_timestamp"]
                 ):
                     node["sensor_temperature"] = f"{sensor['temperature']:.2f}"
-                    node["sensor_dissolved_oxygen"] = f"{sensor['dissolved_oxygen']:.2f}"
+                    node["sensor_dissolved_oxygen"] = (
+                        f"{sensor['dissolved_oxygen']:.2f}"
+                    )
                     node["sensor_timestamp"] = sensor["timestamp"].isoformat()
                     node["sensor_id"] = sensor["id"]
                     node["sensor_name"] = sensor["name"]
@@ -170,7 +193,12 @@ def enrich_geometry_nodes_with_sensors(river_elements: list, sensors: list, max_
 
 @router.get("/riverpoints")
 async def get_river_points(
-    x1: float, y1: float, x2: float, y2: float, date: datetime | None = None
+    logged_in_user: get_logged_in_user_depends,
+    x1: float,
+    y1: float,
+    x2: float,
+    y2: float,
+    date: datetime | None = None,
 ):
     """Get river data for a given area."""
 
@@ -185,8 +213,7 @@ async def get_river_points(
 
     # enrich river data with sensor data
     enriched = enrich_geometry_nodes_with_sensors(
-        river_data.get("elements", []),
-        sensors
+        river_data.get("elements", []), sensors
     )
 
     # return enriched river data
@@ -195,4 +222,3 @@ async def get_river_points(
         "generator": "aquasensor-backend",
         "elements": enriched,
     }
-

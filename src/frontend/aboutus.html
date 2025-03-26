@@ -1,20 +1,62 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AquaSensor</title>
-  </head>
-  <body>
-    <div class="main">
-      <div class="content">
-        <h1>Enter Text<br /><span>Here</span></h1>
-        <p class="par"></p>
-      </div>
-    </div>
-  </body>
-</html>
+{% extends "base.html" %} {% block title %}About Us — AquaSensor{% endblock %}
+{% block content %}
+<style>
+  .about-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    line-height: 1.7;
+  }
+
+  .about-container h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+  }
+
+  .about-container h1 span {
+    display: block;
+    font-size: 22px;
+    font-weight: 400;
+    margin-top: 10px;
+    color: #3498db;
+  }
+
+  .about-container p {
+    font-size: 17px;
+    margin-top: 20px;
+    text-align: justify;
+  }
+</style>
+
+<div class="about-container">
+  <h1>
+    About AquaSensor<br /><span>Delivering Real-Time Water Quality Data</span>
+  </h1>
+  <p>
+    AquaSensor, founded in 2023 and headquartered in Barnsley, UK, specializes
+    in building end-to-end systems that provide accurate water quality data for
+    rivers, lakes, and marine environments. Our mission is to deliver low-cost,
+    real-time river quality monitoring solutions that ensure legal compliance,
+    save money, and protect the environment.
+  </p>
+  <p>
+    Extensive monitoring of our river systems is essential both to provide a
+    baseline of water quality and to give access to live data with alerts
+    related to unusual changes. AquaSensor's solutions are designed to be
+    accurate, live, long-term remote capable, and economically viable for all
+    users of the system.
+  </p>
+  <p>
+    Our comprehensive approach includes sensor deployment, data analytics, and
+    user-friendly interfaces, enabling stakeholders to make informed decisions
+    to safeguard aquatic ecosystems. By leveraging advanced technology and a
+    commitment to environmental stewardship, AquaSensor aims to be at the
+    forefront of water quality monitoring.
+  </p>
+</div>
 {% endblock %}

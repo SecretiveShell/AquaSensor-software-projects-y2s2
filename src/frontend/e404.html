@@ -1,9 +1,75 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
-<div class="main">
-  <div class="content">
+{% extends "base.html" %}
+{% block title %}AquaSensor - Page Not Found{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary: #3498db;
+    --text: #333;
+    --bg: #f9f9f9;
+    --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg);
+    font-family: var(--font);
+    overflow: hidden;
+  }
+
+  .error-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .error-box {
+    max-width: 500px;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .error-box h1 {
+    font-size: 72px;
+    color: var(--primary);
+    margin: 0 0 10px;
+  }
+
+  .error-box p {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 25px;
+  }
+
+  .error-box a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  .error-box a:hover {
+    background-color: #2980b9;
+  }
+</style>
+
+<div class="error-wrapper">
+  <div class="error-box">
     <h1>404</h1>
-    <p>Return to <a href="/">Index Page</a></p>
+    <p>The page you're looking for doesn't exist.</p>
+    <a href="/">Return to Home</a>
   </div>
 </div>
 {% endblock %}

@@ -37,6 +37,15 @@
     transform: translateY(-5px);
   }
 
+  .navlink {
+	  float:right;
+	  margin-left:5px;
+	  padding: 4px 16px;
+	  margin-top:15%;
+	  border: 1px solid black;
+	  border-radius:4px;
+  }
+
   #datalist h4 {
     color: #2c3e50;
     font-size: 18px;

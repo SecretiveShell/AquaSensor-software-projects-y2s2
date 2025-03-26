@@ -1,280 +1,98 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AquaSensor</title>
-    <style>
-        * {
-    box-sizing: border-box;
-}
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    line-height: 1.4;
-    color: rgba(0, 0, 0, 0.85);
-    background-color: #f9f9f9;
- 
-}
-button {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    font-size: 14px;
-    padding: 4px 8px;
-    color: rgba(0, 0, 0, 0.85);
-    background-color: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-}
-button:hover,
-button:focus,
-button:active {
-    cursor: pointer;
-    background-color: #ecf0f1;
-}
-.comment-thread {
-    width: 700px;
-    max-width: 100%;
-    margin: auto;
-    padding: 0 30px;
-    background-color: #fff;
-    border: 1px solid transparent;
-}
-.m-0 {
-    margin: 0;
-}
-.sr-only {
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-}
- 
-.comment {
-    position: relative;
-    margin: 20px auto;
-}
-.comment-heading {
-    display: flex;
-    align-items: center;
-    height: 50px;
-    font-size: 14px;
-}
-.comment-voting {
-    width: 20px;
-    height: 32px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-}
-.comment-voting button {
-    display: block;
-    width: 100%;
-    height: 50%;
-    padding: 0;
-    border: 0;
-    font-size: 10px;
-}
-.comment-info {
-    color: rgba(0, 0, 0, 0.5);
-    margin-left: 10px;
-}
-.comment-author {
-    color: rgba(0, 0, 0, 0.85);
-    font-weight: bold;
-    text-decoration: none;
-}
-.comment-author:hover {
-    text-decoration: underline;
-}
-.replies {
-    margin-left: 20px;
-}
-.comment-border-link {
-    display: block;
-    position: absolute;
-    top: 50px;
-    left: 0;
-    width: 12px;
-    height: calc(100% - 50px);
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    background-color: rgba(0, 0, 0, 0.1);
-    background-clip: padding-box;
-}
-.comment-border-link:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-.comment-body {
-    padding: 0 20px;
-    padding-left: 28px;
-}
-.replies {
-    margin-left: 28px;
-}
-details.comment summary {
-    position: relative;
-    list-style: none;
-    cursor: pointer;
-}
-details.comment summary::-webkit-details-marker {
-    display: none;
-}
-details.comment:not([open]) .comment-heading {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-}
-.comment-heading::after {
-    display: inline-block;
-    position: absolute;
-    right: 5px;
-    align-self: center;
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.55);
-}
-details.comment[open] .comment-heading::after {
-    content: "Click to hide";
-}
-details.comment:not([open]) .comment-heading::after {
-    content: "Click to show";
-}
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    .comment-heading {
-        cursor: default;
-    }
-    details.comment[open] .comment-heading::after,
-    details.comment:not([open]) .comment-heading::after {
-        content: " ";
-    }
-}
-.reply-form textarea {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+{% extends "base.html" %}
+{% block title %}Contact Us — AquaSensor{% endblock %}
+
+{% block content %}
+<style>
+  .contact-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+
+  .contact-container h1 {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+  }
+
+  .contact-info {
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .contact-info p {
     font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .contact-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
     width: 100%;
-    max-width: 100%;
-    margin-top: 15px;
-    margin-bottom: 5px;
-}
-.d-none {
-    display: none;
-}
-    </style>
-  </head>
-  <body>
-    <div class="main">
-      <div class="content">
-        <div class="contactdata">
-            <h2>
-                You can contact AquaSensor at: 
-            </h2>
-            <p>
+    padding: 12px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
 
-            </p>
-        </div>
-        <div class="comment-thread">
-            <details open class="comment" id="comment-1">
-                <a href="#comment-1" class="comment-border-link">
-                    <span class="sr-only">Jump to first comment</span>
-                </a>
-                <summary>
-                    <div class="comment-heading">
-                        <div class="comment-voting">
-                            <button type="button">
-                                <span aria-hidden="true">&#9650</span>
-                                <span class="sr-only">Vote up</span>
-                            </button>
-                            <button type="button">
-                                <span aria-hidden="true">&#9660</span>
-                                <span class="sr-only">Vote down</span>
-                            </button>
-                        </div>
-                        <div class="comment-info">
-                            <a href="#" class="comment-author">aquasensor145</a>
-                            <p class="m-0">22 points &bull;4days ago</p>
-                        </div>
-                    </div>
-                </summary>
-                <div class="comment-body">
-                    <p>
-                        enter an replay section
-                    </p>
-                    <button type="button" data-toggle="reply-form" data-target="comment-1-reply-form">Reply</button>
-                    <button type="button">Flag</button>
+  .contact-form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
 
-                    <form method="POST" class="reply-form d-none" id="comment-1-reply-form">
-                        <textarea placeholder="Reply to comment" rows="4"></textarea>
-                        <button type="submit">Submit</button>
-                        <button type="button" data-toggle="reply-form" data-target="comment-1-reply-form">Cancel</button>
-                    </form>
+  .contact-form button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
-                    <div class="replies">
-                        <!-- Comment 2 start -->
-                        <details open class="comment" id="comment-2">
-                            <a href="#comment-2" class="comment-border-link">
-                                <span class="sr-only">Jump to comment-2</span>
-                            </a>
-                            <summary>
-                                <div class="comment-heading">
-                                    <div class="comment-voting">
-                                        <button type="button">
-                                            <span aria-hidden="true">&#9650;</span>
-                                            <span class="sr-only">Vote up</span>
-                                        </button>
-                                        <button type="button">
-                                            <span aria-hidden="true">&#9660;</span>
-                                            <span class="sr-only">Vote down</span>
-                                        </button>
-                                    </div>
-                                    <div class="comment-info">
-                                        <a href="#" class="comment-author">randomperson81</a>
-                                        <p class="m-0">
-                                            4 points &bull; 3 days ago
-                                        </p>
-                                    </div>
-                                </div>
-                            </summary>
-             
-                            <div class="comment-body">
-                                <p>
-                                    Took the words right out of my mouth!
-                                </p>
-                                <button type="button" data-toggle="reply-form" data-target="comment-2-reply-form">Reply</button>
-                                <button type="button">Flag</button>
-             
-                                <!-- Reply form start -->
-                                <form method="POST" class="reply-form d-none" id="comment-2-reply-form">
-                                    <textarea placeholder="Reply to comment" rows="4"></textarea>
-                                    <button type="submit">Submit</button>
-                                    <button type="button" data-toggle="reply-form" data-target="comment-2-reply-form">Cancel</button>
-                                </form>
-                                <!-- Reply form end -->
-                            </div>
-                        </details>
-             
-                        <a href="#load-more">Load more replies</a>
-                    </div>
-                </div>
-            </details>
-        </div>
-      </div>
-    </div>
-    <script>
-        document.addEventListener("click", 
-            function(event){
-                var target = event.target;
-                var replyForm;
-                if(target.matches("[data-toggle=@reply-form]")){
-                    replyForm = document.getElementById(target.getAttibute("data-target"));
-                    replyForm = classList.toggle("d-none");
-                }
-            },
-            false
+  .contact-form button:hover {
+    background-color: #2980b9;
+  }
+</style>
 
-        );
-    </script>
-  </body>
-</html>
+<div class="contact-container">
+  <h1>Contact Us</h1>
+
+  <div class="contact-info">
+    <p>Have a question about AquaSensor or want to get in touch?</p>
+    <p>Email: <a href="mailto:info@aquasensor.co.uk">info@aquasensor.co.uk</a></p>
+    <p>Address: Barnsley, UK</p>
+  </div>
+
+  <form class="contact-form" method="POST" action="mailto:info@aquasensor.co.uk" enctype="text/plain">
+    <label for="name">Your Name</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="email">Your Email</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="message">Your Message</label>
+    <textarea id="message" name="message" required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+</div>
 {% endblock %}

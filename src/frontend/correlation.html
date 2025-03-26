@@ -49,17 +49,21 @@
 		}
 		return j["items"][0]["value"];
 	}
-	function parseWarnings(){
-		var warn=document.getElementById("warnings");
+	async function parseWarnings(){
+		let warn=document.getElementById("warnings");
+		let c=0;
 		warn.innerHTML="";
 		if(warnList['flowError']){
 			warn.innerHTML+="<em>Issues retreiving requested flow rate, latest reading used instead</em>"
 			warnList['flowError']=false;
+			c++;
 		}
 		if(warnList['levelError']){
 			warn.innerHTML+="<em>Issues retreiving requested river level, latest reading used instead</em>"
 			warnList['levelError']=false;
+			c++;
 		}
+		return c;
 	}
 </script>
 
@@ -71,8 +75,8 @@
 </div>
 <div id="settings" class="corr">
 	<form>
-		<div id="temp-oxy-view">
-			<p>variable toggles</p>
+		<fieldset id="temp-oxy-view">
+			<legend>variable toggles</legend>
 			<br/>
 			<span id="r">
 			<label for="temp">temp</label>
@@ -83,31 +87,46 @@
 			<label for="oxygen">oxygen</label>
 			<input type="checkbox" id="oxygen" checked></input>
 			</span>
-		</div>
-		<div id="dist-and-flow">
-			<p>manual settings</p>
-			<label id=flowLabel" for="flow">flow</label>
-			<label id="distLabel"for="dist">distance</label>
+		</fieldset>
+		<fieldset id="dist-and-flow">
+			<legend>manual settings</legend>
+			<div class="flowside">
+				<label id=flowLabel" for="flow" class="flowside">flow</label>
+				<input type="checkbox" id="flow" class="flowside"></input>
+			</div>
+			<div class="distside">
+				<label id="distLabel"for="dist">distance</label>
+				<input type="checkbox" id="dist"></input>
+			</div>
 			<br/>
-			<input type="checkbox" id="flow"></input>
-			<input type="checkbox" id="dist"></input>
+			<input id="21Center" value="21" type="checkbox" class="MainSensor"></input>
+			<label for="21Center">Derwent 21</label>
 			<br/>
-			<p>Derwent 21</p>
+			<span class="flowside">
+				<input type="text" id="flowA"></input><label id="flowALabel" for="flowA">m/s3</label>
+			</span>
+			<span class="distside">
+				<input type="text" id="distA"></input><label id="distALabel" for="distA">m</label>
+			</span>
 			<br/>
-			<input type="text" id="flowA"></input><label id="flowALabel" for="flowA">m/s3</label>
-			<input type="text" id="distA"></input><label id="distALabel" for="distA">m</label>
+			<input id="1350Center" value="1350" type="checkbox" class="MainSensor"></input>
+			<label for="1350Center">Derwent 13-50</label>
 			<br/>
-			<p>Derwent 13-50</p>
+			<span class="flowside">
+				<input type="text" id="flowB"></input><label id="flowBLabel" for="flowB">m/s3</label>
+			</span>
+			<span class="distside">
+				<input type="text" id="distB"></input><label id="distBLabel" for="distB">m</label>
+			</span>
 			<br/>
-			<input type="text" id="flowB"></input><label id="flowBLabel" for="flowB">m/s3</label>
-			<input type="text" id="distB"></input><label id="distBLabel" for="distB">m</label>
+			<input id="13Center" value="13" type="checkbox" class="MainSensor"></input>
+			<label for="13Center">Derwent 13</label>
 			<br/>
-			<p>Derwent 13</p><br/>
-		</div>
+		</fieldset>
 		<label id="levelCheckLabel" for="levelCheck">level</label><input type=checkbox id="levelCheck"></input>
 		<input type=number id="level"></input><label for="level" id="levelLabel">m</label>
 		<br/>
-		<input type="submit" value="recalculate"></input>
+		<input class="authrequired" type="submit" value="recalculate"></input>
 	</form>
 </div>
 <div id="graph" class="corr">
@@ -123,6 +142,7 @@
 <script>
   _isLogged().then((value)=>{
   if(value){
+    //
     var chart=echarts.init(document.getElementById("chart-section"));
     let initOptions= {
       xAxis: [
@@ -156,6 +176,7 @@
   }
   else{
 	  document.getElementById("warnings").innerHTML+="<p><em>No Authentication, please <a href=\"login?r=/correlate\">login</a> to use this page</em></p>";
+	  Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
   }
 });
 </script>

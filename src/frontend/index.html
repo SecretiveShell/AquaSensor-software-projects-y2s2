@@ -4,6 +4,21 @@
 {% block contentHead %}
 
 <script src="/static/isLogged.js" defer></script>
+<script defer>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const loggedInView = document.getElementById("logged-in");
+    const loggedOutView = document.getElementById("logged-out");
+
+    const isLogged = await isLoggedIn();
+    if (isLogged) {
+      loggedInView.style.display = "block";
+      loggedOutView.style.display = "none";
+    } else {
+      loggedInView.style.display = "none";
+      loggedOutView.style.display = "block";
+    }
+  });
+</script>
 
 <link rel="stylesheet" href="/static/css/index.css"></link>
 {% endblock %}

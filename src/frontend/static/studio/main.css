@@ -20,8 +20,9 @@ nav {
   color: black;
   background-color: white;
   display: flex;
-  align-items: center;
+  align-items: left;
   gap: 20px;
+  border-radius: 0 0 8px 8px;
 }
 
 nav a {
@@ -36,6 +37,7 @@ div.logo-container {
 
 div.logo-container > img {
   height: 100%;
+  border-radius: 4px;
 }
 
 /* MAIN FLEX CONTAINER */
@@ -44,9 +46,10 @@ div.logo-container > img {
   flex-direction: row;
   height: calc(100% - 48px);
   width: 100%;
-  border-left: 6px solid #68bbd9;
-  border-right: 6px solid #68bbd9;
-  border-bottom: 6px solid #68bbd9;
+  border-left: 6px solid rgb(42, 90, 107);
+  border-right: 6px solid rgb(42, 90, 107);
+  border-bottom: 6px solid rgb(42, 90, 107);
+  border-radius: 0 0 8px 8px;
 }
 
 /* LEFT & RIGHT PANES */
@@ -60,11 +63,13 @@ div.logo-container > img {
 }
 
 #left {
-  border-right: 4px solid #68bbd9;
+  border-right: 4px solid rgb(42, 90, 107);
+  border-radius: 0 0 0 8px;
 }
 
 #right {
-  border-left: 4px solid #68bbd9;
+  border-left: 4px solid rgb(42, 90, 107);
+  border-radius: 0 0 8px 0;
 }
 
 #left-top,
@@ -74,16 +79,19 @@ div.logo-container > img {
   flex: 1;
   background-color: #ddd;
   overflow: auto;
+  border-radius: 4px;
 }
 
 #left-top {
-  border-top: 4px solid #68bbd9;
+  border-top: 4px solid rgb(42, 90, 107);
+  margin: 4px;
 }
 
 #left-bottom,
 #right-bottom,
 #right-top {
-  border-top: 4px solid #68bbd9;
+  border-top: 4px solid rgb(42, 90, 107);
+  margin: 4px;
 }
 
 #map-controls > label {
@@ -118,6 +126,8 @@ div.logo-container > img {
   background-color: #eee;
   backface-visibility: hidden;
   will-change: transform;
+  border-radius: 4px;
+  margin: 4px;
 }
 
 #map * {
@@ -132,7 +142,9 @@ div.logo-container > img {
   justify-content: space-around;
   background-color: #ddd;
   padding: 10px;
-  border-top: 4px solid #68bbd9;
+  border-top: 4px solid rgb(42, 90, 107);
+  border-radius: 4px;
+  margin: 4px;
 }
 
 #date-slider {
@@ -156,6 +168,7 @@ div.info-panel {
   padding: 20px;
   height: 100%;
   width: 100%;
+  border-radius: 8px;
 }
 
 div.info-panel-header {
@@ -164,17 +177,29 @@ div.info-panel-header {
   height: 20%;
   font-size: x-large;
   text-align: center;
+  border-radius: 8px 8px 0 0;
+  background-color: rgba(42, 90, 107, 0.1);
 }
 
 div.info-panel-content {
   height: 80%;
   width: 100%;
+  border-radius: 0 0 8px 8px;
+  background-color: rgba(42, 90, 107, 0.05);
+  padding: 10px;
 }
 
 div.info-panel-content-item {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  margin: 8px 0;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+div.info-panel-content-item:hover {
+  background-color: rgba(42, 90, 107, 0.1);
 }
 
 div.info-panel-content-item-title {
@@ -190,6 +215,7 @@ div.info-panel-content-item-value {
   nav {
     flex-direction: column;
     padding: 5px;
+    height: auto;
   }
 
   .logo-container {
@@ -203,12 +229,14 @@ div.info-panel-content-item-value {
   #left, #center, #right {
     width: 100%;
     box-sizing: border-box;
+    border-radius: 0;
   }
 
   #left-top, #left-bottom,
   #center-top, #center-bottom,
   #right-top, #right-bottom {
     margin-bottom: 15px;
+    margin: 8px;
   }
 
   #map-controls {
@@ -236,7 +264,6 @@ div.info-panel-content-item-value {
     margin-bottom: 5px;
   }
 }
-
 /* Dark mode support */
 .dark-mode {
   background-color: #121212;

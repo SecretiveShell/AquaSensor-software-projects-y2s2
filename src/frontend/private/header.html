@@ -2,54 +2,54 @@
 <link rel="icon" type="image/png" href="/static/favicon.png" />
 <link rel="stylesheet" href="/static/css/header.css" />
 <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 />
 
+<script defer>
+  async function isLoggedIn() {
+    const token = window.sessionStorage["AquaSensorToken"];
+    try {
+      const response = await fetch("/api/v1/auth/me", {
+        headers: {
+          Accept: "application/json",
+          "AquaSensor-Login-Token": token,
+        },
+      });
+      return response.ok;
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      return false;
+    }
+    return true;
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const loggedInView = document.getElementById("logout-header");
+    const loggedOutView = document.getElementById("login-signup-header");
+
+    const isLogged = await isLoggedIn();
+    if (isLogged) {
+      loggedInView.style.display = "block";
+      loggedOutView.style.display = "none";
+    } else {
+      loggedInView.style.display = "none";
+      loggedOutView.style.display = "block";
+    }
+
+    const logoutButton = document.getElementById("logout-button");
+    logoutButton.addEventListener("click", async () => {
+      const token = window.sessionStorage.clear();
+      window.location.href = "/";
+    });
+  });
+</script>
 <script src="/static/darkmode.js" defer></script>
 <script src="/static/google-translate.js" defer></script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <!-- Header layout -->
 <header>
-  <script defer>
-    async function isLoggedIn() {
-      const token = window.sessionStorage["AquaSensorToken"];
-      try {
-        const response = await fetch("/api/v1/auth/me", {
-          headers: {
-            Accept: "application/json",
-            "AquaSensor-Login-Token": token,
-          },
-        });
-        return response.ok;
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-        return false;
-      }
-      return true;
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      const loggedInView = document.getElementById("logout-header");
-      const loggedOutView = document.getElementById("login-signup-header");
-
-      const isLogged = await isLoggedIn();
-      if (isLogged) {
-        loggedInView.style.display = "block";
-        loggedOutView.style.display = "none";
-      } else {
-        loggedInView.style.display = "none";
-        loggedOutView.style.display = "block";
-      }
-
-      const logoutButton = document.getElementById("logout-button");
-      logoutButton.addEventListener("click", async () => {
-        const token = window.sessionStorage.clear();
-        window.location.href = "/";
-      });
-    });
-  </script>
 
   <div id="header-left">
     <div class="title">
@@ -59,8 +59,8 @@
     </div>
 
     <nav id="desktop-navigation">
-      <a href="/"><i class="fa fa-fw fa-home"></i>Home</a>
-      <a href="/studio"><i class="fa fa-fw fa-home"></i>Dashboard</a>
+      <a href="/studio"><i class="fa fa-fw fa-wrench"></i>Studio</a>
+      <a href="/correlate"><i class="fa fa-fw fa-wrench"></i>Correlate</a>
       <a href="/chart"><i class="fa fa-fw fa-wrench"></i>River Data</a>
       <a href="/aboutus"><i class="fa fa-fw fa-user"></i>Client</a>
       <a href="/contactus"><i class="fa fa-fw fa-envelope"></i>Contact Us</a>

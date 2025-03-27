@@ -5,7 +5,7 @@ const realtimeCheckbox = document.getElementById("realtime-checkbox");
 
 function getToken() {
   const token = sessionStorage.getItem("AquaSensorToken");
-  if (!token) window.location.href = "/login";
+  if (!token) window.location.href = "/login?r=/studio";
   return token;
 }
 

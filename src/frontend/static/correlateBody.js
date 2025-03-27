@@ -1,5 +1,5 @@
 var logged;
-await _isLogged().then((value)=>logged=value);
+await isLoggedIn().then((value)=>logged=value);
 if(!logged){
   document.getElementById("warnings").innerHTML+="<p><em>No Authentication, please <a href=\"login?r=/correlate\">login</a> to use this page</em></p>";
   Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
@@ -48,6 +48,10 @@ if(logged){
 		)
   	)
   );
+    //this can be removed in deployment
+    //only needed for data seed from the middleware
+    data21['temperature']=eSmoothing(data21['temperature']);
+    data21['dissolved_oxygen']=eSmoothing(data21['dissolved_oxygen']);
   await r1350.then((value)=>value.json().then((value)=>
       value["readings"].forEach((v)=>
 			{
@@ -58,6 +62,10 @@ if(logged){
 		)
   	)
     );
+    //this can be removed in deployment
+    //only needed for data seed from the middleware
+    data1350['temperature']=eSmoothing(data1350['temperature']);
+    data1350['dissolved_oxygen']=eSmoothing(data1350['dissolved_oxygen']);
     await r13.then((value)=>value.json().then((value)=>
 		value["readings"].forEach((v)=>
 			{
@@ -68,8 +76,12 @@ if(logged){
 		)
     	)
     );
+    //this can be removed in deployment
+    //only needed for data seed from the middleware
+    data13['temperature']=eSmoothing(data13['temperature']);
+    data13['dissolved_oxygen']=eSmoothing(data13['dissolved_oxygen']);
     var chartoptions={
-	    tootltip: {
+	    tooltip: {
 		    trigger: 'item',
 		    axisPointer:{type:'cross'}
 	    },
@@ -137,7 +149,7 @@ if(logged){
 		},
 		{
 			name: "Temperature",
-			data: data1350["time"].map((x,index)=>[x,data21["temperature"][index]]),
+			data: data1350["time"].map((x,index)=>[x,data1350["temperature"][index]]),
 			smooth:false,
 			symbol: "none",
 			type: "line"

@@ -11,74 +11,75 @@
 <link rel="stylesheet" href="/static/css/correlation.css"/>
 {% endblock %}
 {% block content %}
-
-<div id="warnings">
-</div>
-<div id="settings" class="corr">
-	<form>
-		<fieldset id="temp-oxy-view">
-			<legend>variable toggles</legend>
-			<br/>
-			<span id="r">
-			<label for="temp">temp</label>
-			<input type="checkbox" id="temp" checked></input>
-			</span>
-			<br/>
-			<span id="r">
-			<label for="oxygen">oxygen</label>
-			<input type="checkbox" id="oxygen" checked></input>
-			</span>
-		</fieldset>
-		<fieldset id="dist-and-flow">
-			<legend>manual settings</legend>
-			<div class="flowside">
-				<label id=flowLabel" for="flow" class="flowside">flow</label>
-				<input type="checkbox" id="flow" class="flowside"></input>
-			</div>
-			<div class="distside">
-				<label id="distLabel"for="dist">distance</label>
-				<input type="checkbox" id="dist"></input>
-			</div>
-			<br/>
-			<input id="21Center" value="21" type="checkbox" class="MainSensor"></input>
-			<label for="21Center">Derwent 21</label>
-			<br/>
-			<span class="flowside">
-				<input type="text" id="flowA"></input><label id="flowALabel" for="flowA">m/s3</label>
-			</span>
-			<span class="distside">
-				<input type="text" id="distA"></input><label id="distALabel" for="distA">m</label>
-			</span>
-			<br/>
-			<input id="1350Center" value="1350" type="checkbox" class="MainSensor"></input>
-			<label for="1350Center">Derwent 13-50</label>
-			<br/>
-			<span class="flowside">
-				<input type="text" id="flowB"></input><label id="flowBLabel" for="flowB">m/s3</label>
-			</span>
-			<span class="distside">
-				<input type="text" id="distB"></input><label id="distBLabel" for="distB">m</label>
-			</span>
-			<br/>
-			<input id="13Center" value="13" type="checkbox" class="MainSensor"></input>
-			<label for="13Center">Derwent 13</label>
-			<br/>
-		</fieldset>
-		<label id="levelCheckLabel" for="levelCheck">level</label><input type=checkbox id="levelCheck"></input>
-		<input type=number id="level"></input><label for="level" id="levelLabel">m</label>
-		<br/>
-		<input class="authrequired" type="submit" value="recalculate"></input>
-	</form>
-</div>
-<div id="graph" class="corr">
-	<div id="chart-section">
+<div id="container">
+	<div id="warnings">
 	</div>
-</div>
-<div id="form" class="corr">
-	<form>
-		<p>River Derwent<br/><sub><em>(other rivers to be supported in future)</em></sub></p>
-		<input type="datetime-local"></input>
-	</form>
+	<div id="settings" class="corr">
+		<form>
+			<fieldset id="temp-oxy-view">
+				<legend>variable toggles</legend>
+				<br/>
+				<span id="r">
+				<label for="temp">temp</label>
+				<input class="series-control"type="checkbox" id="temp" checked></input>
+				</span>
+				<br/>
+				<span id="r">
+				<label for="oxygen">oxygen</label>
+				<input class="series-control" type="checkbox" id="oxygen" checked></input>
+				</span>
+			</fieldset>
+			<fieldset id="dist-and-flow">
+				<legend>manual settings</legend>
+				<div class="flowside">
+					<label id=flowLabel" for="flow" class="flowside">flow</label>
+					<input type="checkbox" id="flow" class="flowside"></input>
+				</div>
+				<div class="distside">
+					<label id="distLabel"for="dist">distance</label>
+					<input type="checkbox" id="dist"></input>
+				</div>
+				<br/>
+				<input id="21Center" value="21" type="checkbox" class="MainSensor"></input>
+				<label for="21Center">Derwent 21</label>
+				<br/>
+				<span class="flowside">
+					<input type="text" id="flowA"></input><label id="flowALabel" for="flowA">m/s3</label>
+				</span>
+				<span class="distside">
+					<input type="text" id="distA"></input><label id="distALabel" for="distA">m</label>
+				</span>
+				<br/>
+				<input id="1350Center" value="1350" type="checkbox" class="MainSensor"></input>
+				<label for="1350Center">Derwent 13-50</label>
+				<br/>
+				<span class="flowside">
+					<input type="text" id="flowB"></input><label id="flowBLabel" for="flowB">m/s3</label>
+				</span>
+				<span class="distside">
+					<input type="text" id="distB"></input><label id="distBLabel" for="distB">m</label>
+				</span>
+				<br/>
+				<input id="13Center" value="13" type="checkbox" class="MainSensor"></input>
+				<label for="13Center">Derwent 13</label>
+				<br/>
+			</fieldset>
+			<label id="levelCheckLabel" for="levelCheck">level</label><input type=checkbox id="levelCheck"></input>
+			<input type=number id="level"></input><label for="level" id="levelLabel">m</label>
+			<br/>
+			<input class="authrequired" type="submit" value="recalculate"></input>
+		</form>
+	</div>
+	<div id="graph" class="corr">
+		<div id="chart-section">
+		</div>
+	</div>
+	<div id="form" class="corr">
+		<form>
+			<p>River Derwent<br/><sub><em>(other rivers to be supported in future)</em></sub></p>
+			<input type="datetime-local"></input>
+		</form>
+	</div>
 </div>
 <script type="module" src="/static/correlateBody.js"></script>
 {% endblock %}

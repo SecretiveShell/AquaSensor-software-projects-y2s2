@@ -48,10 +48,6 @@ if(logged){
 		)
   	)
   );
-    //this can be removed in deployment
-    //only needed for data seed from the middleware
-    data21['temperature']=eSmoothing(data21['temperature']);
-    data21['dissolved_oxygen']=eSmoothing(data21['dissolved_oxygen']);
   await r1350.then((value)=>value.json().then((value)=>
       value["readings"].forEach((v)=>
 			{
@@ -62,10 +58,6 @@ if(logged){
 		)
   	)
     );
-    //this can be removed in deployment
-    //only needed for data seed from the middleware
-    data1350['temperature']=eSmoothing(data1350['temperature']);
-    data1350['dissolved_oxygen']=eSmoothing(data1350['dissolved_oxygen']);
     await r13.then((value)=>value.json().then((value)=>
 		value["readings"].forEach((v)=>
 			{
@@ -76,13 +68,9 @@ if(logged){
 		)
     	)
     );
-    //this can be removed in deployment
-    //only needed for data seed from the middleware
-    data13['temperature']=eSmoothing(data13['temperature']);
-    data13['dissolved_oxygen']=eSmoothing(data13['dissolved_oxygen']);
     var chartoptions={
 	    tooltip: {
-		    trigger: 'item',
+		    trigger: 'axis',
 		    axisPointer:{type:'cross'}
 	    },
 	    xAxis: [
@@ -119,57 +107,103 @@ if(logged){
 	    ],
 	    dataZoom: [
 		    {
-		    type:"inside"
+		    type:"inside",
+		    filterMode: 'weakFilter'
 		    }
 	    ],
 	    legend: {
-		    data: ["Dissolved Oxygen","Temperature"]
+		    data:[
+			    {
+				    name:"Dissolved Oxygen"
+			    },
+			    {
+				    name:"Temperature"
+			    }
+		    ],
+		    selectedMode: false
 	    },
 	    series: [
 		{
 			name: "Dissolved Oxygen",
 			data: data21["time"].map((x,index)=>[x,data21["dissolved_oxygen"][index]]),
-			smooth:false,
+			smooth:true,
 			symbol: "none",
-			type: "line"
+			type: "line",
+			lineStyle: {
+				normal: {
+					type:'solid'
+				}
+			}
 		},
 		{
 			name: "Temperature",
 			data: data21["time"].map((x,index)=>[x,data21["temperature"][index]]),
-			smooth:false,
+			smooth:true,
 			symbol: "none",
-			type: "line"
+			type: "line",
+			lineStyle: {
+				normal: {
+					type:'solid'
+				}
+			}
 		},
 		{
 			name: "Dissolved Oxygen",
 			data: data1350["time"].map((x,index)=>[x,data1350["dissolved_oxygen"][index]]),
-			smooth:false,
+			smooth:true,
 			symbol: "none",
-			type: "line"
+			type: "line",
+			lineStyle: {
+				normal: {
+					type:[5,4]
+				}
+			}
 		},
 		{
 			name: "Temperature",
 			data: data1350["time"].map((x,index)=>[x,data1350["temperature"][index]]),
-			smooth:false,
+			smooth:true,
 			symbol: "none",
-			type: "line"
+			type: "line",
+			lineStyle: {
+				normal: {
+					type:[5,4]
+				}
+			}
 		},
 		{
 			name: "Dissolved Oxygen",
 			data: data13["time"].map((x,index)=>[x,data13["dissolved_oxygen"][index]]),
-			smooth:false,
+			smooth:true,
 			symbol: "none",
-			type: "line"
+			type: "line",
+			lineStyle: {
+				normal: {
+					type:[4,10]
+				}
+			}
 		},
 		{
 			name: "Temperature",
 			data: data13["time"].map((x,index)=>[x,data13["temperature"][index]]),
-			smooth:false,
+			smooth:true,
 			symbol: "none",
-			type: "line"
+			type: "line",
+			lineStyle: {
+				normal: {
+					type:[4,10]
+				}
+			}
 		}
 	    ]
     };
+    chart.hideLoading();
     chart.setOption(chartoptions);
+    window.onresize=function(){
+	    chart.resize();
+    }
+    let t=Array.from(document.getElementsByClassName("series-control"));
+	t[0].onchange=function(){};
+	t[1].onchange=function(){};
 }
 

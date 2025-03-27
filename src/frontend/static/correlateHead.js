@@ -46,12 +46,12 @@ async function parseWarnings(){
 	let c=0;
 	warn.innerHTML="";
 	if(warnList['flowError']){
-		warn.innerHTML+="<em>Issues retreiving requested flow rate, latest reading used instead</em>"
+		warn.innerHTML+="<p><em>Issues retreiving requested flow rate, latest reading used instead</em></p>"
 		warnList['flowError']=false;
 		c++;
 	}
 	if(warnList['levelError']){
-		warn.innerHTML+="<em>Issues retrieving requested river level, latest reading used instead</em>"
+		warn.innerHTML+="<p><em>Issues retrieving requested river level, latest reading used instead</em></p>"
 		warnList['levelError']=false;
 		c++;
 	}

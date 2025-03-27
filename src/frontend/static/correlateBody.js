@@ -203,7 +203,8 @@ if(logged){
 	    chart.resize();
     }
     let t=Array.from(document.getElementsByClassName("series-control"));
-	t[0].onchange=function(){};
-	t[1].onchange=function(){};
+    t[0].onchange=function(){};
+    t[1].onchange=function(){};
+    parseWarnings();
 }
 

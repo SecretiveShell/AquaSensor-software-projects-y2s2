@@ -3,10 +3,15 @@
 	margin: 0px;
 }
 
+#container{
+	display: flex;
+	flex-direction:row;
+	flex-wrap:wrap;
+	width:100%;
+}
 .corr{
-	height: 78.7vh;
+	height: 79vh;
 	display:inline-block;
-	float: left;
 }
 
 #chart-section{
@@ -20,6 +25,7 @@
 
 #warnings {
 	height: 5vh;
+	width:100%;
 	box-sizing: border-box;
 	border-bottom: 1px solid black;
 }
@@ -58,7 +64,6 @@
 
 #graph{
 	width:70vw;
-	
 }
 
 #form{

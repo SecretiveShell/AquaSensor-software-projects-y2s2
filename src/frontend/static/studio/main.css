@@ -20,7 +20,7 @@ nav {
   color: black;
   background-color: rgb(42, 90, 107);
   display: flex;
-  align-items: center;
+  align-items: left;
   gap: 20px;
   border-radius: 0 0 8px 8px;
 }

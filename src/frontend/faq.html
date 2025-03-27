@@ -1,17 +1,78 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AquaSensor</title>
-  </head>
-  <body>
-    <div id="main">
-      <p>FAQ page</p>
-    </div>
-    {% endblock %}
-  </body>
-</html>
+{% extends "base.html" %}
+{% block title %}FAQs — AquaSensor{% endblock %}
+
+{% block content %}
+<style>
+  .faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    line-height: 1.7;
+  }
+
+  .faq-container h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+  }
+
+  .faq-item {
+    margin-bottom: 30px;
+  }
+
+  .faq-item h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #3498db;
+  }
+
+  .faq-item p {
+    font-size: 17px;
+    text-align: justify;
+  }
+</style>
+
+<div class="faq-container">
+  <h1>Frequently Asked Questions</h1>
+
+  <div class="faq-item">
+    <h2>What is AquaSensor?</h2>
+    <p>
+      AquaSensor is a company specializing in building end-to-end systems that provide accurate water quality data for rivers, lakes, and marine environments. Our mission is to deliver low-cost, real-time river quality monitoring solutions that ensure legal compliance, save money, and protect the environment.
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <h2>How does AquaSensor's technology work?</h2>
+    <p>
+      Our technology involves deploying sensors in aquatic environments to continuously monitor various water quality parameters. The collected data is transmitted in real-time to our analytics platform, where it is processed and made accessible to users through an intuitive interface.
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <h2>Who can benefit from using AquaSensor?</h2>
+    <p>
+      AquaSensor's solutions are designed for environmental agencies, research institutions, municipalities, and any organizations involved in water resource management. Our systems provide valuable insights for monitoring and improving water quality.
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <h2>Is AquaSensor's system customizable?</h2>
+    <p>
+      Yes, our systems are modular and can be tailored to meet specific monitoring requirements. We work closely with clients to design solutions that address their unique needs.
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <h2>How can I get started with AquaSensor?</h2>
+    <p>
+      To learn more about our solutions or to request a consultation, please visit our <a href="/contactus">Contact Us</a> page and fill out the inquiry form. Our team will get back to you promptly.
+    </p>
+  </div>
+</div>
+{% endblock %}

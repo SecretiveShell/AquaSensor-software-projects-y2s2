@@ -44,16 +44,10 @@
     <!-- end of map -->
   </head>
   <body>
-    <div id="header"></div>
-    <nav>
-      <a href="/">
-        <div class="logo-container">
-          <img src="static/aquasensor logo.png">
-        </div>
-      </a>
-      <a href=""></a>
-    </nav>
-    <div id="container">
+    <div id="header">
+      {% include "private/header.html" %}
+    </div>
+    <div id="studio-container">
       <div id="left">
         <div id="left-top">
           <div id="map-controls"></div>
@@ -87,6 +81,5 @@
         <div id="right-bottom"></div>
       </div>
     </div>
-    <div id="footer"></div>
   </body>
 </html>

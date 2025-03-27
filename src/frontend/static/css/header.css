@@ -1,18 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
 header {
   background: rgb(255, 255, 255);
-  height: 9vh;
+  height: 48px;
   width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid black;
   color: rgb(0, 0, 0);
 }
-.title {
-  width: 95%;
-  height: 100%;
+
+div.title {
+  height: 40px;
   display: flex;
   align-items: center;
   border-radius: 8px;
+}
+
+div.title > a, div.title > a > img {
+  text-decoration: none;
+  height: 100%;
+  width: auto;
 }
 
 .search{
@@ -92,7 +103,8 @@ header .logo {
   align-items: center;
 }
 .logo img {
-  width: 150px;
+  height: 100%;
+  width: auto;
 }
 .sidenav {
   height: 100vh;
@@ -253,4 +265,35 @@ h2 {
 
 @media screen and (-ms-high-contrast: active), (forced-colors: active) {
   /* high contrast changes here*/
+}
+
+/* Hide by default (mobile first) */
+nav#desktop-navigation {
+  display: none;
+}
+
+/* Show only on desktop */
+@media screen and (min-width: 1024px) {
+  nav#desktop-navigation {
+    display: block;
+  }
+
+  div.sidebar {
+    display: none;
+  }
+}
+
+div#header-right, div#header-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+div#header-right a, div#header-left nav a {
+  text-decoration: none;
+  color: white;
+  background-color: #3498db;
+  padding: 5px;
+  margin: 10px;
+  border-radius: 10px;
 }

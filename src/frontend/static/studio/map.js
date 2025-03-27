@@ -120,6 +120,10 @@ async function fetchRivers() {
         if (!isValidSensor(node)) continue;
         if (sensor_temperature === undefined) continue;
 
+        if (sensor_id == getObservedSensorId()) {
+          renderInfoPanel(sensor_name, sensor_dissolved_oxygen, sensor_temperature);
+        }
+
         const temp = parseFloat(sensor_temperature);
         const color = tempToColor(temp);
         const popupContent = createPopupContent(temp, sensor_dissolved_oxygen);

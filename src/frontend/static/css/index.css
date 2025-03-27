@@ -45,6 +45,11 @@
 	  border: 1px solid black;
 	  border-radius:4px;
   }
+  .navlink a{
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    color: black;
+  }
 
   #datalist h4 {
     color: #2c3e50;

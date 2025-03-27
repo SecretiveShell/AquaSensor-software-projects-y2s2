@@ -29,6 +29,10 @@
 	box-sizing: border-box;
 	border-bottom: 1px solid black;
 }
+#warnings p{
+	margin-left:5px;
+}
+
 #warnings p,em {
 	font-size: 1.75vh;
 }

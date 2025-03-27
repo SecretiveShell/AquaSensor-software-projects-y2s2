@@ -1,17 +1,15 @@
 var logged;
-await isLoggedIn().then((value)=>logged=value);
-if(!logged){
-  document.getElementById("warnings").innerHTML+="<p><em>No Authentication, please <a href=\"login?r=/correlate\">login</a> to use this page</em></p>";
-  Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
+var level;
+var flow;
+var now=new Date();
+
+function newDateFetch(){
+	now=new Date(document.getElementById("fetchDate").value);
+	pullanddraw();
+	return
 }
-if(logged){
-  //
-  var chart=echarts.init(document.getElementById("chart-section"));
 
-
-  var level;
-  var flow;
-  let now=new Date();
+async function pullanddraw(){
   await getLevel(now).then((value)=>level=value);
   await getFlow(now).then((value)=>flow=value);
   
@@ -27,10 +25,10 @@ if(logged){
 
   let start=new Date();
   start.setDate(now.getDate()-1);
-  start.setHours(23,0,0);
+  start.setHours(22,50,0);
   let till=new Date();
   till.setDate(now.getDate()+1);
-  till.setHours(1,0,0);
+  till.setHours(1,10,0);
     
   var data21={'time':[],'temperature':[],'dissolved_oxygen':[]};
   var data1350={'time':[],'temperature':[],'dissolved_oxygen':[]};
@@ -196,15 +194,28 @@ if(logged){
 			}
 		}
 	    ]
-    };
-    chart.hideLoading();
+    }; 
     chart.setOption(chartoptions);
-    window.onresize=function(){
-	    chart.resize();
-    }
-    let t=Array.from(document.getElementsByClassName("series-control"));
-    t[0].onchange=function(){};
-    t[1].onchange=function(){};
-    parseWarnings();
+}
+
+await isLoggedIn().then((value)=>logged=value);
+if(!logged){
+  document.getElementById("warnings").innerHTML+="<p><em>No Authentication, please <a href=\"login?r=/correlate\">login</a> to use this page</em></p>";
+  Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
+}
+if(logged){
+  //
+  var chart=echarts.init(document.getElementById("chart-section"));
+
+  await pullanddraw();	
+
+  window.onresize=function(){
+    chart.resize();
+  }
+  let t=Array.from(document.getElementsByClassName("series-control"));
+  t[0].onchange=function(){};
+  t[1].onchange=function(){};
+  document.getElementById("datesubmit").onclick=newDateFetch;
+  parseWarnings();
 }
 

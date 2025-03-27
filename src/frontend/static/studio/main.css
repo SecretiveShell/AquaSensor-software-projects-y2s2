@@ -13,17 +13,6 @@ body {
   overflow: hidden;
 }
 
-/* NAVIGATION BAR */
-
-div.logo-container {
-  height: 40px;
-  width: auto;
-}
-
-div.logo-container > img {
-  height: 100%;
-}
-
 /* MAIN FLEX CONTAINER */
 #studio-container {
   display: flex;
@@ -172,12 +161,122 @@ div.info-panel-content-item-value {
   text-align: right;
 }
 
-@media (max-width: 768px) {
-  nav {
-    flex-direction: column;
-    padding: 5px;
+/* Dark mode support */
+.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.dark-mode #header,
+.dark-mode #footer,
+.dark-mode nav {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.dark-mode #map {
+  background-color: #2d2d2d;
+}
+
+/* mobile stuff */
+.mobile-button {
+  position: fixed;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 12px 8px;
+  font-size: 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  z-index: 999;
+  display: none; /* hide by default */
+}
+
+/* mobile button Positioning */
+.mobile-button-top-left {
+  top: 20%;
+  left: 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.mobile-button-bottom-left {
+  bottom: 20%;
+  left: 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.mobile-button-top-right {
+  top: 20%;
+  right: 0;
+  border-radius: 8px 0 0 8px;
+  writing-mode: vertical-lr;
+}
+
+.mobile-button-bottom-right {
+  bottom: 20%;
+  right: 0;
+  border-radius: 8px 0 0 8px;
+  writing-mode: vertical-lr;
+}
+
+/* mobile friendly stuff */
+@media only screen and (max-width: 720px) {
+  .mobile-button {
+    display: block;
   }
 
+  #right-top,
+  #right-bottom {
+    position: fixed;
+    right: 0;
+    width: 70vw;
+    background: #ddd;
+    z-index: 1000;
+    display: none;
+  }
+
+  #right-top {
+    top: 0;
+    height: 50%;
+    border-left: 4px solid #68bbd9;
+  }
+
+  #right-bottom {
+    bottom: 0;
+    height: 50%;
+    border-left: 4px solid #68bbd9;
+  }
+
+  #left,
+  #right {
+    visibility: hidden;
+    width: 0px;
+    overflow: visible;
+  }
+
+  #left-top,
+  #left-bottom,
+  #right-top,
+  #right-bottom {
+    display: none;
+  }
+
+  #left-top,
+  #left-bottom,
+  #right-top,
+  #right-bottom {
+    /* display: block; */
+    visibility: visible;
+    width: 70vw;
+    z-index: 1000;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+}
+
+/* @media (max-width: 768px) {
   .logo-container {
     margin-bottom: 10px;
   }
@@ -221,21 +320,4 @@ div.info-panel-content-item-value {
     display: block;
     margin-bottom: 5px;
   }
-}
-
-/* Dark mode support */
-.dark-mode {
-  background-color: #121212;
-  color: #ffffff;
-}
-
-.dark-mode #header,
-.dark-mode #footer,
-.dark-mode nav {
-  background-color: #1e1e1e;
-  color: #ffffff;
-}
-
-.dark-mode #map {
-  background-color: #2d2d2d;
-}
+} */

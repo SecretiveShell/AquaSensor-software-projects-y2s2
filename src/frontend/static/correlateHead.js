@@ -46,7 +46,7 @@ async function parseWarnings(){
 	let c=0;
 	warn.innerHTML="";
 	if(warnList['flowError']){
-		warn.innerHTML+="<em>Issues retreiving requested flow rate, latest reading used instead</em>"
+		warn.innerHTML+="<em>Issues retrieving requested flow rate, latest reading used instead</em>"
 		warnList['flowError']=false;
 		c++;
 	}

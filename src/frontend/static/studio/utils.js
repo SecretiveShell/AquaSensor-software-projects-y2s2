@@ -28,6 +28,8 @@ function setrealtime(checked) {
   if (checked) {
     datePicker.value = null;
     slider.value = slider.max;
+    fetchAndRenderCharts();
+    fetchRivers();
 
     pollIntervalId = setInterval(() => {
       fetchAndRenderCharts();

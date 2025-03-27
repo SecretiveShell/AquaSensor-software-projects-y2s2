@@ -5,7 +5,7 @@ from sqlalchemy.future import select
 from zoneinfo import ZoneInfo
 
 from aquasensor_backend.ORM import AsyncSessionLocal
-from aquasensor_backend.api.utils import do_saturation_percent
+from aquasensor_backend.api.utils import do_saturation_percent, normalize_date
 from aquasensor_backend.security import get_logged_in_user_depends
 from aquasensor_backend.models.sensor import (
     SensorListResponse,
@@ -100,8 +100,8 @@ async def get_sensor_readings_by_id(
 ) -> SensorReadingsResponse:
     """Get sensor readings by ID."""
 
-    start = start_date.astimezone(ZoneInfo("UTC")).replace(tzinfo=None)
-    end = end_date.astimezone(ZoneInfo("UTC")).replace(tzinfo=None)
+    start = normalize_date(start_date)
+    end = normalize_date(end_date)
 
     result = await db.execute(
         select(SensorReadingsModel)

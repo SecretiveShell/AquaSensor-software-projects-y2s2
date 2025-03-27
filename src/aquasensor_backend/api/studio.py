@@ -9,6 +9,7 @@ from loguru import logger
 from shapely.geometry import Point
 from sqlalchemy import Select
 
+from aquasensor_backend.api.utils import normalize_date
 from aquasensor_backend.cache import cache
 from aquasensor_backend.ORM import AsyncSessionLocal, SensorReadings, Sensors
 from aquasensor_backend.security import get_logged_in_user_depends
@@ -201,6 +202,9 @@ async def get_river_points(
     date: datetime | None = None,
 ):
     """Get river data for a given area."""
+
+    if date:
+        date = normalize_date(date)
 
     # normalize the bbox and make x1/y1 the smallest value
     x1, y1, x2, y2 = normalize_bbox(x1, y1, x2, y2)

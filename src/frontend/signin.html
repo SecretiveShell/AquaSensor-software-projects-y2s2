@@ -1,145 +1,163 @@
-{% extends "base.html" %} {% block title %}AquaSensor{% endblock %} {% block
-content %}
+{% extends "base.html" %}
+{% block title %}AquaSensor{% endblock %}
+
+{% block content %}
 <style>
-  .form-container {
-    min-height: 100%;
+  :root {
+    --primary: #3498db;
+    --danger: #e74c3c;
+    --bg: #f9f9f9;
+    --white: #fff;
+    --gray: #ccc;
+    --text: #333;
+    --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  html, body {
+    box-sizing: border-box;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font);
+    background-color: var(--bg);
+    overflow: hidden;
+  }
+
+  .form-wrapper {
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding-top: 50%;
-    padding: 20px;
-    padding-bottom: 60px;
-    background: #eee;
+    align-items: center;
+    height: 100%;
+    padding: 5vw;
+    box-sizing: border-box;
   }
 
-  .form-container form {
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    background: #fff;
+  .form-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+  }
+
+  .form-card h3 {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: var(--text);
     text-align: center;
-    width: 500px;
   }
 
-  .form-container form h3 {
-    font-size: 30px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    color: #333;
+  .form-card input[type="text"],
+  .form-card input[type="password"] {
+    width: 90%;
+    padding: 12px 15px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    border: 1px solid var(--gray);
+    border-radius: 6px;
+    background-color: #f0f0f0;
+    color: var(--text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .form-container form input,
-  .form-container form select {
-    width: 80%;
-    padding: 10px 15px;
-    font-size: 17px;
-    margin: 8px 0;
-    background: #eee;
-    border-radius: 5px;
+  .form-card input::placeholder {
+    color: #888;
   }
 
-  .form-container form select option {
-    background: #fff;
+  .form-card input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    background-color: #fff;
+    outline: none;
   }
 
-  .form-container form .form-btn {
-    background: #fbd0d9;
-    color: crimson;
-    text-transform: capitalize;
-    font-size: 20px;
+  .form-card input[type="submit"] {
+    width: 100%;
+    padding: 12px 0;
+    background-color: var(--primary);
+    border: none;
+    color: var(--white);
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 6px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
 
-  .form-container form .form-btn:hover {
-    background: crimson;
-    color: #fff;
+  .form-card input[type="submit"]:hover {
+    background-color: #2980b9;
   }
 
-  .form-container form p {
-    margin-top: 10px;
-    font-size: 20px;
-    color: #333;
-  }
-
-  .form-container form p a {
-    color: crimson;
-  }
-
-  .form-container form .error-msg {
-    margin: 10px 0;
-    display: block;
-    background: crimson;
-    color: #fff;
-    border-radius: 5px;
-    font-size: 20px;
-    padding: 10px;
+  .form-card .error-msg {
+    display: none;
+    background-color: var(--danger);
+    color: var(--white);
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-size: 16px;
+    text-align: center;
   }
 </style>
-<div class="page-container">
-  <div class="form-container">
-    <form id="loginform" method="none" action="javascript:void(0);">
-      <h3>Sign In</h3>
-      <input
-        type="text"
-        placeholder="Enter Username"
-        name="username"
-        required
-      />
-      <input
-        type="password"
-        placeholder="Enter Password"
-        name="password"
-        required
-      />
-      <input type="submit" value="Submit" onclick="process()" />
-    </form>
-  </div>
+
+<div class="form-wrapper">
+  <form id="loginform" method="none" action="javascript:void(0);" class="form-card">
+    <h3>Sign In</h3>
+    <div id="errormsg" class="error-msg">Login failed</div>
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="password" name="password" placeholder="Password" required />
+    <input type="submit" value="Login" onclick="process()" />
+  </form>
 </div>
+
 <script>
   async function process() {
-    var f = new FormData(document.getElementById("loginform"));
+    const form = document.getElementById("loginform");
+    const errorBox = document.getElementById("errormsg");
+    const formData = new FormData(form);
 
-    // validation code
-    if (!(f.get("username") && f.get("password"))) {
-      alert("Please enter username and password");
+    const username = formData.get("username");
+    const password = formData.get("password");
+
+    if (!username || !password) {
+      errorBox.innerText = "Please enter username and password";
+      errorBox.style.display = "block";
       return;
     }
 
-    // call the api
-    var req = await fetch('/api/v1/auth/login', {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: f.get("username"),
-        password: f.get("password"),
-      }),
-    });
-    var res = await req.json();
-    if (res["success"] == false) {
-      alert("login failed");
-      return;
+    try {
+      const response = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        errorBox.innerText = "Invalid username or password";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      // Store token
+      window.sessionStorage.setItem("AquaSensorToken", data.token);
+
+      // Handle redirect
+      const queryParams = new URLSearchParams(window.location.search);
+      const redirectTo = queryParams.get("r") || "/";
+      window.location.href = redirectTo;
+
+    } catch (err) {
+      errorBox.innerText = "An unexpected error occurred";
+      errorBox.style.display = "block";
     }
-    if (res["success"] == true) {
-      /*let d = new Date();
-    d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
-    Document.cookie="AquaSensorToken="+res["token"]+"; expires="+d.toGMTString()+"; path=/";*/
-      window.sessionStorage.setItem("AquaSensorToken", res["token"]);
-      let get=window.location.search.substr(1);
-      get=get.split("&");
-      var ref="/";
-      get.forEach(function(arg){
-        let x=arg.split('=')
-	if(x[0]=='r')ref=x[1];
-      })
-      window.location.href = ref;
-      return;
-    }
-    //panic here
-    alert("login failed");
-    return;
   }
 </script>
 {% endblock %}

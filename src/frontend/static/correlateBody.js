@@ -155,7 +155,7 @@ if(logged){
 			type: "line",
 			lineStyle: {
 				normal: {
-					type:[5,4]
+					type:[6,4]
 				}
 			}
 		},
@@ -167,7 +167,7 @@ if(logged){
 			type: "line",
 			lineStyle: {
 				normal: {
-					type:[5,4]
+					type:[6,4]
 				}
 			}
 		},

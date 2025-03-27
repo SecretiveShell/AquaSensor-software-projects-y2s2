@@ -67,6 +67,7 @@ async function pullanddraw(){
     	)
     );
     var chartoptions={
+	    calculable:true,
 	    tooltip: {
 		    trigger: 'axis',
 		    axisPointer:{type:'cross'}
@@ -208,6 +209,7 @@ if(logged){
   var chart=echarts.init(document.getElementById("chart-section"));
 
   await pullanddraw();	
+  parseWarnings();
 
   window.onresize=function(){
     chart.resize();
@@ -216,6 +218,5 @@ if(logged){
   t[0].onchange=function(){};
   t[1].onchange=function(){};
   document.getElementById("datesubmit").onclick=newDateFetch;
-  parseWarnings();
 }
 

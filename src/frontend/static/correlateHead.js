@@ -59,7 +59,6 @@ async function parseWarnings(){
 }
 
 async function dataRequest(id,start,till){
-	console.log("api/v1/sensors/"+id+"/readings?start_date="+start.toISOString()+"&end_date="+till.toISOString());
 	return fetch("api/v1/sensors/"+id+"/readings?start_date="+start.toISOString()+"&end_date="+till.toISOString(),{
 		headers: {
 			Accept: "appication/json",

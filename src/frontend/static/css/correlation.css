@@ -42,8 +42,8 @@
 
 #settings {
     width: 10vw;
-    background-color: grey;
-
+    background-color: white;
+    padding: 10px;
 }
 
 #settings form {
@@ -74,7 +74,7 @@
 }
 
 #settings form #r {
-    float: right;
+    float: left;
 }
 
 #graph {
@@ -108,12 +108,12 @@ input[type=submit]:disabled {
 	}
 	#graph{
 		width: 100%;
+		order: 2;
 		height:50vh;
-		order: 1;
 	}
 	#form{
 		width: 100%;
-		order: 2;
+		order: 1;
 	}
 	#warning{
 		height: auto;
@@ -138,6 +138,6 @@ input[type=submit]:disabled {
     }
     
     .corr {
-        min-height: 40vh;
+        min-height: 4vh;
     }
 }

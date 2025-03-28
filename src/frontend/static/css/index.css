@@ -45,7 +45,11 @@
 	  padding: 4px 16px;
 	  border: 1px solid black;
 	  border-radius:4px;
-
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .navlink:hover{
+    animation: button-push 0.4s ease-out;
+    color: aqua;
   }
   .navlink a{
     padding: 8px 8px 8px 32px;

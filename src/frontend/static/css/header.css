@@ -25,7 +25,23 @@ div.title > a, div.title > a > img {
   height: 100%;
   width: auto;
 }
-
+div.title img{
+  animation: FallIn 1s ease-in-out forwards;
+}
+@keyframes FallIn{
+  0%{
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  80%{
+    transform: translateY(10px);
+    opacity: 1;
+  }
+  100%{
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 .search{
   display: flex;
   align-items: flex-end;

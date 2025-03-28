@@ -11,11 +11,156 @@ var baseTime21;
 var baseTime1350;
 var baseTime13;
 
+var chart;
+
 function newDateFetch(){
 	now=new Date(document.getElementById("fetchDate").value);
 	pullanddraw();
-
 	return
+}
+
+async function draw(){
+    let t=document.getElementById("temp").checked;
+    let o=document.getElementById("oxygen").checked;
+    console.log(o);
+
+    var chartoptions={
+    calculable:true,
+    tooltip: {
+	    trigger: 'axis',
+	    axisPointer:{type:'cross'}
+    },
+    xAxis: [
+	{
+	type: 'time',
+	boundaryGap:false,
+	name: "Sensor Readings",
+	nameGap: 0,
+	nameTextStyle: {
+		align:"center",
+		verticalAlign:"bottom"
+	}
+	}
+    ],
+    yAxis: [
+	{
+		type:"value"
+	},
+	{
+		type:"value"
+	},
+	{
+		type:"value"
+	},
+	{
+		type:"value"
+	},
+	{
+		type:"value"
+	},
+	{
+		type:"value"
+	}
+    ],
+    dataZoom: [
+	    {
+	    type:"inside",
+	    filterMode: 'weakFilter'
+	    }
+    ],
+    legend: {
+	    data:[
+		    {
+			    name:"Dissolved Oxygen(ppm)",
+			    show:o
+		    },
+		    {
+			    name:"Temperature(°C)",
+			    show:t
+		    }
+	    ],
+	    selected:{
+		"Dissolved Oxygen(ppm)":o,
+		"Temperature(°C)":t
+	    },
+	    selectedMode: false
+    },
+    series: [
+	{
+		name: "Dissolved Oxygen(ppm)",
+		data: data21["time"].map((x,index)=>[x,data21["dissolved_oxygen"][index]]),
+		smooth:true,
+		symbol: "none",
+		type: "line",
+		lineStyle: {
+			normal: {
+				type:'solid'
+			}
+		}
+	},
+	{
+		name: "Temperature(°C)",
+		data: data21["time"].map((x,index)=>[x,data21["temperature"][index]]),
+		smooth:true,
+		symbol: "none",
+		type: "line",
+		lineStyle: {
+			normal: {
+				type:'solid'
+			}
+		}
+	},
+	{
+		name: "Dissolved Oxygen(ppm)",
+		data: data1350["time"].map((x,index)=>[x,data1350["dissolved_oxygen"][index]]),
+		smooth:true,
+		symbol: "none",
+		type: "line",
+		lineStyle: {
+			normal: {
+				type:[6,4]
+			}
+		}
+	},
+	{
+		name: "Temperature(°C)",
+		data: data1350["time"].map((x,index)=>[x,data1350["temperature"][index]]),
+		smooth:true,
+		symbol: "none",
+		type: "line",
+		lineStyle: {
+			normal: {
+				type:[6,4]
+			}
+		}
+	},
+	{
+		name: "Dissolved Oxygen(ppm)",
+		data: data13["time"].map((x,index)=>[x,data13["dissolved_oxygen"][index]]),
+		smooth:true,
+		symbol: "none",
+		type: "line",
+		lineStyle: {
+			normal: {
+				type:[4,10]
+			}
+		}
+	},
+	{
+		name: "Temperature(°C)",
+		data: data13["time"].map((x,index)=>[x,data13["temperature"][index]]),
+		smooth:true,
+		symbol: "none",
+		type: "line",
+		lineStyle: {
+			normal: {
+				type:[4,10]
+			}
+		}
+	}
+    ]
+   }; 
+   chart.setOption(chartoptions);
 }
 
 async function pullanddraw(){
@@ -80,137 +225,8 @@ async function pullanddraw(){
     baseTime13=Array.from(data13["time"]);
     for(let i=0;i<data21["time"].length;i++)data21["time"][i].addSeconds(timeoff1+timeoff2);
     for(let i=0;i<data1350["time"].length;i++)data1350["time"][i].addSeconds(timeoff2);
-    var chartoptions={
-	    calculable:true,
-	    tooltip: {
-		    trigger: 'axis',
-		    axisPointer:{type:'cross'}
-	    },
-	    xAxis: [
-		{
-		type: 'time',
-		boundaryGap:false,
-		name: "Sensor Readings",
-		nameGap: 0,
-		nameTextStyle: {
-			align:"center",
-			verticalAlign:"bottom"
-		}
-		}
-	    ],
-	    yAxis: [
-		{
-			type:"value"
-		},
-		{
-			type:"value"
-		},
-		{
-			type:"value"
-		},
-		{
-			type:"value"
-		},
-		{
-			type:"value"
-		},
-		{
-			type:"value"
-		}
-	    ],
-	    dataZoom: [
-		    {
-		    type:"inside",
-		    filterMode: 'weakFilter'
-		    }
-	    ],
-	    legend: {
-		    data:[
-			    {
-				    name:"Dissolved Oxygen(ppm)"
-			    },
-			    {
-				    name:"Temperature(°C)"
-			    }
-		    ],
-		    selectedMode: false
-	    },
-	    series: [
-		{
-			name: "Dissolved Oxygen(ppm)",
-			data: data21["time"].map((x,index)=>[x,data21["dissolved_oxygen"][index]]),
-			smooth:true,
-			symbol: "none",
-			type: "line",
-			lineStyle: {
-				normal: {
-					type:'solid'
-				}
-			}
-		},
-		{
-			name: "Temperature(°C)",
-			data: data21["time"].map((x,index)=>[x,data21["temperature"][index]]),
-			smooth:true,
-			symbol: "none",
-			type: "line",
-			lineStyle: {
-				normal: {
-					type:'solid'
-				}
-			}
-		},
-		{
-			name: "Dissolved Oxygen(ppm)",
-			data: data1350["time"].map((x,index)=>[x,data1350["dissolved_oxygen"][index]]),
-			smooth:true,
-			symbol: "none",
-			type: "line",
-			lineStyle: {
-				normal: {
-					type:[6,4]
-				}
-			}
-		},
-		{
-			name: "Temperature(°C)",
-			data: data1350["time"].map((x,index)=>[x,data1350["temperature"][index]]),
-			smooth:true,
-			symbol: "none",
-			type: "line",
-			lineStyle: {
-				normal: {
-					type:[6,4]
-				}
-			}
-		},
-		{
-			name: "Dissolved Oxygen(ppm)",
-			data: data13["time"].map((x,index)=>[x,data13["dissolved_oxygen"][index]]),
-			smooth:true,
-			symbol: "none",
-			type: "line",
-			lineStyle: {
-				normal: {
-					type:[4,10]
-				}
-			}
-		},
-		{
-			name: "Temperature(°C)",
-			data: data13["time"].map((x,index)=>[x,data13["temperature"][index]]),
-			smooth:true,
-			symbol: "none",
-			type: "line",
-			lineStyle: {
-				normal: {
-					type:[4,10]
-				}
-			}
-		}
-	    ]
-    }; 
-    chart.setOption(chartoptions);
+    
+    await draw();
     parseWarnings();
 }
 
@@ -220,7 +236,7 @@ if(!logged){
   Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
 }
 if(logged){
-  var chart=echarts.init(document.getElementById("chart-section"));
+  chart=echarts.init(document.getElementById("chart-section"));
   document.getElementById("fetchDate").valueAsDate=now;
 
   await pullanddraw();	
@@ -229,8 +245,8 @@ if(logged){
     chart.resize();
   }
   let t=Array.from(document.getElementsByClassName("series-control"));
-  t[0].onchange=function(){};
-  t[1].onchange=function(){};
+  t[0].onchange=draw;
+  t[1].onchange=draw;
   document.getElementById("datesubmit").onclick=newDateFetch;
 }
 

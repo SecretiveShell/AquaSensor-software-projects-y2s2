@@ -18,7 +18,7 @@ class LoginResponse(BaseModel):
 class Register(BaseModel):
     """Register Data"""
 
-    username: str = Field(..., description="Username", min_length=3, max_length=20)
+    username: str = Field(..., description="Username", min_length=3, max_length=64)
     email: EmailStr = Field(..., description="Email")
     password: str = Field(..., description="Password", min_length=16, max_length=72)
 

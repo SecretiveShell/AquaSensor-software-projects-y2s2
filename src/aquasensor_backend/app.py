@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.exceptions import HTTPException
+from fastapi.middleware.gzip import GZipMiddleware
 from aquasensor_backend.templates import templates, static_files
 from aquasensor_backend.api import router as api_router
 from aquasensor_backend.lifespan import lifespan
@@ -11,6 +12,8 @@ app = FastAPI(
     description="A backend for the AquaSensor project.",
     lifespan=lifespan,
 )
+
+app.add_middleware(GZipMiddleware, minimum_size=500, compresslevel=5)
 
 app.mount("/static", static_files, name="static")
 

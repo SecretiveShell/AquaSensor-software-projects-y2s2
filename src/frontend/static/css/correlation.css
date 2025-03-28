@@ -83,7 +83,7 @@
 
 #form {
     width: 20vw;
-
+    border-left: 1px solid black;
 }
 
 #form form {

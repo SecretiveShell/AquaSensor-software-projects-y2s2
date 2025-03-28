@@ -31,6 +31,7 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     transition: transform 0.3s ease;
+    position:relative;
   }
 
   #datalist > div:hover {
@@ -38,12 +39,13 @@
   }
 
   .navlink {
-	  float:right;
-	  margin-left:5px;
+	  position:absolute;
+	  bottom:10px;
+	  right:10px;
 	  padding: 4px 16px;
-	  margin-top:15%;
 	  border: 1px solid black;
 	  border-radius:4px;
+
   }
   .navlink a{
     padding: 8px 8px 8px 32px;

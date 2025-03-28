@@ -23,10 +23,10 @@ async function pullanddraw(){
   let timeoff1=d1*sm;
   let timeoff2=d2*sm;
 
-  let start=new Date();
+  let start=new Date(now);
   start.setDate(now.getDate()-1);
   start.setHours(22,50,0);
-  let till=new Date();
+  let till=new Date(now);
   till.setDate(now.getDate()+1);
   till.setHours(1,10,0);
     

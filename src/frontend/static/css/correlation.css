@@ -29,7 +29,6 @@
     height: 5vh;
     width: 100%;
     border-bottom: 1px solid black;
-    padding: 5px;
 }
 
 #warnings p {
@@ -44,7 +43,7 @@
 #settings {
     width: 10vw;
     background-color: grey;
-    padding: 10px;
+
 }
 
 #settings form {
@@ -84,7 +83,7 @@
 
 #form {
     width: 20vw;
-    padding: 10px;
+
 }
 
 #form form {
@@ -109,6 +108,7 @@ input[type=submit]:disabled {
 	}
 	#graph{
 		width: 100%;
+		height:50vh;
 		order: 1;
 	}
 	#form{

@@ -211,8 +211,6 @@ async function pullanddraw(){
 	    ]
     }; 
     chart.setOption(chartoptions);
-    console.log(data21["time"][0]);
-    console.log(data13["time"][0]);
     parseWarnings();
 }
 
@@ -222,11 +220,10 @@ if(!logged){
   Array.from(document.getElementsByClassName("authrequired")).forEach((arg)=>arg.setAttribute("disabled",""));
 }
 if(logged){
-  //
   var chart=echarts.init(document.getElementById("chart-section"));
+  document.getElementById("fetchDate").valueAsDate=now;
 
   await pullanddraw();	
-  
 
   window.onresize=function(){
     chart.resize();

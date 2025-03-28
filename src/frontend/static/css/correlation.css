@@ -12,7 +12,7 @@
 }
 
 .corr {
-    height: 79vh;
+    height: calc(95vh - 48px - 54px);
     display: inline-block;
 }
 
@@ -29,7 +29,6 @@
     height: 5vh;
     width: 100%;
     border-bottom: 1px solid black;
-    padding: 5px;
 }
 
 #warnings p {
@@ -84,7 +83,7 @@
 
 #form {
     width: 20vw;
-    padding: 10px;
+
 }
 
 #form form {
@@ -110,6 +109,7 @@ input[type=submit]:disabled {
 	#graph{
 		width: 100%;
 		order: 2;
+		height:50vh;
 	}
 	#form{
 		width: 100%;

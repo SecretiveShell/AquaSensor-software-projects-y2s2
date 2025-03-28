@@ -42,8 +42,13 @@
 
 #settings {
     width: 10vw;
+<<<<<<< HEAD
     background-color: white;
     
+=======
+    background-color: grey;
+    padding: 10px;
+>>>>>>> origin
 }
 
 #settings form {
@@ -74,7 +79,7 @@
 }
 
 #settings form #r {
-	float:right;
+    float:right;
 }
 
 #graph {

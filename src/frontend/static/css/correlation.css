@@ -95,7 +95,7 @@ span + #break {
 input[type=submit]:disabled {
     color: grey;
 }
-@media (max-width: 800px){
+@media (max-width: 900px){
 	#container{
 		flex-direction: column;
 	}

@@ -6,6 +6,7 @@ var now=new Date();
 function newDateFetch(){
 	now=new Date(document.getElementById("fetchDate").value);
 	pullanddraw();
+  	parseWarnings();
 	return
 }
 
@@ -113,17 +114,17 @@ async function pullanddraw(){
 	    legend: {
 		    data:[
 			    {
-				    name:"Dissolved Oxygen"
+				    name:"Dissolved Oxygen(ppm)"
 			    },
 			    {
-				    name:"Temperature"
+				    name:"Temperature(°C)"
 			    }
 		    ],
 		    selectedMode: false
 	    },
 	    series: [
 		{
-			name: "Dissolved Oxygen",
+			name: "Dissolved Oxygen(ppm)",
 			data: data21["time"].map((x,index)=>[x,data21["dissolved_oxygen"][index]]),
 			smooth:true,
 			symbol: "none",
@@ -135,7 +136,7 @@ async function pullanddraw(){
 			}
 		},
 		{
-			name: "Temperature",
+			name: "Temperature(°C)",
 			data: data21["time"].map((x,index)=>[x,data21["temperature"][index]]),
 			smooth:true,
 			symbol: "none",
@@ -147,7 +148,7 @@ async function pullanddraw(){
 			}
 		},
 		{
-			name: "Dissolved Oxygen",
+			name: "Dissolved Oxygen(ppm)",
 			data: data1350["time"].map((x,index)=>[x,data1350["dissolved_oxygen"][index]]),
 			smooth:true,
 			symbol: "none",
@@ -159,7 +160,7 @@ async function pullanddraw(){
 			}
 		},
 		{
-			name: "Temperature",
+			name: "Temperature(°C)",
 			data: data1350["time"].map((x,index)=>[x,data1350["temperature"][index]]),
 			smooth:true,
 			symbol: "none",
@@ -171,7 +172,7 @@ async function pullanddraw(){
 			}
 		},
 		{
-			name: "Dissolved Oxygen",
+			name: "Dissolved Oxygen(ppm)",
 			data: data13["time"].map((x,index)=>[x,data13["dissolved_oxygen"][index]]),
 			smooth:true,
 			symbol: "none",
@@ -183,7 +184,7 @@ async function pullanddraw(){
 			}
 		},
 		{
-			name: "Temperature",
+			name: "Temperature(°C)",
 			data: data13["time"].map((x,index)=>[x,data13["temperature"][index]]),
 			smooth:true,
 			symbol: "none",

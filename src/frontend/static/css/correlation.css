@@ -43,7 +43,7 @@
 #settings {
     width: 10vw;
     background-color: white;
-    padding: 10px;
+    
 }
 
 #settings form {
@@ -74,7 +74,7 @@
 }
 
 #settings form #r {
-    float: left;
+	float:right;
 }
 
 #graph {
@@ -89,11 +89,13 @@
 #form form {
     margin-left: 0.5vw;
 }
-
+span + #break {
+	display:inline;
+}
 input[type=submit]:disabled {
     color: grey;
 }
-@media (max-width: 768px){
+@media (max-width: 800px){
 	#container{
 		flex-direction: column;
 	}
@@ -129,6 +131,12 @@ input[type=submit]:disabled {
 	}
 	#settings form, #form form{
 		margin: 10px;
+	}
+	#settings form #r {
+	    float: none;
+	}
+	span + #break {
+		display:none;
 	}
 }
 @media (max-width: 480px) {

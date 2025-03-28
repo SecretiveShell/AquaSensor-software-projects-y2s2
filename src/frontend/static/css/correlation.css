@@ -1,83 +1,143 @@
-*{
-	padding: 0px;
-	margin: 0px;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-#container{
-	display: flex;
-	flex-direction:row;
-	flex-wrap:wrap;
-	width:100%;
-}
-.corr{
-	height: 79vh;
-	display:inline-block;
+#container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
-#chart-section{
-	height:100%;
-	width:100%;
+.corr {
+    height: 79vh;
+    display: inline-block;
 }
 
-.corr p{
-	line-height:1.3;
+#chart-section {
+    height: 100%;
+    width: 100%;
+}
+
+.corr p {
+    line-height: 1.3;
 }
 
 #warnings {
-	height: 5vh;
-	width:100%;
-	box-sizing: border-box;
-	border-bottom: 1px solid black;
-}
-#warnings p{
-	margin-left:5px;
+    height: 5vh;
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding: 5px;
 }
 
-#warnings p,em {
-	font-size: 1.75vh;
+#warnings p {
+    margin-left: 5px;
+}
+
+#warnings p,
+#warnings em {
+    font-size: 1.75vh;
 }
 
 #settings {
-	width:10vw;
-	background-color:grey;
+    width: 10vw;
+    background-color: grey;
+    padding: 10px;
 }
+
 #settings form {
-	margin-top:0.5vh;
-	margin-right:0.5vw;
+    margin-top: 0.5vh;
+    margin-right: 0.5vw;
 }
+
 #temp-oxy-view {
-	width:100%;
-	height:10vh;
+    width: 100%;
+    height: 10vh;
 }
-#temp-oxy-view legend{
-	float: right;
+
+#temp-oxy-view legend {
+    float: right;
 }
+
 #dist-and-flow {
-	width:100%;
-	min-height:20vh;
-}
-#dist-and-flow legend{
-	float: right;
-}
-#dist-and-flow input[type=text]{
-	width:25%;
-}
-#settings form #r{
-	float:right;
+    width: 100%;
+    min-height: 20vh;
 }
 
-#graph{
-	width:70vw;
+#dist-and-flow legend {
+    float: right;
 }
 
-#form{
-	width:20vw;
+#dist-and-flow input[type=text] {
+    width: 25%;
 }
 
-#form form{
-	margin-left:0.5vw;
+#settings form #r {
+    float: right;
 }
 
-input[type=submit]:disabled{
-	color:grey;
+#graph {
+    width: 70vw;
+}
+
+#form {
+    width: 20vw;
+    padding: 10px;
+}
+
+#form form {
+    margin-left: 0.5vw;
+}
+
+input[type=submit]:disabled {
+    color: grey;
+}
+@media (max-width: 768px){
+	#container{
+		flex-direction: column;
+	}
+	.corr{
+		height: auto;
+		min-height: 50vh;
+		width: 100%;
+	}
+	#settings{
+		width: 100%;
+		order: 3;
+	}
+	#graph{
+		width: 100%;
+		order: 1;
+	}
+	#form{
+		width: 100%;
+		order: 2;
+	}
+	#warning{
+		height: auto;
+		min-height: 15vh;
+	}
+	#temp-oxy-view, #dist-and-flow{
+		height: auto;
+		min-height: 15vh;
+	}
+	#dist-and-flow input[type=text]{
+		width: 100%;
+		margin-bottom: 5px;
+	}
+	#settings form, #form form{
+		margin: 10px;
+	}
+}
+@media (max-width: 480px) {
+    #warnings p,
+    #warnings em {
+        font-size: 12px;
+    }
+    
+    .corr {
+        min-height: 40vh;
+    }
 }

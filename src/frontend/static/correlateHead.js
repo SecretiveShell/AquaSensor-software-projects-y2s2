@@ -45,13 +45,22 @@ async function parseWarnings(){
 	let warn=document.getElementById("warnings");
 	let c=0;
 	warn.innerHTML="";
-	if(warnList['flowError']){
-		warn.innerHTML+="<p><em>Issues retreiving requested flow rate, latest reading used instead</em></p>"
+	if(warnList['flowError']||warnList["flowNAN"]){
+		let text="<p><em>";
+		if(warnList["flowNAN"]) text+="Invalid input in flow, defaulting to request: ";
+		if(warnList["flowError"])text+="Issues retreiving requested flow rate, latest reading used instead"
+		text+="</em></p>";
+		warn.innerHTML+=text;
+		warnList["flowNAN"]=false;
 		warnList['flowError']=false;
 		c++;
 	}
-	if(warnList['levelError']){
-		warn.innerHTML+="<p><em>Issues retrieving requested river level, latest reading used instead</em></p>"
+	if(warnList['levelError']||warnList["levelNAN"]){
+		let text="<p><em>";
+		if(warnList["levelNaN"]) text+="Invalid input in level, defaulting to request: ";
+		if(warnList["levelError"])text+="Issues retrieving requested river level, latest reading used instead";
+		text+="</em></p>";
+		warn.innerHTML+=text;
 		warnList['levelError']=false;
 		c++;
 	}

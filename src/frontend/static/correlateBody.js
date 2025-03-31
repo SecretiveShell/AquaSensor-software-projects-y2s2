@@ -26,7 +26,6 @@ async function recalc(){
 	data1350.time=baseTime21.map((value)=>new Date(value).addSeconds(timeBC));
 	await draw();
 	parseWarnings();
-
 }
 
 async function draw(){
@@ -176,15 +175,25 @@ async function calculateOffsets(){
 	let flowAB,flowBC;
 	let distAB,distBC;
 	if(document.getElementById("flow").checked){
-		flowAB = document.getElementById("flowA").value;
-		flowBC = document.getElementById("flowB").value;
+		flowAB = parseFloat(document.getElementById("flowA").value);
+		flowBC = parseFloat(document.getElementById("flowB").value);
+		if(isNaN(flowAB)||isNaN(flowBC)){
+			await getFlow(now).then((value)=>flowBC=flowAB=value);
+			warnList["flowNAN"]=true;
+		}
 	}
 	else{
 		await getFlow(now).then((value)=>flowBC=flowAB=value);
 	}
+	
 	if(document.getElementById("dist").checked){
-		distAB=document.getElementById("distA").value;
-		distBC=document.getElementById("distB").value;
+		distAB=parseFloat(document.getElementById("distA").value);
+		distBC=parseFloat(document.getElementById("distB").value);
+		if(isNaN(distAB)||isNaN(distBC)){
+			distAB=5;
+			distAB=3;
+			warnList["distNAN"]=true;
+		}
 	}
 	else{
 		//MAKE ENDPOINT FOR DISTANCE SOON
@@ -192,7 +201,11 @@ async function calculateOffsets(){
 		distBC=3;
 	}
 	if(document.getElementById("levelCheck").checked){
-		level=document.getElementById("level").value;
+		level=parseFloat(document.getElementById("level").value);
+		if(isNaN(level)){
+			await getLevel(now).then((value)=>level=value);
+			warnList["levelNAN"]=true;
+		}
 	}
 	else{
 		await getLevel(now).then((value)=>level=value);

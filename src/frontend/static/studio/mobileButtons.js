@@ -1,14 +1,43 @@
 // static/studio/mobileButtons.js
 document.addEventListener("DOMContentLoaded", () => {
-
   function hideAllPanels() {
     document.getElementById("left-top").style.display = "none";
     document.getElementById("left-bottom").style.display = "none";
     document.getElementById("right-top").style.display = "none";
     document.getElementById("right-bottom").style.display = "none";
   }
+  function setupCloseFunctionality() {
 
-  // Map of button IDs to action functions
+    const panels = [
+      "left-top", 
+      "left-bottom", 
+      "right-top", 
+      "right-bottom"
+    ];
+    
+    panels.forEach(panelId => {
+      const panel = document.getElementById(panelId);
+      if (panel) {
+        if (!panel.querySelector('.mobile-close-button')) {
+          const closeButton = document.createElement('button');
+          closeButton.className = 'mobile-close-button';
+          closeButton.innerHTML = '×';
+          closeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panel.style.display = 'none';
+          });
+          panel.appendChild(closeButton);
+        }
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.mobile-button') && !e.target.closest('[id$="-top"], [id$="-bottom"]')) {
+        hideAllPanels();
+      }
+    });
+  }
+
   const buttonActions = {
     "mobile-map-control-button": () => {
       console.log("Map Controls button clicked");
@@ -45,4 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn(`Button with ID ${id} not found.`);
     }
   }
+
+  setupCloseFunctionality();
 });

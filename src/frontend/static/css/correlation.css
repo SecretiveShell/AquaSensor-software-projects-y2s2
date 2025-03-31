@@ -41,9 +41,8 @@
 }
 
 #settings {
-    width: 95px;
+    width: 13vw;
     background-color: white;
-    padding: 10px;
 }
 
 #settings form {
@@ -193,7 +192,8 @@ input[type=number]{
 		margin-bottom: 5px;
 	}
 	#settings form {
-		margin: 4px;
+		margin-top:0.5vh;
+		margin-right:0.5vw;
 	}
 	#form {
 		height:70px;

@@ -161,6 +161,9 @@ input[type=number]{
 	width:70%;
 }
 @media (max-width: 900px){
+	body {
+		overflow: visible;
+	}
 	#container{
 		flex-direction: column;
 	}

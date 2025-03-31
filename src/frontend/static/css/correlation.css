@@ -74,6 +74,7 @@
 
 #grid1 {
     grid-column-start: 2;
+    margin-left:auto;
 }
 
 #grid2 {

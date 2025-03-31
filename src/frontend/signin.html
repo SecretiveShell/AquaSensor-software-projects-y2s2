@@ -151,13 +151,21 @@
 
       // Handle redirect
       const queryParams = new URLSearchParams(window.location.search);
-      const redirectTo = queryParams.get("r") || "/";
+      const redirectTo = validateRedirect(queryParams.get("r")) || "/";
       window.location.href = redirectTo;
 
     } catch (err) {
       errorBox.innerText = "An unexpected error occurred";
       errorBox.style.display = "block";
     }
+  }
+
+  function validateRedirect(url) {
+    // Allow only relative URLs
+    if (url && url.startsWith("/") && !url.includes("//")) {
+      return url;
+    }
+    return "/";
   }
 </script>
 {% endblock %}

@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from typing import Any
 
@@ -8,6 +8,7 @@ from httpx import AsyncClient
 from loguru import logger
 from shapely.geometry import Point
 from sqlalchemy import Select
+from sqlalchemy.sql import func
 
 from aquasensor_backend.api.utils import normalize_date
 from aquasensor_backend.cache import cache
@@ -106,7 +107,8 @@ async def get_sensors(
                     Select(SensorReadings)
                     .where(SensorReadings.sensor_id == sensor.id)
                     .where(SensorReadings.timestamp <= date)
-                    .order_by(SensorReadings.timestamp.desc())
+                    .where(SensorReadings.timestamp >= date - timedelta(hours=6))
+                    .order_by(func.abs(func.extract('epoch', SensorReadings.timestamp - date)))
                     .limit(1)
                 )
                 reading = readingq.scalars().first()
@@ -115,6 +117,7 @@ async def get_sensors(
                 readingq: Any = await session.execute(
                     Select(SensorReadings)
                     .where(SensorReadings.sensor_id == sensor.id)
+                    .where(SensorReadings.timestamp >= datetime.utcnow() - timedelta(hours=6))
                     .order_by(SensorReadings.timestamp.desc())
                     .limit(1)
                 )

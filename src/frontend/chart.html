@@ -158,10 +158,14 @@ content %}
           yesterday.setDate(yesterday.getDate() - 1);
           const yesterdayDate = yesterday.toISOString().split("T")[0];
 
+          yesterday2 = new Date();
+          yesterday2.setDate(yesterday2.getDate() - 2);
+          const yesterdayDate2 = yesterday2.toISOString().split("T")[0];
+
           Promise.all([
             fetchDataAndRenderChart(
               sensorId,
-              today,
+              yesterdayDate,
               today,
               "todayChart",
               "Today's Water Temperature",
@@ -169,7 +173,7 @@ content %}
             ),
             fetchDataAndRenderChart(
               sensorId,
-              yesterdayDate,
+              yesterdayDate2,
               yesterdayDate,
               "yesterdayChart",
               "Yesterday's Water Temperature",

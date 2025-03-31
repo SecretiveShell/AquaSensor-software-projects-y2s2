@@ -152,6 +152,9 @@ span + #break {
 input[type=submit]:disabled {
     color: grey;
 }
+input[type=number]{
+	width:70%;
+}
 @media (max-width: 900px){
 	#container{
 		flex-direction: column;

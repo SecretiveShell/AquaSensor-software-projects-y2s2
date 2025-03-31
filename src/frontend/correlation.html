@@ -15,7 +15,7 @@
 	<div id="warnings">
 	</div>
 	<div id="settings" class="corr">
-		<form>
+		<form method="none" action="javascript:void(0);">
 			<fieldset id="temp-oxy-view">
 				<legend>variable toggles</legend>
 				<br/>
@@ -23,45 +23,45 @@
 				<label for="temp">temp</label>
 				<input class="series-control"type="checkbox" id="temp" checked></input>
 				</span>
-				<br/>
+				<br id="break"/>
 				<span id="r">
 				<label for="oxygen">oxygen</label>
 				<input class="series-control" type="checkbox" id="oxygen" checked></input>
 				</span>
 			</fieldset>
 			<fieldset id="dist-and-flow">
-				<legend>manual settings</legend>
-				<div class="flowside">
+				<legend id="grid1" >manual settings</legend>
+				<div  id="grid2" class="dfCell">
 					<label id=flowLabel" for="flow" class="flowside">flow</label>
 					<input type="checkbox" id="flow" class="flowside"></input>
 				</div>
-				<div class="distside">
+				<div class="dfCell" id="grid3">
 					<label id="distLabel"for="dist">distance</label>
 					<input type="checkbox" id="dist"></input>
 				</div>
-				<br/>
-				<p>Derwent 21</p>
-				<span class="flowside">
-					<input type="text" id="flowA"></input><label id="flowALabel" for="flowA">m/s3</label>
+
+				<p id="grid4">Derwent 21</p>
+				<span class="dfCell" id="grid5">
+					<input type="text" id="flowA"></input><label id="flowALabel" for="flowA">m/s<sup>3</sup></label>
 				</span>
-				<span class="distside">
+				<span class="dfCell" id="grid6">
 					<input type="text" id="distA"></input><label id="distALabel" for="distA">m</label>
 				</span>
-				<br/>
-				<p>Derwent 13-50</p>
-				<span class="flowside">
-					<input type="text" id="flowB"></input><label id="flowBLabel" for="flowB">m/s3</label>
+				<p id="grid7">Derwent 13-50</p>
+				<span id="grid8" class="dfCell">
+					<input type="text" id="flowB"></input><label id="flowBLabel" for="flowB">m/s<sup>3</sup></label>
 				</span>
-				<span class="distside">
+				<span id="grid9" class="dfCell">
 					<input type="text" id="distB"></input><label id="distBLabel" for="distB">m</label>
 				</span>
-				<br/>
-				<p>Derwent 13</p>
+
+				<p id="grid10">Derwent 13</p>
 			</fieldset>
-			<label id="levelCheckLabel" for="levelCheck">level</label><input type=checkbox id="levelCheck"></input>
+			<label id="levelCheckLabel" for="levelCheck">level</label><input type=checkbox id="levelCheck">
+			<br/>
 			<input type=number id="level"></input><label for="level" id="levelLabel">m</label>
 			<br/>
-			<input class="authrequired" type="submit" value="recalculate"></input>
+			<input class="authrequired" id="offsubmit" type="submit" value="recalculate">
 		</form>
 	</div>
 	<div id="graph" class="corr">
@@ -72,7 +72,7 @@
 		<form method="none" action="javascript:void(0);">
 			<p>River Derwent<br/><sub><em>(other rivers to be supported in future)</em></sub></p>
 			<input id="fetchDate" type="date">
-			<input id="datesubmit" type="submit" value="fetch data">
+			<input class="authrequired" id="datesubmit" type="submit" value="fetch data">
 		</form>
 	</div>
 </div>

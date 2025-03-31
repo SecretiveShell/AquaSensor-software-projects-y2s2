@@ -1,6 +1,7 @@
 var logged;
 var level;
-var flow;
+var timeAB;
+var timeBC;
 var now=new Date();
 
 var data21;
@@ -19,10 +20,20 @@ function newDateFetch(){
 	return
 }
 
+async function recalc(){
+	await calculateOffsets();
+
+	data21["time"] = baseTime21.map((value)=>new Date(value).addSeconds(timeAB+timeBC));
+	data1350["time"]=baseTime1350.map((value)=>new Date(value).addSeconds(timeBC));
+
+	await draw();
+	parseWarnings();
+	return;
+}
+
 async function draw(){
     let t=document.getElementById("temp").checked;
     let o=document.getElementById("oxygen").checked;
-    console.log(o);
 
     var chartoptions={
     calculable:true,
@@ -163,19 +174,55 @@ async function draw(){
    chart.setOption(chartoptions);
 }
 
-async function pullanddraw(){
-  await getLevel(now).then((value)=>level=value);
-  await getFlow(now).then((value)=>flow=value);
-  
-  var sm=DerwentWidthM*level/flow;
-  
-  //temporary values until I make the distance endpoint
-  //distance end point will probably be added post merge, as to avoid conflicts
-  var d1=5;
-  var d2=3;
+async function calculateOffsets(){
+	let flowAB,flowBC;
+	let distAB,distBC;
+	if(document.getElementById("flow").checked){
+		flowAB = parseFloat(document.getElementById("flowA").value);
+		flowBC = parseFloat(document.getElementById("flowB").value);
+		if(isNaN(flowAB)||isNaN(flowBC)){
+			await getFlow(now).then((value)=>flowBC=flowAB=value);
+			warnList["flowNAN"]=true;
+		}
+	}
+	else{
+		await getFlow(now).then((value)=>flowBC=flowAB=value);
+	}
+	
+	if(document.getElementById("dist").checked){
+		distAB=parseFloat(document.getElementById("distA").value);
+		distBC=parseFloat(document.getElementById("distB").value);
+		if(isNaN(distAB)||isNaN(distBC)){
+			distAB=1000;
+			distBC=50;
+			warnList["distNAN"]=true;
+		}
+	}
+	else{
+		//MAKE ENDPOINT FOR DISTANCE SOON
+		distAB=1000;
+		distBC=50;
+	}
+	if(document.getElementById("levelCheck").checked){
+		level=parseFloat(document.getElementById("level").value);
+		if(isNaN(level)){
+			await getLevel(now).then((value)=>level=value);
+			warnList["levelNAN"]=true;
+		}
+	}
+	else{
+		await getLevel(now).then((value)=>level=value);
+	}
+	let smAB=DerwentWidthM*level/flowAB;
+	let smBC=DerwentWidthM*level/flowBC;
 
-  let timeoff1=d1*sm;
-  let timeoff2=d2*sm;
+	timeAB=distAB*smAB;
+	timeBC=distBC*smBC;
+}
+
+
+async function pullanddraw(){
+  await calculateOffsets();
 
   let start=new Date(now);
   start.setDate(now.getDate()-1);
@@ -220,11 +267,24 @@ async function pullanddraw(){
 		)
     	)
     );
-    baseTime21=Array.from(data21["time"]);
-    baseTime1350=Array.from(data1350["time"]);
-    baseTime13=Array.from(data13["time"]);
-    for(let i=0;i<data21["time"].length;i++)data21["time"][i].addSeconds(timeoff1+timeoff2);
-    for(let i=0;i<data1350["time"].length;i++)data1350["time"][i].addSeconds(timeoff2);
+
+    /* timeoffset math
+     * Derwent 21 time:T
+     * dist a
+     * Derwent 1350 time:T+a
+     * dist b
+     * Derwent 13 time:T+a+b
+     *
+     * to allign:
+     * 21 time += a+b
+     * 1350 time += b
+    */
+
+    baseTime21=data21["time"].map((value)=>new Date(value));
+    baseTime1350=data1350["time"].map((value)=>new Date(value));
+    baseTime13=data13["time"].map((value)=>new Date(value));
+    for(let i=0;i<data21["time"].length;i++)data21["time"][i].addSeconds(timeAB+timeBC);
+    for(let i=0;i<data1350["time"].length;i++)data1350["time"][i].addSeconds(timeBC);
     
     await draw();
     parseWarnings();
@@ -248,5 +308,6 @@ if(logged){
   t[0].onchange=draw;
   t[1].onchange=draw;
   document.getElementById("datesubmit").onclick=newDateFetch;
+  document.getElementById("offsubmit").onclick=recalc;
 }
 

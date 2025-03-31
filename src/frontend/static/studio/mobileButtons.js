@@ -8,6 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("right-bottom").style.display = "none";
   }
 
+  function isMobileViewport() {
+    return window.matchMedia('only screen and (max-width: 720px)').matches;
+  }
+
+  map.on("click", function (e) {
+    if (isMobileViewport()) {
+      hideAllPanels();
+    }
+  });
+
   // Map of button IDs to action functions
   const buttonActions = {
     "mobile-map-control-button": () => {

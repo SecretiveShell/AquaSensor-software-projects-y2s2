@@ -37,7 +37,7 @@
 
 #warnings p,
 #warnings em {
-    font-size: 1.75vh;
+    font-size: 1.6vh;
 }
 
 #settings {
@@ -63,6 +63,60 @@
 #dist-and-flow {
     width: 100%;
     min-height: 20vh;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(7, 1fr); 
+    gap: 0px;
+}
+
+.dfCell {
+	width:100%;
+}
+
+#grid1 {
+    grid-column-start: 2;
+    margin-left:auto;
+}
+
+#grid2 {
+    grid-column-start: 1;
+    grid-row-start: 2;
+}
+
+#grid3 {
+    grid-column-start: 2;
+    grid-row-start: 2;
+}
+
+#grid4 {
+    grid-column-start: 2;
+}
+
+#grid5 {
+    grid-column-start: 1;
+    grid-row-start: 4;
+}
+
+#grid6 {
+    grid-row-start: 4;
+}
+
+#grid7 {
+    grid-column-start: 2;
+}
+
+#grid8 {
+    grid-column-start: 1;
+    grid-row-start: 6;
+}
+
+#grid9 {
+    grid-column-start: 2;
+    grid-row-start: 6;
+}
+
+#grid10 {
+    grid-column-start: 2;
 }
 
 #dist-and-flow legend {
@@ -70,11 +124,16 @@
 }
 
 #dist-and-flow input[type=text] {
-    width: 25%;
+    width: 50%;
+}
+
+.dfCell input + label{
+	font-size:85%;
 }
 
 #settings form #r {
-    float: right;
+    float:right;
+    margin-right:2px;
 }
 
 #graph {
@@ -82,24 +141,28 @@
 }
 
 #form {
-    width: 20vw;
-
+    width: 17vw;
+    border-left: 1px solid black;
 }
 
 #form form {
     margin-left: 0.5vw;
 }
-
+span + #break {
+	display:inline;
+}
 input[type=submit]:disabled {
     color: grey;
 }
-@media (max-width: 768px){
+input[type=number]{
+	width:70%;
+}
+@media (max-width: 900px){
 	#container{
 		flex-direction: column;
 	}
 	.corr{
 		height: auto;
-		min-height: 50vh;
 		width: 100%;
 	}
 	#settings{
@@ -109,7 +172,7 @@ input[type=submit]:disabled {
 	#graph{
 		width: 100%;
 		order: 2;
-		height:50vh;
+		height:60vh;
 	}
 	#form{
 		width: 100%;
@@ -117,18 +180,34 @@ input[type=submit]:disabled {
 	}
 	#warning{
 		height: auto;
-		min-height: 15vh;
+		min-height: 10vh;
 	}
 	#temp-oxy-view, #dist-and-flow{
-		height: auto;
-		min-height: 15vh;
+		height: auto;	
+	}
+	#dist-and-flow input {
+	    width: auto;
 	}
 	#dist-and-flow input[type=text]{
-		width: 100%;
+		width: 50%;
 		margin-bottom: 5px;
 	}
-	#settings form, #form form{
-		margin: 10px;
+	#settings form {
+		margin: 4px;
+	}
+	#form {
+		height:70px;
+	}
+	#form form{
+		margin: auto;
+	}
+	#settings form #r {
+	    float: none;
+	    margin-left: 20vw;
+	    margin-bottom:1vh;
+	}
+	span + #break {
+		display:none;
 	}
 }
 @media (max-width: 480px) {

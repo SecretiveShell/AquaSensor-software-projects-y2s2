@@ -15,7 +15,7 @@
 	<div id="warnings">
 	</div>
 	<div id="settings" class="corr">
-		<form>
+		<form method="none" action="javascript:void(0);">
 			<fieldset id="temp-oxy-view">
 				<legend>variable toggles</legend>
 				<br/>
@@ -61,7 +61,7 @@
 			<label id="levelCheckLabel" for="levelCheck">level</label><input type=checkbox id="levelCheck"></input>
 			<input type=number id="level"></input><label for="level" id="levelLabel">m</label>
 			<br/>
-			<input class="authrequired" type="submit" value="recalculate"></input>
+			<input class="authrequired" id="offsubmit" type="submit" value="recalculate"></input>
 		</form>
 	</div>
 	<div id="graph" class="corr">
@@ -72,7 +72,7 @@
 		<form method="none" action="javascript:void(0);">
 			<p>River Derwent<br/><sub><em>(other rivers to be supported in future)</em></sub></p>
 			<input id="fetchDate" type="date">
-			<input id="datesubmit" type="submit" value="fetch data">
+			<input class="authrequired" id="datesubmit" type="submit" value="fetch data">
 		</form>
 	</div>
 </div>

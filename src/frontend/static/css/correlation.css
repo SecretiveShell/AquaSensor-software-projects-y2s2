@@ -41,7 +41,7 @@
 }
 
 #settings {
-    width: 10vw;
+    width: 13vw;
     background-color: grey;
 }
 
@@ -62,14 +62,71 @@
 #dist-and-flow {
     width: 100%;
     min-height: 20vh;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(7, 1fr); 
+    gap: 0px;
+}
+
+.dfCell {
+	width:100%;
+}
+
+#grid1 {
+    grid-column-start: 2;
+}
+
+#grid2 {
+    grid-column-start: 1;
+    grid-row-start: 2;
+}
+
+#grid3 {
+    grid-column-start: 2;
+    grid-row-start: 2;
+}
+
+#grid4 {
+    grid-column-start: 2;
+}
+
+#grid5 {
+    grid-column-start: 1;
+    grid-row-start: 4;
+}
+
+#grid6 {
+    grid-row-start: 4;
+}
+
+#grid7 {
+    grid-column-start: 2;
+}
+
+#grid8 {
+    grid-column-start: 1;
+    grid-row-start: 6;
+}
+
+#grid9 {
+    grid-column-start: 2;
+    grid-row-start: 6;
+}
+
+#grid10 {
+    grid-column-start: 2;
 }
 
 #dist-and-flow legend {
     float: right;
 }
 
-#dist-and-flow input {
-    width: 25%;
+#dist-and-flow input[type=text] {
+    width: 50%;
+}
+
+.dfCell input + label{
+	font-size:85%;
 }
 
 #settings form #r {
@@ -82,7 +139,7 @@
 }
 
 #form {
-    width: 20vw;
+    width: 17vw;
     border-left: 1px solid black;
 }
 
@@ -140,9 +197,9 @@ input[type=submit]:disabled {
 		margin: auto;
 	}
 	#settings form #r {
-	    display: table;
 	    float: none;
-	    margin: 0 auto;
+	    margin-left: 20vw;
+	    margin-bottom:1vh;
 	}
 	span + #break {
 		display:none;

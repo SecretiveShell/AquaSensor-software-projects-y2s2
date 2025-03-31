@@ -22,10 +22,13 @@ function newDateFetch(){
 
 async function recalc(){
 	await calculateOffsets();
-	data21.time=baseTime21.map((value)=>new Date(value).addSeconds(timeAB+timeBC));
-	data1350.time=baseTime21.map((value)=>new Date(value).addSeconds(timeBC));
+
+	data21["time"] = baseTime21.map((value)=>new Date(value).addSeconds(timeAB+timeBC));
+	data1350["time"]=baseTime1350.map((value)=>new Date(value).addSeconds(timeBC));
+
 	await draw();
 	parseWarnings();
+	return;
 }
 
 async function draw(){
@@ -190,15 +193,15 @@ async function calculateOffsets(){
 		distAB=parseFloat(document.getElementById("distA").value);
 		distBC=parseFloat(document.getElementById("distB").value);
 		if(isNaN(distAB)||isNaN(distBC)){
-			distAB=5;
-			distAB=3;
+			distAB=1000;
+			distBC=50;
 			warnList["distNAN"]=true;
 		}
 	}
 	else{
 		//MAKE ENDPOINT FOR DISTANCE SOON
-		distAB=5;
-		distBC=3;
+		distAB=1000;
+		distBC=50;
 	}
 	if(document.getElementById("levelCheck").checked){
 		level=parseFloat(document.getElementById("level").value);
@@ -277,9 +280,9 @@ async function pullanddraw(){
      * 1350 time += b
     */
 
-    baseTime21=Array.from(data21["time"]);
-    baseTime1350=Array.from(data1350["time"]);
-    baseTime13=Array.from(data13["time"]);
+    baseTime21=data21["time"].map((value)=>new Date(value));
+    baseTime1350=data1350["time"].map((value)=>new Date(value));
+    baseTime13=data13["time"].map((value)=>new Date(value));
     for(let i=0;i<data21["time"].length;i++)data21["time"][i].addSeconds(timeAB+timeBC);
     for(let i=0;i<data1350["time"].length;i++)data1350["time"][i].addSeconds(timeBC);
     

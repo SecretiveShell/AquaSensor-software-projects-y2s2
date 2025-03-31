@@ -9,6 +9,9 @@ router = APIRouter(include_in_schema=False)
 async def read_root(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("index.html", {"request": request})
 
+@router.get("/sitemap.xml")
+async def read_sitemap(request:Request) -> Response:
+    return Response(templates.TemplateResponse("sitemap.xml",{"request":request}).body,media_type="application/xml")
 
 @router.get("/chart")
 async def read_chart(request: Request) -> HTMLResponse:

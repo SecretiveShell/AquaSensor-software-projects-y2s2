@@ -37,18 +37,12 @@
 
 #warnings p,
 #warnings em {
-    font-size: 1.75vh;
+    font-size: 1.6vh;
 }
 
 #settings {
     width: 10vw;
-<<<<<<< HEAD
-    background-color: white;
-    
-=======
     background-color: grey;
-    padding: 10px;
->>>>>>> origin
 }
 
 #settings form {
@@ -74,12 +68,13 @@
     float: right;
 }
 
-#dist-and-flow input[type=text] {
+#dist-and-flow input {
     width: 25%;
 }
 
 #settings form #r {
     float:right;
+    margin-right:2px;
 }
 
 #graph {
@@ -106,7 +101,6 @@ input[type=submit]:disabled {
 	}
 	.corr{
 		height: auto;
-		min-height: 50vh;
 		width: 100%;
 	}
 	#settings{
@@ -116,7 +110,7 @@ input[type=submit]:disabled {
 	#graph{
 		width: 100%;
 		order: 2;
-		height:50vh;
+		height:60vh;
 	}
 	#form{
 		width: 100%;
@@ -124,21 +118,31 @@ input[type=submit]:disabled {
 	}
 	#warning{
 		height: auto;
-		min-height: 15vh;
+		min-height: 10vh;
 	}
 	#temp-oxy-view, #dist-and-flow{
-		height: auto;
-		min-height: 15vh;
+		height: auto;	
+	}
+	#dist-and-flow input {
+	    width: auto;
 	}
 	#dist-and-flow input[type=text]{
-		width: 100%;
+		width: 50%;
 		margin-bottom: 5px;
 	}
-	#settings form, #form form{
-		margin: 10px;
+	#settings form {
+		margin: 4px;
+	}
+	#form {
+		height:70px;
+	}
+	#form form{
+		margin: auto;
 	}
 	#settings form #r {
+	    display: table;
 	    float: none;
+	    margin: 0 auto;
 	}
 	span + #break {
 		display:none;

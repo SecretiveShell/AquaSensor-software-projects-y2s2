@@ -220,6 +220,19 @@ async function pullanddraw(){
 		)
     	)
     );
+
+    /* timeoffset math
+     * Derwent 21 time:T
+     * dist a
+     * Derwent 1350 time:T+a
+     * dist b
+     * Derwent 13 time:T+a+b
+     *
+     * to allign:
+     * 21 time += a+b
+     * 1350 time += b
+    */
+
     baseTime21=Array.from(data21["time"]);
     baseTime1350=Array.from(data1350["time"]);
     baseTime13=Array.from(data13["time"]);
